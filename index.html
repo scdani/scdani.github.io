@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daniel Csonka — Agentic AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#060A14; --surface:#0A1220; --edge:#112038; --line:#1A3050;
+  --sky:#0EA5E9; --sky-dim:rgba(14,165,233,.1); --sky-mid:rgba(14,165,233,.22);
+  --text:#E8F0F8; --muted:#5A7A9A; --muted2:#8AABB0;
+  --mono:'Space Mono',monospace; --sans:'Space Grotesk',system-ui,sans-serif;
+  --sp1:8px;--sp2:13px;--sp3:21px;--sp4:34px;--sp5:55px;--sp6:89px;--sp7:144px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+a{color:var(--sky);text-decoration:none}
+a:hover{opacity:.8}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.025'/%3E%3C/svg%3E");
+  opacity:.5}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.25s}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:var(--sp3) var(--sp5);
+  background:rgba(6,10,20,.8);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.04)}
+.nav-mark{font-weight:700;font-size:14px;letter-spacing:-.3px;
+  display:flex;align-items:center;gap:var(--sp2)}
+.nav-dot{width:7px;height:7px;border-radius:50%;background:var(--sky);
+  animation:pulse 2.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+.nav-links{display:flex;gap:var(--sp4);list-style:none}
+.nav-links a{font-size:13px;color:var(--muted);font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--text);opacity:1}
+.nav-cta{font-size:13px;font-weight:600;padding:7px 18px;
+  border:1px solid var(--sky);color:var(--sky);border-radius:6px;transition:background .2s}
+.nav-cta:hover{background:var(--sky-dim);opacity:1}
+
+/* HERO */
+.hero{min-height:100dvh;display:grid;grid-template-columns:56% 44%;
+  align-items:start;padding:120px var(--sp5) var(--sp6);gap:var(--sp5);
+  position:relative;overflow:hidden}
+.hero-orb{position:absolute;pointer-events:none;border-radius:50%;filter:blur(60px);
+  width:800px;height:800px;top:-200px;left:-200px;
+  background:radial-gradient(circle,rgba(14,165,233,.06) 0%,transparent 65%);
+  animation:drift 14s ease-in-out infinite}
+@keyframes drift{0%,100%{transform:translate(0,0)}40%{transform:translate(80px,50px)}70%{transform:translate(-40px,70px)}}
+
+.hero-left{position:relative;z-index:1}
+.h-eyebrow{display:inline-flex;align-items:center;gap:var(--sp2);
+  font-family:var(--mono);font-size:11px;color:var(--sky);
+  border:1px solid var(--sky-mid);border-radius:4px;
+  padding:4px 12px;margin-bottom:var(--sp4);letter-spacing:.05em}
+.h-dot{width:5px;height:5px;border-radius:50%;background:var(--sky);animation:pulse 2s ease-in-out infinite}
+
+h1.hero-title{font-size:clamp(40px,6vw,76px);font-weight:700;
+  letter-spacing:-3px;line-height:.95;margin-bottom:var(--sp3);color:var(--text)}
+.hero-sub{font-size:clamp(14px,1.6vw,16px);color:var(--muted2);
+  max-width:420px;line-height:1.7;margin-bottom:var(--sp3)}
+.hero-sub strong{color:var(--text);font-weight:600}
+.hero-quote{font-size:13px;color:var(--muted);border-left:2px solid var(--sky);
+  padding-left:var(--sp3);max-width:380px;line-height:1.7;font-style:italic;
+  margin-bottom:var(--sp4)}
+.hero-contacts{display:flex;gap:var(--sp2);flex-wrap:wrap}
+.chip-contact{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted2);
+  border:1px solid var(--line);border-radius:6px;padding:7px 14px;
+  transition:border-color .2s,color .2s}
+.chip-contact:hover{border-color:var(--sky);color:var(--text);opacity:1}
+.chip-contact svg{width:13px;height:13px;flex-shrink:0}
+
+/* TERMINAL */
+.hero-right{position:relative;z-index:1}
+.term{background:var(--surface);border:1px solid var(--line);
+  border-radius:12px;overflow:hidden;
+  box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 0 1px rgba(14,165,233,.05)}
+.term-bar{background:var(--edge);padding:10px 16px;
+  display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
+.td{width:10px;height:10px;border-radius:50%}
+.term-title{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:4px}
+.term-body{padding:var(--sp2);font-family:var(--mono);font-size:11px;line-height:1.5}
+.tl{display:block}
+.dim{color:var(--muted)}.sky{color:var(--sky)}.grn{color:#4ADE80}.ylw{color:#FBBF24}.wht{color:var(--text)}
+.csr{display:inline-block;width:7px;height:13px;background:var(--sky);
+  vertical-align:text-bottom;animation:blink 1s step-end infinite;margin-left:2px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* MARQUEE */
+.mq-wrap{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:var(--sp2) 0;background:rgba(10,18,32,.7);position:relative;z-index:2}
+.mq{display:flex;gap:var(--sp5);animation:mq-scroll 50s linear infinite;width:max-content}
+.mq:hover{animation-play-state:paused}
+@keyframes mq-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.mi{display:flex;align-items:center;gap:var(--sp2);
+  font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
+.mi::before{content:'◆';color:var(--sky);font-size:7px}
+
+/* SECTION */
+.sec{padding:var(--sp7) var(--sp5);position:relative}
+.sec-in{max-width:1100px;margin:0 auto}
+.eyb{font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--sky);margin-bottom:var(--sp2)}
+h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margin-bottom:var(--sp2)}
+.ssub{color:var(--muted2);font-size:15px;max-width:520px}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:0}
+
+/* BENTO */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--sp2);margin-top:var(--sp5)}
+.bc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:var(--sp4);
+  transition:border-color .25s,transform .25s;position:relative;overflow:hidden}
+.bc:hover{border-color:var(--sky-mid);transform:translateY(-2px)}
+.bc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--sky),transparent);
+  opacity:0;transition:opacity .25s}
+.bc:hover::before{opacity:1}
+.bw2{grid-column:span 2}.bw3{grid-column:span 3}
+.sn{font-size:52px;font-weight:700;line-height:1;color:var(--sky);
+  display:block;margin-bottom:6px;font-variant-numeric:tabular-nums}
+.su{font-size:28px}.sl{font-size:12px;color:var(--muted);line-height:1.4;font-weight:500}
+.bq{display:flex;flex-direction:column;justify-content:flex-end;
+  background:linear-gradient(135deg,rgba(14,165,233,.06),transparent)}
+.bq blockquote{font-size:14px;color:var(--text);line-height:1.7;font-style:italic;margin-bottom:var(--sp3)}
+.bq cite{font-size:11px;color:var(--muted);font-style:normal;font-family:var(--mono)}
+
+/* VIDEO */
+.vid-sec{position:relative;clip-path:polygon(0 48px,100% 0,100% calc(100% - 48px),0 100%);margin:var(--sp4) 0}
+.vid-wrap{position:relative;overflow:hidden;max-height:540px}
+.vid-wrap video{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.5) saturate(.75)}
+.vid-ov{position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(6,10,20,.92) 0%,rgba(6,10,20,.7) 60%,rgba(14,165,233,.03) 100%);
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:var(--sp6) var(--sp5)}
+.vid-eyb{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--sky);margin-bottom:var(--sp3)}
+.vid-title{font-size:clamp(22px,4vw,44px);font-weight:700;letter-spacing:-1.5px;max-width:580px;line-height:1.15}
+.vid-sub{font-size:14px;color:var(--muted2);margin-top:var(--sp2);max-width:460px}
+
+/* PROJECT GRID */
+.pg{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--sp2);margin-top:var(--sp5)}
+.pc{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:var(--sp4);position:relative;overflow:hidden;
+  transition:border-color .25s,transform .25s}
+.pc:hover{border-color:var(--edge);transform:translateY(-2px)}
+.pc.s7{grid-column:span 7}.pc.s5{grid-column:span 5}
+.pc.s4{grid-column:span 4}.pc.s8{grid-column:span 8}
+.pc.hl{border-color:rgba(14,165,233,.18);background:linear-gradient(135deg,rgba(14,165,233,.04),transparent)}
+.pi{font-size:26px;margin-bottom:var(--sp3);display:block}
+.pt{font-size:17px;font-weight:700;letter-spacing:-.3px;margin-bottom:6px}
+.pty{font-family:var(--mono);font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:var(--sp3)}
+.pb{font-size:13.5px;color:var(--muted2);line-height:1.7;margin-bottom:var(--sp3)}
+.pp{list-style:none;margin-bottom:var(--sp3)}
+.pp li{font-size:13px;color:#8AABB0;padding:3px 0 3px 16px;position:relative;line-height:1.55}
+.pp li::before{content:'→';position:absolute;left:0;color:var(--sky);font-size:10px;top:5px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.ch{font-family:var(--mono);font-size:11px;padding:3px 9px;
+  border:1px solid var(--line);border-radius:4px;color:var(--muted);transition:border-color .15s,color .15s}
+.ch:hover{border-color:var(--sky);color:var(--sky)}
+.ch.live{border-color:rgba(74,222,128,.3);color:#4ADE80;background:rgba(74,222,128,.05)}
+.ch.open{border-color:rgba(251,191,36,.3);color:#FBBF24;background:rgba(251,191,36,.05)}
+
+/* CG SECTION */
+.cg-sec{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cg-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--sp5)}
+.cg-logo{height:24px;opacity:.75;filter:brightness(1.3)}
+.cg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp2)}
+.cg-card{border:1px solid var(--line);border-radius:10px;padding:var(--sp4);
+  transition:border-color .25s,transform .25s}
+.cg-card:hover{border-color:var(--sky-mid);transform:translateX(4px)}
+.cg-n{font-size:40px;font-weight:700;color:var(--sky);line-height:1;
+  margin-bottom:var(--sp2);font-family:var(--mono)}
+.cg-card h3{font-size:14px;font-weight:700;margin-bottom:var(--sp2);letter-spacing:-.2px}
+.cg-card p{font-size:13px;color:var(--muted2);line-height:1.65}
+
+/* TIMELINE */
+.tl{position:relative;margin-top:var(--sp5)}
+.tl::before{content:'';position:absolute;left:20px;top:8px;bottom:8px;width:1px;
+  background:linear-gradient(180deg,var(--sky),var(--line),transparent)}
+.tli{display:flex;gap:var(--sp4);margin-bottom:var(--sp4);position:relative}
+.tld{width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  background:var(--surface);border:1px solid var(--sky);
+  display:flex;align-items:center;justify-content:center;font-size:15px;position:relative;z-index:1}
+.tl-yr{font-family:var(--mono);font-size:11px;color:var(--sky);margin-bottom:4px}
+.tl-c h4{font-size:15px;font-weight:700;margin-bottom:4px}
+.tl-c p{font-size:13px;color:var(--muted2);line-height:1.65}
+
+/* FIT */
+.fit-sec{background:var(--surface);border-top:1px solid var(--line)}
+.fit-list{margin-top:var(--sp5)}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp2);
+  padding:var(--sp3) 0;border-bottom:1px solid var(--line);align-items:start}
+.fr:last-child{border-bottom:none}
+.freq{font-size:13.5px;font-weight:600;color:var(--muted2)}
+.fans{font-size:13px;color:var(--text);line-height:1.65;display:flex;gap:var(--sp2);align-items:flex-start}
+.fck{color:#4ADE80;font-weight:700;flex-shrink:0;margin-top:2px}
+
+/* CTA */
+.cta{text-align:center;padding:var(--sp7) var(--sp5);position:relative;overflow:hidden;
+  clip-path:polygon(0 48px,100% 0,100% 100%,0 100%);background:var(--surface)}
+.cta-glow{position:absolute;pointer-events:none;width:600px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(14,165,233,.1) 0%,transparent 65%);
+  bottom:-100px;left:50%;transform:translateX(-50%);filter:blur(60px)}
+.cta h2{font-size:clamp(28px,5vw,52px);font-weight:700;letter-spacing:-1.5px;margin-bottom:var(--sp3)}
+.cta p{color:var(--muted2);max-width:420px;margin:0 auto var(--sp5);font-size:15px}
+.btn-row{display:flex;justify-content:center;gap:var(--sp3);flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:var(--sp2);font-weight:600;font-size:14px;
+  padding:13px 26px;border-radius:8px;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);opacity:1}
+.btn-p{background:var(--sky);color:#060A14;box-shadow:0 4px 20px rgba(14,165,233,.3)}
+.btn-p:hover{box-shadow:0 8px 32px rgba(14,165,233,.4)}
+.btn-g{border:1px solid var(--line);color:var(--muted2)}
+.btn-g:hover{border-color:var(--sky);color:var(--text)}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}.hero-right{display:none}
+  .bento{grid-template-columns:repeat(2,1fr)}.bw2,.bw3{grid-column:span 2}
+  .pg{grid-template-columns:1fr}
+  .pc.s7,.pc.s5,.pc.s4,.pc.s8{grid-column:span 1}
+  .cg-grid{grid-template-columns:1fr}
+  .fr{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .sec{padding:var(--sp6) var(--sp3)}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-mark"><span class="nav-dot"></span>Daniel Csonka</div>
+  <ul class="nav-links">
+    <li><a href="#built">Stats</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#capgemini">Capgemini</a></li>
+    <li><a href="#fit">Role Fit</a></li>
+  </ul>
+  <a class="nav-cta" href="mailto:daniel.csonka@capgemini.com">Get in touch</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-left rv">
+    <div class="h-eyebrow"><span class="h-dot"></span>Agentic Champion · Rabobank · Utrecht · 2026-07</div>
+    <h1 class="hero-title">Daniel<br>Csonka</h1>
+    <p class="hero-sub">Domain expert turned <strong>agentic AI builder.</strong><br>
+    I spent years telling clients what needed to change.<br>AI gave me the tools to build the change myself.</p>
+    <blockquote class="hero-quote">"The biggest unlock wasn't the code — it was realising that years of domain knowledge made me a better AI collaborator than a developer with no field context."</blockquote>
+    <div class="hero-contacts">
+      <a class="chip-contact" href="mailto:daniel.csonka@capgemini.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        daniel.csonka@capgemini.com
+      </a>
+      <a class="chip-contact" href="https://linkedin.com/in/daniel-csonka" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <span class="chip-contact">📍 Utrecht, NL · Capgemini Engineering</span>
+    </div>
+  </div>
+
+  <div class="hero-right rv d2">
+    <div class="term">
+      <div class="term-bar">
+        <div class="td" style="background:#FF5F57"></div>
+        <div class="td" style="background:#FEBC2E"></div>
+        <div class="td" style="background:#28C840"></div>
+        <span class="term-title">mimir — agents running</span>
+      </div>
+      <div class="term-body" id="term-body" style="height:320px;overflow-y:auto;scroll-behavior:smooth"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mq-wrap">
+  <div class="mq">
+    <span class="mi">
+      <img src="logos/anthropic.svg" alt="Claude / Anthropic" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Claude / Anthropic
+    </span>
+    <span class="mi">
+      <img src="logos/homeassistant.svg" alt="Home Assistant" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Home Assistant
+    </span>
+    <span class="mi">
+      <img src="logos/docker2.svg" alt="Docker" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Docker
+    </span>
+    <span class="mi">
+      <img src="logos/typescript2.svg" alt="TypeScript" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      TypeScript
+    </span>
+    <span class="mi">
+      <img src="logos/react2.svg" alt="React" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      React
+    </span>
+    <span class="mi">
+      <img src="logos/python2.svg" alt="Python" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Python
+    </span>
+    <span class="mi">
+      <img src="logos/azure2.svg" alt="Azure AI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Azure AI
+    </span>
+    <span class="mi">
+      <img src="logos/pg.svg" alt="PostgreSQL" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      PostgreSQL
+    </span>
+    <span class="mi">
+      <img src="logos/cloudflare.svg" alt="Cloudflare" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Cloudflare
+    </span>
+    <span class="mi">
+      <img src="logos/github2.svg" alt="GitHub" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      GitHub
+    </span>
+    <span class="mi">
+      <img src="logos/fastapi.svg" alt="FastAPI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      FastAPI
+    </span>
+    <span class="mi">
+      <img src="logos/playwright2.svg" alt="Playwright" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Playwright
+    </span>
+    <!-- duplicate -->
+    <span class="mi">
+      <img src="logos/anthropic.svg" alt="Claude / Anthropic" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Claude / Anthropic
+    </span>
+    <span class="mi">
+      <img src="logos/homeassistant.svg" alt="Home Assistant" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Home Assistant
+    </span>
+    <span class="mi">
+      <img src="logos/docker2.svg" alt="Docker" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Docker
+    </span>
+    <span class="mi">
+      <img src="logos/typescript2.svg" alt="TypeScript" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      TypeScript
+    </span>
+    <span class="mi">
+      <img src="logos/react2.svg" alt="React" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      React
+    </span>
+    <span class="mi">
+      <img src="logos/python2.svg" alt="Python" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Python
+    </span>
+    <span class="mi">
+      <img src="logos/azure2.svg" alt="Azure AI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Azure AI
+    </span>
+    <span class="mi">
+      <img src="logos/pg.svg" alt="PostgreSQL" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      PostgreSQL
+    </span>
+    <span class="mi">
+      <img src="logos/cloudflare.svg" alt="Cloudflare" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Cloudflare
+    </span>
+    <span class="mi">
+      <img src="logos/github2.svg" alt="GitHub" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      GitHub
+    </span>
+    <span class="mi">
+      <img src="logos/fastapi.svg" alt="FastAPI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      FastAPI
+    </span>
+    <span class="mi">
+      <img src="logos/playwright2.svg" alt="Playwright" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      Playwright
+    </span>
+  </div>
+</div>
+
+<!-- STATS BENTO -->
+<section class="sec" id="built">
+  <div class="sec-in">
+    <p class="eyb rv">By the numbers</p>
+    <h2 class="st rv d1">What I've built</h2>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp2);margin-top:var(--sp5);margin-bottom:var(--sp3)">
+      <div class="bc rv" style="grid-column:span 2">
+        <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px">
+          <span style="font-size:64px;font-weight:700;line-height:1;color:var(--sky)" data-target="23">0</span>
+          <span style="font-size:14px;color:var(--muted);padding-bottom:10px">agents</span>
+        </div>
+        <div style="font-size:13px;color:var(--muted2)">AI agents in production across personal + Capgemini work</div>
+      </div>
+      <div class="bc rv d1">
+        <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px">
+          <span style="font-size:64px;font-weight:700;line-height:1;color:var(--sky)" data-target="2">0</span>
+          <span style="font-size:14px;color:var(--muted);padding-bottom:10px">months</span>
+        </div>
+        <div style="font-size:13px;color:var(--muted2)">From client-call to SaaS MVP</div>
+      </div>
+      <div class="bc rv d2">
+        <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px">
+          <span style="font-size:64px;font-weight:700;line-height:1;color:var(--sky)" data-target="50">0</span>
+          <span style="font-size:14px;color:var(--muted);padding-bottom:10px">+</span>
+        </div>
+        <div style="font-size:13px;color:var(--muted2)">Custom AI skills & MCP integrations</div>
+      </div>
+      <div class="bc rv d1">
+        <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px">
+          <span style="font-size:64px;font-weight:700;line-height:1;color:var(--sky)" data-target="18">0</span>
+          <span style="font-size:14px;color:var(--muted);padding-bottom:10px">routes</span>
+        </div>
+        <div style="font-size:13px;color:var(--muted2)">API routes in EnergySense SaaS</div>
+      </div>
+      <div class="bc rv d2">
+        <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px">
+          <span style="font-size:64px;font-weight:700;line-height:1;color:var(--sky)" data-target="704">0</span>
+        </div>
+        <div style="font-size:13px;color:var(--muted2)">Home Assistant entities via natural language</div>
+      </div>
+      <div class="bc bq rv d3" style="grid-column:span 2">
+        <blockquote>"I wasn't learning to code. I was learning to communicate intent to a system that could build it."</blockquote>
+        <cite>— Daniel Csonka</cite>
+      </div>
+    </div>
+  </div>
+
+<!-- MIMIR CHAT -->
+<section class="sec" style="background:var(--surface);border-top:1px solid var(--line)">
+  <div class="sec-in">
+    <p class="eyb rv">Ask Mimir</p>
+    <h2 class="st rv d1" style="margin-bottom:var(--sp2)">Ask about Daniel</h2>
+    <p class="rv d2" style="color:var(--muted2);margin-bottom:var(--sp4);font-size:15px;max-width:520px">Powered by the same AI assistant Daniel uses daily. Try: "Why should we hire Daniel?" or "What has he actually built?"</p>
+    <div class="rv d2" style="max-width:720px">
+      <div id="chat-msgs" style="
+        min-height:80px;max-height:340px;overflow-y:auto;
+        background:var(--bg);border:1px solid var(--line);border-radius:12px 12px 0 0;
+        padding:var(--sp3);font-size:13.5px;line-height:1.75;
+        display:flex;flex-direction:column;gap:var(--sp2)">
+        <div style="color:var(--sky);font-family:var(--mono);font-size:11px">Mimir v1 · ready</div>
+        <div class="msg-mimir" style="color:var(--muted2)">Hi, I'm Mimir — Daniel's AI assistant. Ask me anything about his background, what he's built, or whether he might be a good fit for the Rabobank Agentic Champion role.</div>
+      </div>
+      <div style="display:flex;border:1px solid var(--line);border-top:none;border-radius:0 0 12px 12px;overflow:hidden">
+        <input id="chat-input" type="text" placeholder="Ask a question..." onkeydown="if(event.key==='Enter')sendChat()" style="
+          flex:1;background:var(--edge);border:none;outline:none;
+          padding:14px var(--sp3);font-family:var(--sans);font-size:14px;color:var(--text)">
+        <button onclick="sendChat()" style="
+          background:var(--sky);color:#060A14;border:none;cursor:pointer;
+          font-family:var(--sans);font-size:13px;font-weight:700;
+          padding:14px 20px;transition:opacity .15s;white-space:nowrap">
+          Send ↵
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- VIDEO -->
+<div class="vid-sec">
+  <div class="vid-wrap">
+    <video autoplay muted loop playsinline preload="auto">
+      <source src="energysense_cropped.mp4" type="video/mp4">
+    </video>
+    <div class="vid-ov">
+      <div class="vid-eyb">Live Demo · EnergySense · Capgemini Engineering</div>
+      <h2 class="vid-title">EnergySense —<br>Built with AI, end to end</h2>
+      <p class="vid-sub">Full-stack TypeScript SaaS · 23 AI agents · Running in production · Built in under 2 months with Claude Code</p>
+      <div style="display:flex;gap:13px;margin-top:21px;flex-wrap:wrap">
+        <a href="https://energysense.techdaddy.app" target="_blank" style="
+          display:inline-flex;align-items:center;gap:8px;
+          background:rgba(14,165,233,.15);border:1px solid rgba(14,165,233,.4);
+          color:#E8F0F8;font-family:Space Grotesk,system-ui,sans-serif;
+          font-size:13px;font-weight:600;padding:10px 20px;border-radius:8px;
+          backdrop-filter:blur(8px);transition:background .2s;text-decoration:none">
+          ⚡ Open live app
+        </a>
+        <a href="energysense-pitch.html" target="_blank" style="
+          display:inline-flex;align-items:center;gap:8px;
+          background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);
+          color:#8AABB0;font-family:Space Grotesk,system-ui,sans-serif;
+          font-size:13px;font-weight:600;padding:10px 20px;border-radius:8px;
+          backdrop-filter:blur(8px);transition:background .2s;text-decoration:none">
+          📊 5-min pitch deck
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ENERGYSENSE DETAIL -->
+<section class="sec" style="padding-top:var(--sp5)">
+  <div class="sec-in">
+    <p class="eyb rv">EnergySense · What it delivers</p>
+    <h2 class="st rv d1">The intelligence layer on top of your building systems</h2>
+
+    <!-- Integration layer -->
+    <div class="rv d2" style="margin-top:var(--sp4);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:var(--sp4)">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--sky);text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--sp3)">The platform</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--sp2)">
+        <div style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:var(--sp3)">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px">🏗️ Data Integration</div>
+          <div style="font-size:12px;color:var(--muted2);line-height:1.6">BMS · Smart meters · IoT sensors · EV charging · Solar PV · ERP/CMMS — any protocol, any system</div>
+        </div>
+        <div style="background:var(--bg);border:1px solid rgba(14,165,233,.2);border-radius:10px;padding:var(--sp3)">
+          <div style="font-size:13px;font-weight:700;color:var(--sky);margin-bottom:6px">⚡ Intelligence Layer</div>
+          <div style="font-size:12px;color:var(--muted2);line-height:1.6">Single source of truth · unified portfolio view · automated compliance · verified savings · live dashboards</div>
+        </div>
+        <div style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:var(--sp3)">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px">📊 Output</div>
+          <div style="font-size:12px;color:var(--muted2);line-height:1.6">CSRD · EED · ISO 50001 · one-click compliance packs · IPMVP-verified savings reports</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAST cycle metrics -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp2);margin-top:var(--sp3)">
+      <div class="bc rv d1" style="border-top:2px solid var(--sky)">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--sky);text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--sp2)">FIND</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:var(--sp2)">Data freshness</div>
+        <div style="font-size:22px;font-weight:700;color:var(--text)">12–16mo <span style="color:var(--sky);font-size:16px">→</span> live</div>
+        <div style="font-size:12px;color:var(--muted2);margin-top:6px">Real-time identification of savings opportunities</div>
+      </div>
+      <div class="bc rv d2" style="border-top:2px solid var(--sky)">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--sky);text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--sp2)">ACT</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:var(--sp2)">ROI modelling</div>
+        <div style="font-size:22px;font-weight:700;color:var(--text)">weeks <span style="color:var(--sky);font-size:16px">→</span> &lt;2h</div>
+        <div style="font-size:12px;color:var(--muted2);margin-top:6px">Automated ROI simulation for every measure</div>
+      </div>
+      <div class="bc rv d3" style="border-top:2px solid #4ADE80">
+        <div style="font-family:var(--mono);font-size:10px;color:#4ADE80;text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--sp2)">SAVE</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:var(--sp2)">Annual savings</div>
+        <div style="font-size:22px;font-weight:700;color:#4ADE80">12–18%</div>
+        <div style="font-size:12px;color:var(--muted2);margin-top:6px">IPMVP-verified · payback &lt;3 years</div>
+      </div>
+      <div class="bc rv d3" style="border-top:2px solid var(--sky)">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--sky);text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--sp2)">TELL</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:var(--sp2)">Monthly reporting</div>
+        <div style="font-size:22px;font-weight:700;color:var(--text)">5 days <span style="color:var(--sky);font-size:16px">→</span> &lt;1h</div>
+        <div style="font-size:12px;color:var(--muted2);margin-top:6px">One-click CSRD · EED · ISO 50001 output</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPGEMINI -->
+<section class="sec cg-sec" id="capgemini">
+  <div class="sec-in">
+    <div class="cg-head rv">
+      <div>
+        <p class="eyb">Professional work</p>
+        <h2 class="st">At Capgemini Engineering</h2>
+      </div>
+      <img class="cg-logo" src="assets/brand/capgemini-engineering-wordmark.svg" alt="Capgemini Engineering" onerror="this.style.display='none'">
+    </div>
+    <div class="cg-grid">
+      <div class="cg-card rv">
+        <h3>⚡ EnergySense — Full-Stack AI SaaS</h3>
+        <p>Built with Claude Code from zero. 23 AI agents, 18 API routes, React + PostgreSQL. AI recommendations encoding real HVAC/BMS domain knowledge. MVP in 2 months. Piloting at Capgemini Utrecht. FoX Innovation 2026 submission.</p>
+      </div>
+      <div class="cg-card rv d1">
+        <h3>🏭 Field Assist — AI Field Service App</h3>
+        <p>Full PRD for a tablet-first manufacturing app: LLM triage, auto-classification, offline fallback, human-in-the-loop guardrails. Production-quality spec ready for engineering.</p>
+      </div>
+      <div class="cg-card rv d2">
+        <h3>🔧 Claude via Copilot Proxy</h3>
+        <p>700+ line API proxy routing Claude through Copilot Business. Self-healing watchdog, dashboard, dynamic timeout scaling. Used by the team daily.</p>
+      </div>
+      <div class="cg-card rv d3">
+        <h3>☁️ Azure AI Agent Toolkit</h3>
+        <p>26 skills: AKS/GPU provisioning, AI Gateway (semantic caching, jailbreak detection), cross-cloud migration, multi-model setup — GPT-5, DeepSeek-R1, Llama 3.2 Vision 90B.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section class="sec" id="projects">
+  <div class="sec-in">
+    <p class="eyb rv">Personal projects</p>
+    <h2 class="st rv d1">Running in production</h2>
+    <div class="pg">
+      <div class="pc hl s7 rv">
+        <span class="pi">🧠</span>
+        <div class="pty">Multi-agent system · Flagship</div>
+        <h3 class="pt">Mimir — Proactive AI Assistant</h3>
+        <p class="pb">Fully autonomous AI assistant — <strong>Observe → Analyze → Suggest → Learn</strong> loop running 24/7. Surfaces insights proactively, not just on demand.</p>
+        <ul class="pp">
+          <li>50+ custom skills + MCP integrations (Gmail, Calendar, Playwright, Telegram)</li>
+          <li>Self-improving: detects usage patterns, proposes new skills automatically</li>
+        </ul>
+        <div class="chips"><span class="ch">Claude API</span><span class="ch">MCP</span><span class="ch">Python</span><span class="ch">systemd</span><span class="ch live">24/7 Production</span></div>
+      </div>
+      <div class="pc s5 rv d1">
+        <span class="pi">💶</span>
+        <div class="pty">Open Banking · Agentic Finance</div>
+        <h3 class="pt">hollandia-budget</h3>
+        <p class="pb">AI financial pipeline across NL + HU. 3 banks, AI categorization, nightly anomaly detection. Ask via Telegram: "What did I spend on food this month?" → instant answer.</p>
+        <div class="chips"><span class="ch">Enable Banking</span><span class="ch">PSD2</span><span class="ch">FastAPI</span><span class="ch open">Private</span></div>
+      </div>
+      <div class="pc s4 rv d2">
+        <span class="pi">🕸️</span>
+        <div class="pty">Semantic Indexing · RAG</div>
+        <h3 class="pt">Graphify</h3>
+        <p class="pb">Semantic graph indexer. 300+ notes → 327 graph nodes. Powers Mimir's contextual awareness via NLP queries.</p>
+        <div class="chips"><span class="ch">Knowledge graph</span><span class="ch">NLP</span><span class="ch">Python</span><span class="ch open">Open Source</span></div>
+      </div>
+      <div class="pc s8 rv d1">
+        <span class="pi">🏠</span>
+        <div class="pty">IoT · Multi-step Agent Workflows</div>
+        <h3 class="pt">Agentic Home Automation</h3>
+        <p class="pb">704 entities, natural language control. Gaming Mode agent: detects intent → wakes PC → switches TV input → launches Steam. No human triggers.</p>
+        <div class="chips"><span class="ch">Home Assistant</span><span class="ch">ADB</span><span class="ch">Webhooks</span><span class="ch">Multi-step</span><span class="ch live">Production</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="sec">
+  <div class="sec-in">
+    <p class="eyb rv">The shift</p>
+    <h2 class="st rv d1">From Excel macros to production SaaS</h2>
+    <div class="tl">
+      <div class="tli rv">
+        <div class="tld">⚡</div>
+        <div class="tl-c"><div class="tl-yr">2022–2025</div>
+          <h4>Domain expert: 4+ years energy engineering</h4>
+          <p>Pharma, hospitality, industrial. ASHRAE L2/3 audits, IPMVP M&amp;V across 6 countries. Could write MATLAB scripts. Building real software was out of reach.</p></div>
+      </div>
+      <div class="tli rv d1">
+        <div class="tld">🤖</div>
+        <div class="tl-c"><div class="tl-yr">Late 2025</div>
+          <h4>Claude Code as daily pair programmer</h4>
+          <p>Joined Capgemini Engineering. Agentic AI replaced weeks of waiting on devs. First TypeScript, first REST APIs — ideas became running code the same day.</p></div>
+      </div>
+      <div class="tli rv d2">
+        <div class="tld">🚀</div>
+        <div class="tl-c"><div class="tl-yr">2026</div>
+          <h4>Production SaaS in 2 months</h4>
+          <p>EnergySense: 23 AI agents, full-stack TypeScript, ML scoring. The domain knowledge I'd spent years building became the highest-value AI input.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROLE FIT -->
+<section class="sec fit-sec" id="fit">
+  <div class="sec-in">
+    <p class="eyb rv">SNL_RABO_Technical BA – Agentic Champion · K3TEWA</p>
+    <h2 class="st rv d1">Why this role fits</h2>
+    <div class="fit-list rv d2">
+      <div class="fr"><div class="freq">Set up Agentic platform & marketplace</div>
+        <div class="fans"><span class="fck">✓</span>Built a full agentic platform from scratch — skill registry, MCP stack, scheduling, signal bus. Zero to running.</div></div>
+      <div class="fr"><div class="freq">Develop agent-based use cases</div>
+        <div class="fans"><span class="fck">✓</span>23 agents in production: finance, energy, home automation, infra, knowledge management. All designed + maintained by me.</div></div>
+      <div class="fr"><div class="freq">Open-source & European providers</div>
+        <div class="fans"><span class="fck">✓</span>Home Assistant, LM Studio, CouchDB in production. Actively evaluate European AI providers. Privacy-by-design.</div></div>
+      <div class="fr"><div class="freq">Experiment & evaluate capabilities</div>
+        <div class="fans"><span class="fck">✓</span>Led Capgemini's Claude Code vs Copilot evaluation. Daily practice. Concrete opinions on what works vs. vaporware.</div></div>
+      <div class="fr"><div class="freq">API / service architecture</div>
+        <div class="fans"><span class="fck">✓</span>15+ APIs: banking (PSD2), home automation, AI providers, media. I design for reliability and graceful degradation.</div></div>
+      <div class="fr"><div class="freq">Technical BA + hands-on</div>
+        <div class="fans"><span class="fck">✓</span>Stakeholder call in the morning, implementation in the afternoon. IPMVP certified + PM background.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE DEMOS -->
+<section class="sec">
+  <div class="sec-in">
+    <p class="eyb rv">Live demos</p>
+    <h2 class="st rv d1">See it running</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp2);margin-top:var(--sp4)">
+      <a href="demo2/" target="_blank" class="rv" style="
+        display:block;background:var(--surface);border:1px solid var(--line);
+        border-radius:12px;padding:var(--sp4);
+        transition:border-color .25s,transform .25s;color:inherit">
+        <div style="font-size:24px;margin-bottom:var(--sp2)">🤖</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--sky);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Live · Agentic AI Demos</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px">Daniel's Agentic AI Demo Suite</div>
+        <div style="font-size:13px;color:var(--muted2)">Running demos of agentic use cases — live, not screenshots</div>
+      </a>
+      <a href="field-assist.html" target="_blank" class="rv d1" style="
+        display:block;background:var(--surface);border:1px solid var(--line);
+        border-radius:12px;padding:var(--sp4);
+        transition:border-color .25s,transform .25s;color:inherit">
+        <div style="font-size:24px;margin-bottom:var(--sp2)">🏭</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--sky);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Capgemini Engineering · Field Service</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px">Field Assist — AI Field Service App</div>
+        <div style="font-size:13px;color:var(--muted2)">Interactive prototype — click to explore</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta">
+  <div class="cta-glow"></div>
+  <h2 class="rv">Let's talk agentic AI.</h2>
+  <p class="rv d1">Happy to do a live 20-minute demo — seeing an agent think in real time is more convincing than any slide.</p>
+  <div class="btn-row rv d2">
+    <a class="btn btn-p" href="mailto:daniel.csonka@capgemini.com">✉ daniel.csonka@capgemini.com</a>
+    <a class="btn btn-g" href="https://linkedin.com/in/daniel-csonka" target="_blank">LinkedIn →</a>
+  </div>
+</div>
+
+<script>
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msgs = document.getElementById('chat-msgs');
+  const q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+
+  // User bubble
+  const userDiv = document.createElement('div');
+  userDiv.style.cssText = 'text-align:right;color:var(--text);background:var(--edge);border-radius:8px;padding:8px 12px;align-self:flex-end;max-width:80%';
+  userDiv.textContent = q;
+  msgs.appendChild(userDiv);
+
+  // Mimir thinking
+  const mimirDiv = document.createElement('div');
+  mimirDiv.className = 'msg-mimir';
+  mimirDiv.style.color = 'var(--muted2)';
+  mimirDiv.textContent = '⟳ thinking...';
+  msgs.appendChild(mimirDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    const r = await fetch('https://portfolio.techdaddy.app/api/chat?q=' + encodeURIComponent(q));
+    const d = await r.json();
+    mimirDiv.textContent = '';
+    const text = d.text;
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < text.length) {
+        mimirDiv.textContent += text[i++];
+        msgs.scrollTop = msgs.scrollHeight;
+      } else clearInterval(interval);
+    }, 10);
+  } catch(e) {
+    mimirDiv.textContent = 'Mimir is offline — try again in a moment.';
+  }
+}
+
+// Dynamic terminal
+(function() {
+  const tb = document.getElementById('term-body');
+  if (!tb) return;
+
+  const S = (t,c='dim') => `<span class="${c}">${t}</span>`;
+  const sequences = [
+    [
+      [0,   `${S('$')} ${S('python3','sky')} ${S('mimir_analyze.py','wht')}`],
+      [500, S('loading agent context…')],
+      [1000,`${S('✓','grn')} ${S('Financial Health Agent','wht')} ${S('— ING NL / Revolut / OTP synced')}`],
+      [1400,`${S('✓','grn')} ${S('Homelab Monitor','wht')} ${S('— VM 12% CPU · NAS 68% · all nominal')}`],
+      [1800,`${S('✓','grn')} ${S('EnergySense / 23 agents','wht')} ${S('— active')}`],
+      [2200,`${S('⟳','ylw')} ${S('Weekly Life Audit','wht')} ${S('— reading calendar + git log…')}`],
+      [3000,`${S('→')} anomaly: ${S('energy spike site 4 +34%','ylw')}`],
+      [3500,`${S('→')} running HVAC simulation…`],
+      [4200,`${S('✓','grn')} ${S('recommendation queued:','wht')} ${S('schedule shift → −8%','grn')}`],
+      [4800,`${S('→')} 3 signals queued for ${S('08:00','sky')}`],
+      [5200,`${S('Mimir','sky')} ${S('ready')} <span class="csr"></span>`],
+    ],
+    [
+      [0,   `${S('$')} ${S('python3','sky')} ${S('agents/financial_health_agent.py','wht')}`],
+      [600, `${S('→')} fetching ING NL transactions…`],
+      [1100,`${S('→')} fetching Revolut… fetching OTP HU…`],
+      [1700,`${S('✓','grn')} 3 accounts synced · 47 new transactions`],
+      [2200,`${S('→')} AI categorization in progress…`],
+      [2800,`${S('✓','grn')} categorized · no anomalies flagged`],
+      [3200,`${S('→')} cashflow delta vs 30d avg: ${S('+€124','grn')}`],
+      [3700,`${S('→')} recurring charge: ${S('Spotify €10.99','ylw')} — known, skipped`],
+      [4200,`${S('✓','grn')} report dispatched to Telegram`],
+      [4700,`${S('Mimir','sky')} ${S('financial agent complete')} <span class="csr"></span>`],
+    ],
+    [
+      [0,   `${S('$')} ${S('python3','sky')} ${S('agents/homelab_monitor_agent.py','wht')}`],
+      [500, `${S('→')} checking VM health…`],
+      [1000,`${S('✓','grn')} ubuntu-server: ${S('CPU 8% · RAM 34% · uptime 42d')}`],
+      [1500,`${S('→')} checking NAS (100.72.157.43)…`],
+      [2000,`${S('✓','grn')} NAS: ${S('volume2 68% · externals OK')}`],
+      [2500,`${S('→')} pinging services…`],
+      [3000,`${S('✓','grn')} claude-bot · nginx · ha-proxy ${S('— all running')}`],
+      [3400,`${S('→')} UniFi network scan…`],
+      [3900,`${S('✓','grn')} 28 clients · ${S('0 alerts')} · AP uptime 99.8%`],
+      [4400,`${S('Mimir','sky')} ${S('homelab nominal')} <span class="csr"></span>`],
+    ],
+    [
+      [0,   `${S('$')} ${S('python3','sky')} ${S('agents/ha_agent.py check','wht')}`],
+      [500, `${S('→')} connecting to Home Assistant (100.120.45.99)…`],
+      [1000,`${S('✓','grn')} 704 entities online`],
+      [1500,`${S('→')} checking automations…`],
+      [2000,`${S('✓','grn')} 47 automations active · ${S('0 failures')}`],
+      [2500,`${S('→')} light states: living room ${S('ON 45%','ylw')} · bedroom OFF`],
+      [3000,`${S('→')} media: Plex ${S('idle')} · Spotify ${S('playing','grn')}`],
+      [3500,`${S('→')} climate: ${S('19.8°C','sky')} inside · ${S('14.2°C')} outside`],
+      [4000,`${S('✓','grn')} no anomalies · ${S('gaming mode: standby')}`],
+      [4500,`${S('Mimir','sky')} ${S('HA check complete')} <span class="csr"></span>`],
+    ],
+    [
+      [0,   `${S('$')} ${S('python3','sky')} ${S('skills/weather.py','wht')}`],
+      [400, `${S('→')} fetching Utrecht forecast…`],
+      [900, `${S('✓','grn')} today: ${S('16°C · partly cloudy')}`],
+      [1300,`${S('→')} checking HA calendar…`],
+      [1800,`${S('✓','grn')} 2 events today: ${S('standup 09:30 · 1:1 Nick 15:00','sky')}`],
+      [2300,`${S('→')} running morning brief generation…`],
+      [2800,`${S('→')} checking Mimir signals backlog…`],
+      [3300,`${S('→')} 1 suggestion pending: ${S('grocery restock','ylw')}`],
+      [3800,`${S('✓','grn')} morning brief sent to Telegram`],
+      [4300,`${S('Mimir','sky')} ${S('briefing complete')} <span class="csr"></span>`],
+    ],
+    [
+      [0,   `${S('$')} ${S('python3','sky')} ${S('agents/weekly_life_audit.py','wht')}`],
+      [500, `${S('→')} reading Obsidian vault (327 nodes)…`],
+      [1100,`${S('→')} scanning git activity…`],
+      [1700,`${S('✓','grn')} 14 commits this week across 3 repos`],
+      [2200,`${S('→')} analysing finance delta…`],
+      [2700,`${S('✓','grn')} net savings: ${S('+€312','grn')} vs target`],
+      [3200,`${S('→')} calendar review: 8 events · 2 upcoming deadlines`],
+      [3700,`${S('→')} vault drift check: 3 stale notes flagged`],
+      [4200,`${S('✓','grn')} weekly audit complete · dispatching report`],
+      [4700,`${S('Mimir','sky')} ${S('life audit done')} <span class="csr"></span>`],
+    ],
+  ];
+
+  let seqIdx = 0;
+  let timers = [];
+
+  function clearTimers() { timers.forEach(t => clearTimeout(t)); timers = []; }
+
+  function runSeq(seq) {
+    tb.innerHTML = '';
+    seq.forEach(([delay, html]) => {
+      const t = setTimeout(() => {
+        const line = document.createElement('div');
+        line.innerHTML = html;
+        line.style.cssText = 'font-family:var(--mono);font-size:11px;line-height:1.4;padding:1px 0';
+        tb.appendChild(line);
+        tb.scrollTop = tb.scrollHeight;
+      }, delay);
+      timers.push(t);
+    });
+    const totalDur = seq[seq.length-1][0] + 3500;
+    const t = setTimeout(() => {
+      seqIdx = (seqIdx + 1) % sequences.length;
+      runSeq(sequences[seqIdx]);
+    }, totalDur);
+    timers.push(t);
+  }
+
+  runSeq(sequences[0]);
+})();
+
+const ro=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');ro.unobserve(x.target)}}),{threshold:.07,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+setTimeout(()=>document.querySelectorAll('.hero .rv').forEach(el=>el.classList.add('in')),80);
+
+function cnt(el,to,dur=1100){const s=performance.now(),r=n=>{const p=Math.min((n-s)/dur,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(e*to);if(p<1)requestAnimationFrame(r)};requestAnimationFrame(r)}
+const co=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){const t=parseInt(x.target.dataset.target);if(!isNaN(t))cnt(x.target,t);co.unobserve(x.target)}}),{threshold:.5});
+document.querySelectorAll('[data-target]').forEach(el=>co.observe(el));
+</script>
+</body>
+</html>
