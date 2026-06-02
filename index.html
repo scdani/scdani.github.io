@@ -493,70 +493,433 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
 </div>
 
 <!-- ENERGYSENSE DETAIL -->
-<section class="sec" style="padding-top:var(--sp5)">
+<section class="sec es-section" style="padding-top:var(--sp5)">
+  <style>
+    .es-section { --cyan:#1DB8F2; --teal:#00C2B3; --amber:#F59E0B; --green:#10B981; --purple:#7C3AED; }
+    .tag {
+      font-size: 0.65rem; font-weight: 600; padding: 2px 8px;
+      border-radius: 2rem; letter-spacing: 0.04em;
+    }
+.tag--cyan   { background: rgba(29,184,242,0.08); border: 1px solid rgba(29,184,242,0.25); color: var(--cyan); }
+.tag--teal   { background: rgba(0,194,179,0.08);  border: 1px solid rgba(0,194,179,0.25);  color: var(--teal); }
+.tag--green  { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); color: var(--green); }
+.tag--amber  { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); color: var(--amber); }
+.tag--muted  { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.35); }
+.s4-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 0.75rem; flex: 1; min-height: 0;
+    }
+.metric-panel {
+      border-radius: 16px; padding: 1.25rem 1.75rem;
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden;
+    }
+.metric-icon-row {
+      display: flex; align-items: center; gap: 0.625rem; margin-bottom: 0.75rem; flex-shrink: 0;
+    }
+.metric-icon-box {
+      width: 2.25rem; height: 2.25rem; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+.metric-panel--a .metric-icon-box { background: rgba(29,184,242,0.14); border: 1px solid rgba(29,184,242,0.3); }
+.metric-panel--b .metric-icon-box { background: rgba(245,158,11,0.14); border: 1px solid rgba(245,158,11,0.3); }
+.metric-panel--c .metric-icon-box { background: rgba(16,185,129,0.14); border: 1px solid rgba(16,185,129,0.3); }
+.metric-panel--d .metric-icon-box { background: rgba(124,58,237,0.14); border: 1px solid rgba(124,58,237,0.3); }
+.metric-panel::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit;
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+.metric-panel--a { background: linear-gradient(135deg, rgba(29,184,242,0.12), rgba(29,184,242,0.04)); }
+.metric-panel--b { background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.04)); }
+.metric-panel--c { background: linear-gradient(135deg, rgba(16,185,129,0.14), rgba(16,185,129,0.04)); }
+.metric-panel--d { background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(124,58,237,0.04)); }
+.metric-eyebrow {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 0.5rem;
+    }
+.metric-delta {
+      display: flex; flex-direction: column; gap: 0.2rem; margin-bottom: 0.875rem;
+    }
+.metric-before {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: 1.7rem; line-height: 1;
+      color: rgba(255,255,255,0.60); text-decoration: line-through;
+      text-decoration-color: rgba(225,29,72,0.75);
+    }
+.metric-arrow-row {
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+.metric-arrow { color: var(--cyan); font-size: 1rem; opacity: 0.6; }
+.metric-after {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: 2.8rem; line-height: 1;
+      background: linear-gradient(135deg, var(--cyan), var(--teal));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+.metric-panel--b .metric-after {
+      background: linear-gradient(135deg, var(--amber), #fbbf24);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+.metric-panel--c .metric-after {
+      background: linear-gradient(135deg, var(--green), #34d399);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+.metric-panel--d .metric-after {
+      background: linear-gradient(135deg, #a78bfa, var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+.metric-desc {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.62); line-height: 1.6; font-weight: 500;
+    }
+.metric-tags { margin-top: 0.75rem; display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .es-arch-wrap { background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:var(--sp3) }
+    .es-arch-inner { display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:340px }
+    .es-arch-inner svg { width:100%;height:100%;min-height:280px }
+    .es-metrics-grid { display:grid;grid-template-columns:1fr 1fr;gap:var(--sp2) }
+    .metric-panel { border-radius:12px;padding:var(--sp3) var(--sp4);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden }
+    .metric-eyebrow { font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:4px }
+    .metric-before { font-size:13px;color:rgba(255,255,255,.45);margin-bottom:4px }
+    .metric-arrow-row { display:flex;align-items:center;gap:8px }
+    .metric-arrow { font-size:20px;font-weight:700 }
+    .metric-after { font-size:22px;font-weight:700;color:#fff }
+    .metric-desc { font-size:12px;color:rgba(255,255,255,.5);line-height:1.5;margin-top:var(--sp2) }
+    .metric-tags { display:flex;gap:6px;flex-wrap:wrap;margin-top:var(--sp2) }
+    .tag { font-size:10.5px;padding:2px 8px;border-radius:4px;font-weight:500 }
+    .metric-icon-row { display:flex;align-items:center;gap:8px;margin-bottom:var(--sp2) }
+    .metric-icon-box { width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0 }
+    .es-section .metric-panel::before { content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,.09) }
+    .metric-delta { margin-bottom:6px }
+  </style>
   <div class="sec-in">
     <p class="eyb rv">EnergySense explainer</p>
-    <p class="rv d1" style="color:var(--muted2);font-size:15px;max-width:640px;margin-bottom:var(--sp5)">EnergySense sits as an intelligence layer on top of your existing building systems — connecting any data source, surfacing what matters, and turning it into verified action.</p>
+    <p class="rv d1" style="color:var(--muted2);font-size:15px;max-width:640px;margin-bottom:var(--sp4)">The intelligence layer on top of your existing building systems — connecting any data source, surfacing what matters, turning it into verified action.</p>
 
-    <!-- Architecture diagram -->
-    <div class="rv d2" style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:var(--sp4);overflow-x:auto">
-      <div style="display:flex;align-items:center;gap:var(--sp3);min-width:700px">
-        <!-- Data sources -->
-        <div style="flex-shrink:0;width:160px">
-          <div style="font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--sp2)">Data sources</div>
-          <div style="display:flex;flex-direction:column;gap:6px">
-            <div style="background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:11.5px;color:var(--muted2)">🏗️ BMS / HVAC</div>
-            <div style="background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:11.5px;color:var(--muted2)">⚡ Smart meters</div>
-            <div style="background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:11.5px;color:var(--muted2)">🌡️ IoT sensors</div>
-            <div style="background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:11.5px;color:var(--muted2)">🔌 EV / Solar PV</div>
-            <div style="background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:11.5px;color:var(--muted2)">📋 ERP / CMMS</div>
-          </div>
-        </div>
-        <!-- Arrow -->
-        <div style="flex-shrink:0;color:var(--sky);font-size:20px;opacity:.6">→→</div>
-        <!-- Intelligence layer -->
-        <div style="flex:1;background:linear-gradient(135deg,rgba(14,165,233,.08),rgba(14,165,233,.03));border:1px solid rgba(14,165,233,.3);border-radius:10px;padding:var(--sp3);text-align:center">
-          <div style="font-family:var(--mono);font-size:10px;color:var(--sky);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Intelligence layer</div>
-          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">EnergySense</div>
-          <div style="font-size:11px;color:var(--muted2);line-height:1.6">Single source of truth<br>23 AI agents · 3 guilds<br>ISO 50001 · IPMVP</div>
-        </div>
-        <!-- Arrow -->
-        <div style="flex-shrink:0;color:var(--sky);font-size:20px;opacity:.6">→→</div>
-        <!-- Output -->
-        <div style="flex-shrink:0;width:160px">
-          <div style="font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--sp2)">Output</div>
-          <div style="display:flex;flex-direction:column;gap:6px">
-            <div style="background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:11.5px;color:var(--muted2)">💡 Recommendations</div>
-            <div style="background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:11.5px;color:var(--muted2)">✓ Verified savings</div>
-            <div style="background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:11.5px;color:var(--muted2)">📊 CSRD / EED packs</div>
-            <div style="background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:11.5px;color:var(--muted2)">📈 Live dashboards</div>
-          </div>
-        </div>
+    <!-- Architecture + FAST wheel from pitch deck -->
+    <div class="es-arch-wrap rv d2">
+      <div class="es-arch-inner">
+        <svg class="s3-arch-diagram" viewBox="0 0 840 678" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+
+          <!-- ── EnergySense bar (+10% taller: h=272) ───────────── -->
+          <rect x="80" y="0" width="680" height="272" rx="10"
+                fill="rgba(29,184,242,0.09)" stroke="rgba(29,184,242,0.50)" stroke-width="1.5"/>
+          <image href="assets/brand/es-lockup-dark.svg" x="277" y="14" width="286" height="82"
+                 preserveAspectRatio="xMidYMid meet"/>
+          <line x1="100" y1="104" x2="740" y2="104" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <text x="420" y="122" text-anchor="middle" font-size="13"
+                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif" letter-spacing="1.5">INTELLIGENCE LAYER</text>
+          <text x="420" y="150" text-anchor="middle" font-size="22" font-weight="700"
+                fill="rgba(255,255,255,0.92)" font-family="Ubuntu,sans-serif">Single source of truth</text>
+          <line x1="110" y1="164" x2="730" y2="164" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <text x="420" y="184" text-anchor="middle" font-size="16"
+                fill="rgba(255,255,255,0.55)" font-family="Plus Jakarta Sans,sans-serif">Turns building data into verified decisions</text>
+          <line x1="140" y1="198" x2="700" y2="198" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <text x="420" y="218" text-anchor="middle" font-size="13"
+                fill="rgba(255,255,255,0.36)" font-family="Plus Jakarta Sans,sans-serif">Unified portfolio view · all buildings · one platform</text>
+          <text x="420" y="238" text-anchor="middle" font-size="12"
+                fill="rgba(255,255,255,0.25)" font-family="Plus Jakarta Sans,sans-serif">Automated compliance · verified savings · live dashboards</text>
+
+          <!-- ── Funnel from ES card → integration band (inverted) ── -->
+          <!-- ES card bottom=272, band top=322 — narrows from card width to band width -->
+          <polygon points="80,272 760,272 665,322 175,322"
+                   fill="rgba(29,184,242,0.04)" stroke="none"/>
+          <line x1="80" y1="272" x2="175" y2="322"
+                stroke="rgba(29,184,242,0.18)" stroke-width="1"/>
+          <line x1="760" y1="272" x2="665" y2="322"
+                stroke="rgba(29,184,242,0.18)" stroke-width="1"/>
+
+          <!-- ── Data integration band (30% narrower: x=175 w=490) ── -->
+          <rect x="175" y="322" width="490" height="65" rx="5"
+                fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.11)" stroke-width="1"/>
+          <text x="420" y="350" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.40)" font-family="Plus Jakarta Sans,sans-serif" letter-spacing="0.8">DATA INTEGRATION</text>
+          <text x="420" y="370" text-anchor="middle" font-size="12"
+                fill="rgba(255,255,255,0.26)" font-family="Plus Jakarta Sans,sans-serif">any protocol · any system · multiple buildings</text>
+
+          <!-- ── Funnel: band bottom (387) → row 1 tiles (452) ─── -->
+          <polygon points="0,452 840,452 665,387 175,387"
+                   fill="rgba(29,184,242,0.04)" stroke="none"/>
+          <line x1="0" y1="452" x2="175" y2="387"
+                stroke="rgba(29,184,242,0.22)" stroke-width="1"/>
+          <line x1="840" y1="452" x2="665" y2="387"
+                stroke="rgba(29,184,242,0.22)" stroke-width="1"/>
+
+          <!-- ── "CUSTOMER'S EXISTING LANDSCAPE" header ─────────── -->
+          <text x="420" y="432" text-anchor="middle" font-size="16"
+                fill="rgba(255,255,255,0.28)" font-family="Plus Jakarta Sans,sans-serif" letter-spacing="1">CUSTOMER'S EXISTING LANDSCAPE</text>
+          <line x1="0" y1="438" x2="112" y2="438" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <line x1="728" y1="438" x2="840" y2="438" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+          <!-- ── Row 1 tiles (y=452, h=115) ────────────────────── -->
+          <!-- BMS -->
+          <rect x="0" y="452" width="272" height="115" rx="8"
+                fill="rgba(255,255,255,0.055)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          <text x="136" y="480" text-anchor="middle" font-size="19" font-weight="700"
+                fill="rgba(255,255,255,0.90)" font-family="Ubuntu,sans-serif">BMS</text>
+          <line x1="14" y1="490" x2="258" y2="490" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <text x="136" y="508" text-anchor="middle" font-size="16"
+                fill="rgba(255,255,255,0.52)" font-family="Plus Jakarta Sans,sans-serif">Building controls</text>
+          <text x="136" y="524" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">HVAC · lighting · setpoints</text>
+          <text x="136" y="539" text-anchor="middle" font-size="13"
+                fill="rgba(255,255,255,0.22)" font-family="Plus Jakarta Sans,sans-serif">ventilation · schedules</text>
+
+          <!-- Meters -->
+          <rect x="284" y="452" width="272" height="115" rx="8"
+                fill="rgba(255,255,255,0.055)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          <text x="420" y="480" text-anchor="middle" font-size="19" font-weight="700"
+                fill="rgba(255,255,255,0.90)" font-family="Ubuntu,sans-serif">Meters</text>
+          <line x1="298" y1="490" x2="542" y2="490" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <text x="420" y="508" text-anchor="middle" font-size="16"
+                fill="rgba(255,255,255,0.52)" font-family="Plus Jakarta Sans,sans-serif">Smart metering</text>
+          <text x="420" y="524" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">electricity · gas · water</text>
+          <text x="420" y="539" text-anchor="middle" font-size="13"
+                fill="rgba(255,255,255,0.22)" font-family="Plus Jakarta Sans,sans-serif">P1 · DSMR · pulse</text>
+
+          <!-- Sensors -->
+          <rect x="568" y="452" width="272" height="115" rx="8"
+                fill="rgba(255,255,255,0.055)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          <text x="704" y="480" text-anchor="middle" font-size="19" font-weight="700"
+                fill="rgba(255,255,255,0.90)" font-family="Ubuntu,sans-serif">Sensors</text>
+          <line x1="582" y1="490" x2="826" y2="490" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <text x="704" y="508" text-anchor="middle" font-size="16"
+                fill="rgba(255,255,255,0.52)" font-family="Plus Jakarta Sans,sans-serif">IoT environment</text>
+          <text x="704" y="524" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">CO₂ · occupancy · air</text>
+          <text x="704" y="539" text-anchor="middle" font-size="13"
+                fill="rgba(255,255,255,0.22)" font-family="Plus Jakarta Sans,sans-serif">temperature · humidity</text>
+
+          <!-- ── Row 2 tiles (y=585, h=85) ──────────────────────── -->
+          <!-- EV Charging -->
+          <rect x="0" y="585" width="272" height="85" rx="8"
+                fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <text x="136" y="607" text-anchor="middle" font-size="17" font-weight="700"
+                fill="rgba(255,255,255,0.60)" font-family="Ubuntu,sans-serif">EV Charging</text>
+          <line x1="14" y1="616" x2="258" y2="616" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <text x="136" y="633" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">charge points · load mgmt</text>
+          <text x="136" y="649" text-anchor="middle" font-size="12"
+                fill="rgba(255,255,255,0.20)" font-family="Plus Jakarta Sans,sans-serif">OCPP · smart charging</text>
+
+          <!-- Renewables -->
+          <rect x="284" y="585" width="272" height="85" rx="8"
+                fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <text x="420" y="607" text-anchor="middle" font-size="17" font-weight="700"
+                fill="rgba(255,255,255,0.60)" font-family="Ubuntu,sans-serif">Renewables</text>
+          <line x1="298" y1="616" x2="542" y2="616" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <text x="420" y="633" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">solar PV · wind · battery</text>
+          <text x="420" y="649" text-anchor="middle" font-size="12"
+                fill="rgba(255,255,255,0.20)" font-family="Plus Jakarta Sans,sans-serif">generation · self-consumption</text>
+
+          <!-- + any system -->
+          <rect x="568" y="585" width="272" height="85" rx="8"
+                fill="rgba(255,255,255,0.020)" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="6,3"/>
+          <text x="704" y="607" text-anchor="middle" font-size="17" font-weight="700"
+                fill="rgba(255,255,255,0.55)" font-family="Ubuntu,sans-serif">+ any system</text>
+          <text x="704" y="633" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.40)" font-family="Plus Jakarta Sans,sans-serif">ERP · CMMS · GIS · BIM</text>
+          <text x="704" y="649" text-anchor="middle" font-size="12"
+                fill="rgba(255,255,255,0.30)" font-family="Plus Jakarta Sans,sans-serif">if it has data, we connect</text>
+        </svg>
+        <svg class="s3-fast-wheel" viewBox="0 0 720 720" xmlns="http://www.w3.org/2000/svg">
+
+          <!-- ── Ring borders (center shifted right to 360,360) ─── -->
+          <circle cx="360" cy="360" r="217" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+          <circle cx="360" cy="360" r="173" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+          <!-- ── Gradient defs for arc strokes ─────────────────────── -->
+          <defs>
+            <linearGradient id="grad-find" x1="360" y1="165" x2="555" y2="360" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#1DB8F2" stop-opacity="0.72"/>
+              <stop offset="100%" stop-color="#00C2B3" stop-opacity="0.22"/>
+            </linearGradient>
+            <linearGradient id="grad-act" x1="555" y1="360" x2="360" y2="555" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#F59E0B" stop-opacity="0.70"/>
+              <stop offset="100%" stop-color="#FBBF24" stop-opacity="0.20"/>
+            </linearGradient>
+            <linearGradient id="grad-save" x1="360" y1="555" x2="165" y2="360" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#10B981" stop-opacity="0.70"/>
+              <stop offset="100%" stop-color="#34D399" stop-opacity="0.20"/>
+            </linearGradient>
+            <linearGradient id="grad-tell" x1="165" y1="360" x2="360" y2="165" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#A78BFA" stop-opacity="0.60"/>
+              <stop offset="100%" stop-color="#7C3AED" stop-opacity="0.16"/>
+            </linearGradient>
+          </defs>
+
+          <!-- ── Arc quadrants (r=195, stroke-width=42, center 360,360) ── -->
+          <path d="M 360 165 A 195 195 0 0 1 555 360"
+                fill="none" stroke="url(#grad-find)" stroke-width="42" stroke-linecap="butt"/>
+          <path d="M 555 360 A 195 195 0 0 1 360 555"
+                fill="none" stroke="url(#grad-act)"  stroke-width="42" stroke-linecap="butt"/>
+          <path d="M 360 555 A 195 195 0 0 1 165 360"
+                fill="none" stroke="url(#grad-save)" stroke-width="42" stroke-linecap="butt"/>
+          <path d="M 165 360 A 195 195 0 0 1 360 165"
+                fill="none" stroke="url(#grad-tell)" stroke-width="42" stroke-linecap="butt"/>
+
+          <!-- ── Center circle (r=110) ──────────────────────────── -->
+          <circle cx="360" cy="360" r="110" fill="rgba(11,17,32,0.92)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <text x="360" y="334" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-weight="700" font-size="47" fill="rgba(255,255,255,0.92)">FAST</text>
+          <text x="360" y="360" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="22" fill="rgba(29,184,242,0.82)">Energy Management</text>
+          <text x="360" y="384" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="22" fill="rgba(29,184,242,0.82)">cycle</text>
+          <text x="360" y="406" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.40)" letter-spacing="0.3">Based on ISO 50001</text>
+
+          <!-- ── FIND node (r=38, top, center 360,165) ──────────── -->
+          <circle cx="360" cy="165" r="38" fill="rgba(11,17,32,0.95)" stroke="rgba(29,184,242,0.72)" stroke-width="2"/>
+          <text x="360" y="171" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-weight="700" font-size="21" fill="rgba(29,184,242,0.95)">FIND</text>
+          <text x="360" y="72" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="15" fill="rgba(255,255,255,0.78)">Spot savings opportunities</text>
+          <text x="360" y="92" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.50)">across the live portfolio</text>
+          <text x="360" y="110" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.36)">anomalies · waste · quick wins</text>
+
+          <!-- ── ACT node (r=38, right, center 555,360) ─────────── -->
+          <circle cx="555" cy="360" r="38" fill="rgba(11,17,32,0.95)" stroke="rgba(245,158,11,0.72)" stroke-width="2"/>
+          <text x="555" y="366" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-weight="700" font-size="21" fill="rgba(245,158,11,0.95)">ACT</text>
+          <text x="605" y="342" text-anchor="start" font-family="Ubuntu,sans-serif"
+                font-size="15" fill="rgba(255,255,255,0.78)">Model ROI</text>
+          <text x="605" y="362" text-anchor="start" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.55)">plan &amp; prioritise</text>
+          <text x="605" y="382" text-anchor="start" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.38)">track measures</text>
+          <text x="605" y="402" text-anchor="start" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.26)">follow through</text>
+
+          <!-- ── SAVE node (r=38, bottom, center 360,555) ──────── -->
+          <circle cx="360" cy="555" r="38" fill="rgba(11,17,32,0.95)" stroke="rgba(16,185,129,0.72)" stroke-width="2"/>
+          <text x="360" y="561" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-weight="700" font-size="21" fill="rgba(16,185,129,0.95)">SAVE</text>
+          <text x="360" y="612" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="15" fill="rgba(255,255,255,0.78)">Verified savings</text>
+          <text x="360" y="632" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.50)">proven by IPMVP</text>
+          <text x="360" y="650" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.36)">not estimated · audit-proof</text>
+
+          <!-- ── TELL node (r=38, left, center 165,360) ─────────── -->
+          <circle cx="165" cy="360" r="38" fill="rgba(11,17,32,0.95)" stroke="rgba(124,58,237,0.72)" stroke-width="2"/>
+          <text x="165" y="366" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-weight="700" font-size="21" fill="rgba(124,58,237,0.95)">TELL</text>
+          <text x="116" y="342" text-anchor="end" font-family="Ubuntu,sans-serif"
+                font-size="15" fill="rgba(255,255,255,0.78)">Reporting</text>
+          <text x="116" y="362" text-anchor="end" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.55)">CSRD · EED</text>
+          <text x="116" y="382" text-anchor="end" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.38)">ISO 50001</text>
+          <text x="116" y="402" text-anchor="end" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.26)">client reports</text>
+        </svg>
       </div>
     </div>
 
-    <!-- FAST cycle -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp2);margin-top:var(--sp3)">
-      <div class="bc rv d1" style="border-top:2px solid var(--sky)">
-        <div style="font-family:var(--mono);font-size:10px;color:var(--sky);text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--sp2)">FIND</div>
-        <div style="font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px">12–16mo → live</div>
-        <div style="font-size:12px;color:var(--muted2)">Spot savings opportunities in near-real-time, not last year's data</div>
-      </div>
-      <div class="bc rv d2" style="border-top:2px solid var(--sky)">
-        <div style="font-family:var(--mono);font-size:10px;color:var(--sky);text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--sp2)">ACT</div>
-        <div style="font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px">weeks → &lt;2h</div>
-        <div style="font-size:12px;color:var(--muted2)">Automated ROI simulation for every measure, every building, instantly</div>
-      </div>
-      <div class="bc rv d3" style="border-top:2px solid #4ADE80">
-        <div style="font-family:var(--mono);font-size:10px;color:#4ADE80;text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--sp2)">SAVE</div>
-        <div style="font-size:22px;font-weight:700;color:#4ADE80;margin-bottom:6px">IPMVP-verified</div>
-        <div style="font-size:12px;color:var(--muted2)">Savings proven by measurement & verification — not estimated</div>
-      </div>
-      <div class="bc rv d3" style="border-top:2px solid var(--sky)">
-        <div style="font-family:var(--mono);font-size:10px;color:var(--sky);text-transform:uppercase;letter-spacing:.1em;margin-bottom:var(--sp2)">TELL</div>
-        <div style="font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px">5 days → &lt;1h</div>
-        <div style="font-size:12px;color:var(--muted2)">One-click CSRD · EED · ISO 50001 compliance output</div>
-      </div>
+    <!-- Metric panels from pitch deck (slide 4) -->
+    <div class="es-metrics-grid rv d3">
+      <!-- Find -->
+        <div class="metric-panel metric-panel--a">
+          <div>
+            <div class="metric-icon-row">
+              <div class="metric-icon-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(29,184,242,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </div>
+              <div class="metric-eyebrow">Find — Data freshness</div>
+            </div>
+            <div class="metric-delta">
+              <div class="metric-before">12–16 months lag</div>
+              <div class="metric-arrow-row">
+                <span class="metric-arrow">↓</span>
+                <div class="metric-after">Near-live</div>
+              </div>
+            </div>
+          </div>
+          <div class="metric-desc">Identify measures across the portfolio — on current data, not last year's.</div>
+          <div class="metric-tags">
+            <span class="tag tag--cyan">Find phase</span>
+            <span class="tag tag--muted">Real-time</span>
+          </div>
+        </div>
+
+        <!-- Act -->
+        <div class="metric-panel metric-panel--b">
+          <div>
+            <div class="metric-icon-row">
+              <div class="metric-icon-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(245,158,11,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <div class="metric-eyebrow">Act — ROI modelling time</div>
+            </div>
+            <div class="metric-delta">
+              <div class="metric-before">Weeks</div>
+              <div class="metric-arrow-row">
+                <span class="metric-arrow" style="color:var(--amber);">↓</span>
+                <div class="metric-after">&lt; 2 hours</div>
+              </div>
+            </div>
+          </div>
+          <div class="metric-desc">Automated ROI simulation — every measure, every building, instantly.</div>
+          <div class="metric-tags">
+            <span class="tag tag--amber">Act phase</span>
+            <span class="tag tag--muted">Automated</span>
+          </div>
+        </div>
+
+        <!-- Save -->
+        <div class="metric-panel metric-panel--c">
+          <div>
+            <div class="metric-icon-row">
+              <div class="metric-icon-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(16,185,129,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              </div>
+              <div class="metric-eyebrow">Save — Annual savings</div>
+            </div>
+            <div class="metric-delta">
+              <div class="metric-before">Unverified</div>
+              <div class="metric-arrow-row">
+                <span class="metric-arrow" style="color:var(--green);">↑</span>
+                <div class="metric-after">12–18%</div>
+              </div>
+            </div>
+          </div>
+          <div class="metric-desc">IPMVP-verified savings. Payback &lt;3 years across the portfolio.</div>
+          <div class="metric-tags">
+            <span class="tag tag--green">Save phase</span>
+            <span class="tag tag--muted">IPMVP</span>
+          </div>
+        </div>
+
+        <!-- Tell -->
+        <div class="metric-panel metric-panel--d">
+          <div>
+            <div class="metric-icon-row">
+              <div class="metric-icon-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              </div>
+              <div class="metric-eyebrow">Tell — Monthly reporting time</div>
+            </div>
+            <div class="metric-delta">
+              <div class="metric-before">5 days</div>
+              <div class="metric-arrow-row">
+                <span class="metric-arrow" style="color:#a78bfa;">↓</span>
+                <div class="metric-after">&lt; 1 hour</div>
+              </div>
+            </div>
+          </div>
+          <div class="metric-desc">One-click compliance output — CSRD, EED, ISO 50001 — always ready.</div>
+          <div class="metric-tags">
+            <span class="tag" style="background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.25);color:#a78bfa;">Tell phase</span>
+            <span class="tag tag--muted">Automated</span>
+          </div>
+        </div>
     </div>
   </div>
 </section>
