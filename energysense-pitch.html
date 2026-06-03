@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EnergySense — 5-min Pitch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* 1920×1080 canvas — 1rem = 21.3px keeps proportions identical to the old 1440×900 design */
+    html { font-size: 21.3px; }
+
+    :root {
+      --navy:   #0B1120;
+      --cyan:   #1DB8F2;
+      --teal:   #00C2B3;
+      --purple: #7C3AED;
+      --blue:   #2563EB;
+      --rose:   #E11D48;
+      --amber:  #F59E0B;
+      --green:  #10B981;
+      --white:  #FFFFFF;
+      --muted:  rgba(255,255,255,0.42);
+      --border: rgba(255,255,255,0.10);
+      --glass:  rgba(255,255,255,0.055);
+      --r:      12px;
+      --font-head: 'Ubuntu', Helvetica, sans-serif;
+      --font-body: 'Plus Jakarta Sans', Helvetica, sans-serif;
+    }
+
+    html, body {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+      background: #000; font-family: var(--font-body); color: var(--white);
+    }
+
+    /* ── Scroll deck ────────────────────────────────────────── */
+    #deck {
+      width: 100vw; height: 100vh;
+      overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth;
+    }
+
+    /* ── Slide letterbox wrapper ────────────────────────────── */
+    .slide-snap {
+      width: 100vw; height: 100vh;
+      scroll-snap-align: start;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; background: #000;
+    }
+
+    /* ── Slide canvas (fixed 1920×1080, 16:9) ──────────────── */
+    .slide {
+      width: 1920px; height: 1080px;
+      flex-shrink: 0;
+      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+      background: var(--navy);
+      transform-origin: center center;
+    }
+    .slide::before {
+      content: ''; position: absolute; inset: 0; z-index: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.065) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+
+    .orbs { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .orb  { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0; }
+
+    @keyframes appear { to { opacity: var(--op, 0.28); } }
+    @keyframes floatA { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(55px,-75px) scale(1.1)} 66%{transform:translate(-30px,40px) scale(0.95)} }
+    @keyframes floatB { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(65px,-50px) scale(1.12)} }
+    @keyframes floatC { 0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(-50px,35px) scale(0.9)} 80%{transform:translate(35px,-20px) scale(1.08)} }
+    @keyframes floatD { 0%,100%{transform:translate(0,0) scale(1)} 60%{transform:translate(-45px,-65px) scale(1.15)} }
+
+    .z { position: relative; z-index: 1; }
+
+    /* ── Header ────────────────────────────────────────────── */
+    .slide-header {
+      display: flex; align-items: center; justify-content: flex-end;
+      padding: 1.1rem 3.5rem 0; flex-shrink: 0;
+    }
+    .cap-logo { height: 1.3rem; width: auto; display: block; flex-shrink: 0; }
+    .se-logo  { height: 1.4rem; width: auto; display: block; flex-shrink: 0; }
+    .brand-pair { display: flex; align-items: center; gap: 0.75rem; }
+    .brand-sep { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
+
+    /* ── Slide inner ──────────────────────────────────────── */
+    .slide-inner {
+      flex: 1; min-height: 0;
+      display: flex; flex-direction: column;
+      padding: 0.6rem 3.5rem 1.25rem;
+      overflow: hidden;
+    }
+    .slide-num {
+      position: absolute; bottom: 0.875rem; right: 3.5rem;
+      font-size: 0.7rem; color: rgba(255,255,255,0.15); z-index: 1;
+    }
+
+    /* ── Shared atoms ───────────────────────────────────────── */
+    .accent-bar {
+      width: 2.5rem; height: 3px; border-radius: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--teal));
+      margin-bottom: 0.4rem; flex-shrink: 0;
+    }
+    .slide-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--cyan); margin-bottom: 0.3rem; flex-shrink: 0;
+    }
+    .slide-title {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: 2.4rem; line-height: 1.12; margin-bottom: 0.6rem;
+      background: linear-gradient(135deg, #fff 25%, #9dd5f0 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      flex-shrink: 0;
+    }
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+      border: 1px solid var(--border); border-radius: var(--r);
+    }
+    .icon-box {
+      border-radius: 12px; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0;
+    }
+    .icon-rose   { background: rgba(225,29,72,0.12);  border: 1px solid rgba(225,29,72,0.22); }
+    .icon-amber  { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.22); }
+    .icon-purple { background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.22); }
+    .icon-cyan   { background: rgba(29,184,242,0.12); border: 1px solid rgba(29,184,242,0.22); }
+    .icon-teal   { background: rgba(0,194,179,0.12);  border: 1px solid rgba(0,194,179,0.22); }
+    .icon-green  { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.22); }
+
+    .tag {
+      font-size: 0.65rem; font-weight: 600; padding: 2px 8px;
+      border-radius: 2rem; letter-spacing: 0.04em;
+    }
+    .tag--cyan   { background: rgba(29,184,242,0.08); border: 1px solid rgba(29,184,242,0.25); color: var(--cyan); }
+    .tag--teal   { background: rgba(0,194,179,0.08);  border: 1px solid rgba(0,194,179,0.25);  color: var(--teal); }
+    .tag--green  { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); color: var(--green); }
+    .tag--amber  { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); color: var(--amber); }
+    .tag--muted  { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.35); }
+
+    /* ── Nav dots ──────────────────────────────────────────── */
+    nav.slide-nav {
+      position: fixed; right: 1rem; top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 7px; z-index: 200;
+    }
+    .nav-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: rgba(255,255,255,0.22); cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+    .nav-dot.active { background: var(--cyan); transform: scale(1.4); }
+
+    /* ══ SLIDE 1 — COVER ════════════════════════════════════ */
+    #slide-0 .cap-logo { display: none; }
+    .s1-body {
+      flex: 1; min-height: 0;
+      display: flex; gap: 2rem; align-items: stretch;
+    }
+    .s1-visual {
+      width: 46%; flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 1rem;
+    }
+    .s1-logo-img {
+      width: 646px;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 6px 28px rgba(29,184,242,0.45));
+    }
+    .s1-logo-glow {
+      display: flex; align-items: center; justify-content: center;
+    }
+    .s1-cap-below {
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .s1-cap-logo { height: 2rem; width: auto; display: block; opacity: 0.85; }
+
+    .s1-content {
+      flex: 1; min-height: 0;
+      display: flex; flex-direction: column; gap: 1rem; justify-content: center;
+    }
+    .cover-title {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: 3.4rem; line-height: 1.06; margin-bottom: 0.5rem; padding-bottom: 0.15em;
+      background: linear-gradient(135deg, #fff 20%, #9dd5f0 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .cover-tagline {
+      font-size: 1.05rem; color: rgba(255,255,255,0.6); line-height: 1.65;
+    }
+    .s1-context-card { padding: 1rem 1.25rem; flex-shrink: 0; }
+    .s1-context-label {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 0.4rem;
+    }
+    .s1-context-text {
+      font-size: 0.95rem; color: rgba(255,255,255,0.68); line-height: 1.65;
+    }
+    .s1-context-text strong { color: rgba(255,255,255,0.92); }
+    .s1-stats {
+      display: flex; align-items: stretch; flex-shrink: 0; overflow: hidden;
+    }
+    .s1-stat { flex: 1; padding: 0.875rem 1.125rem; display: flex; flex-direction: column; gap: 0.2rem; }
+    .s1-stat-sep { width: 1px; background: var(--border); flex-shrink: 0; margin: 0.375rem 0; }
+    .s1-stat-val {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: 2.1rem; line-height: 1;
+      background: linear-gradient(135deg, var(--cyan), var(--teal));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .s1-stat-lbl { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
+
+    /* ══ SLIDE 2 — PROBLEM ══════════════════════════════════ */
+    .s2-body {
+      flex: 1; min-height: 0;
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .prob-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0; flex: 0 0 auto; padding-bottom: 0.75rem;
+    }
+    .prob-card {
+      padding: 0 1.5rem 0.875rem 1.5rem; overflow: hidden;
+      display: flex; flex-direction: column;
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+    .prob-card:last-child { border-right: none; }
+    .prob-head {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 0.625rem;
+      padding: 1rem 0 0.875rem; flex-shrink: 0;
+    }
+    .prob-title {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: 1.15rem; color: rgba(255,255,255,0.95); line-height: 1.25;
+    }
+    .prob-body {
+      font-size: 1.05rem; color: rgba(255,255,255,0.68);
+      line-height: 1.65; flex: 1;
+    }
+    .prob-body strong { color: rgba(255,255,255,0.92); }
+
+    .s2-quotes {
+      flex: 0 0 auto;
+      margin-top: auto; margin-bottom: auto;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .voice-card {
+      padding: 1.25rem 1.5rem;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      display: flex; flex-direction: column; gap: 0.5rem;
+      text-align: center; align-items: center;
+    }
+    .voice-card:last-child { border-right: none; }
+    .voice-quote {
+      font-size: 1.1rem; font-style: italic;
+      color: rgba(255,255,255,0.78); line-height: 1.7; text-align: center;
+    }
+    .voice-quote::before { content: '"'; color: var(--cyan); font-style: normal; font-weight: 700; }
+    .voice-quote::after  { content: '"'; color: var(--cyan); font-style: normal; font-weight: 700; }
+    .voice-source {
+      font-size: 0.7rem; font-weight: 600;
+      color: rgba(255,255,255,0.42); letter-spacing: 0.04em; text-align: center;
+    }
+
+    .s2-bottom-bar {
+      flex-shrink: 0;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      background: rgba(255,255,255,0.028);
+      border: 1px solid rgba(255,255,255,0.07); border-radius: var(--r);
+      overflow: hidden;
+    }
+    .s2-stat {
+      padding: 0.875rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.2rem;
+      border-right: 1px solid rgba(255,255,255,0.07);
+    }
+    .s2-stat:last-child { border-right: none; }
+    .s2-stat-val {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: 2.8rem; line-height: 1.15;
+      background: linear-gradient(135deg, var(--rose), var(--amber));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .s2-stat-lbl {
+      font-size: 0.88rem; color: rgba(255,255,255,0.45); line-height: 1.4;
+    }
+
+    /* ══ SLIDE 3 — PLATFORM (2-column wow slide) ════════════ */
+    .s3-body {
+      display: grid; grid-template-columns: 51fr 49fr; gap: 2rem;
+      align-items: stretch; padding: 1rem 3rem 1.5rem; flex: 1; min-height: 0;
+    }
+    .s3-left {
+      display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+    }
+    .s3-arch-diagram {
+      width: 100%; flex: 1; min-height: 0;
+    }
+    .s3-right {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 0;
+    }
+    .s3-wheel-header {
+      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.35); text-align: center; flex-shrink: 0; margin-bottom: 0.5rem;
+    }
+    .s3-fast-wheel {
+      width: 100%; flex: 1; min-height: 0;
+    }
+
+    /* ══ SLIDE 4 — RESULTS ══════════════════════════════════ */
+    .s4-body {
+      flex: 1; min-height: 0;
+      display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .s4-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 0.75rem; flex: 1; min-height: 0;
+    }
+    .metric-panel {
+      border-radius: 16px; padding: 1.25rem 1.75rem;
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden;
+    }
+    .metric-icon-row {
+      display: flex; align-items: center; gap: 0.625rem; margin-bottom: 0.75rem; flex-shrink: 0;
+    }
+    .metric-icon-box {
+      width: 2.25rem; height: 2.25rem; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .metric-panel--a .metric-icon-box { background: rgba(29,184,242,0.14); border: 1px solid rgba(29,184,242,0.3); }
+    .metric-panel--b .metric-icon-box { background: rgba(245,158,11,0.14); border: 1px solid rgba(245,158,11,0.3); }
+    .metric-panel--c .metric-icon-box { background: rgba(16,185,129,0.14); border: 1px solid rgba(16,185,129,0.3); }
+    .metric-panel--d .metric-icon-box { background: rgba(124,58,237,0.14); border: 1px solid rgba(124,58,237,0.3); }
+    .metric-panel::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit;
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+    .metric-panel--a { background: linear-gradient(135deg, rgba(29,184,242,0.12), rgba(29,184,242,0.04)); }
+    .metric-panel--b { background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.04)); }
+    .metric-panel--c { background: linear-gradient(135deg, rgba(16,185,129,0.14), rgba(16,185,129,0.04)); }
+    .metric-panel--d { background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(124,58,237,0.04)); }
+    .metric-eyebrow {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 0.5rem;
+    }
+    .metric-delta {
+      display: flex; flex-direction: column; gap: 0.2rem; margin-bottom: 0.875rem;
+    }
+    .metric-before {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: 1.7rem; line-height: 1;
+      color: rgba(255,255,255,0.60); text-decoration: line-through;
+      text-decoration-color: rgba(225,29,72,0.75);
+    }
+    .metric-arrow-row {
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .metric-arrow { color: var(--cyan); font-size: 1rem; opacity: 0.6; }
+    .metric-after {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: 2.8rem; line-height: 1;
+      background: linear-gradient(135deg, var(--cyan), var(--teal));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .metric-panel--b .metric-after {
+      background: linear-gradient(135deg, var(--amber), #fbbf24);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .metric-panel--c .metric-after {
+      background: linear-gradient(135deg, var(--green), #34d399);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .metric-panel--d .metric-after {
+      background: linear-gradient(135deg, #a78bfa, var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .metric-desc {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.62); line-height: 1.6; font-weight: 500;
+    }
+    .metric-tags { margin-top: 0.75rem; display: flex; gap: 0.35rem; flex-wrap: wrap; }
+
+    /* Panel icon (before eyebrow in metric panels) */
+    .panel-icon {
+      display: inline-flex; align-items: center; margin-bottom: 0.5rem; opacity: 0.9;
+    }
+
+    /* ══ SLIDE 5 — IMPLEMENTATION ═══════════════════════════ */
+    .s5-body {
+      flex: 1; min-height: 0;
+      display: grid; grid-template-columns: 1fr 1px 1fr;
+      grid-template-rows: 1fr auto;
+      gap: 0; min-height: 0;
+    }
+    .s5-radar-wrap {
+      flex: 1; min-height: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .s5-radar-svg { width: 100%; flex: 1; min-height: 0; max-height: 100%; }
+    .s5-radar-legend {
+      font-size: 0.62rem; color: rgba(255,255,255,0.50); text-align: center; flex-shrink: 0;
+      margin-top: 0.25rem;
+    }
+    .s5-se-block {
+      grid-column: 3; grid-row: 2;
+      margin-top: 0.5rem; margin-bottom: 0.5rem; margin-left: 2rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      display: flex; align-items: center; gap: 1.5rem;
+    }
+    .s5-se-text {
+      font-size: 0.875rem; color: rgba(255,255,255,0.6); line-height: 1.5;
+    }
+    .s5-se-text strong { color: rgba(255,255,255,0.85); }
+    .s5-divider { background: rgba(255,255,255,0.08); grid-row: 1 / 3; }
+
+    /* Left: dimensions */
+    .s5-dims {
+      padding: 0.5rem 2rem 0 0;
+      display: flex; flex-direction: column; gap: 0.875rem;
+    }
+    .s5-section-label {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.28); flex-shrink: 0;
+    }
+    .s5-dim-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0.625rem; flex: 1; align-content: start;
+    }
+    .s5-dim-pill {
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px;
+      display: flex; align-items: center; gap: 0.625rem;
+    }
+    .s5-dim-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .s5-dim-info { display: flex; flex-direction: column; gap: 2px; }
+    .s5-dim-name {
+      font-size: 1.05rem; font-weight: 600; color: rgba(255,255,255,0.9); line-height: 1.2;
+    }
+    .s5-dim-cat {
+      font-size: 0.62rem; color: rgba(255,255,255,0.32); letter-spacing: 0.04em;
+    }
+
+    .s5-partner {
+      margin-top: auto; flex-shrink: 0;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      display: flex; align-items: center; gap: 0.875rem;
+    }
+    .s5-partner-text {
+      font-size: 0.9rem; color: rgba(255,255,255,0.65); line-height: 1.4;
+    }
+    .s5-partner-text strong { color: rgba(255,255,255,0.85); }
+
+    /* Right: process */
+    .s5-process {
+      padding: 0.5rem 0 0 2rem;
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .s5-timeline {
+      flex: 1; min-height: 0;
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .s5-step {
+      flex: 1; min-height: 0;
+      display: flex; gap: 1rem; align-items: stretch;
+      position: relative;
+    }
+    .s5-step-track {
+      display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 2rem;
+    }
+    .s5-step-node {
+      width: 2rem; height: 2rem; border-radius: 50%; flex-shrink: 0;
+      background: rgba(29,184,242,0.15); border: 2px solid var(--cyan);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; font-weight: 700; color: var(--cyan);
+    }
+    .s5-step-line {
+      flex: 1; width: 2px; background: rgba(255,255,255,0.07); margin: 2px 0;
+    }
+    .s5-step:last-child .s5-step-line { display: none; }
+    .s5-step:last-child .s5-step-content { padding-bottom: 0; }
+    .s5-step-content {
+      flex: 1; padding-bottom: 0.75rem;
+    }
+    .s5-step-name {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: 1.1rem; color: rgba(255,255,255,0.92); line-height: 1.2;
+      margin-bottom: 0.2rem;
+    }
+    .s5-step-dur {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em;
+      color: var(--cyan); margin-bottom: 0.3rem;
+    }
+    .s5-step-desc {
+      font-size: 0.95rem; color: rgba(255,255,255,0.62); line-height: 1.55;
+    }
+
+    .s5-deliverable {
+      grid-column: 1; grid-row: 2;
+      margin-top: 0.5rem; margin-bottom: 0.5rem; margin-right: 2rem;
+      padding: 0.75rem 1rem;
+      background: rgba(0,194,179,0.07); border: 1px solid rgba(0,194,179,0.2);
+      border-radius: 10px;
+    }
+    .s5-del-label {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 0.35rem;
+    }
+    .s5-del-items {
+      display: flex; gap: 0.25rem; flex-direction: column;
+    }
+    .s5-del-item {
+      display: flex; align-items: center; gap: 0.35rem;
+      font-size: 0.92rem; color: rgba(255,255,255,0.72);
+    }
+    .s5-del-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+
+    /* ══ SLIDE 6 — CTA ══════════════════════════════════════ */
+    .s6-body {
+      flex: 1; min-height: 0;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .s6-headline-block {
+      flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; padding: 0.5rem 0;
+    }
+    .cta-headline {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: 5rem; line-height: 1.05;
+      background: linear-gradient(135deg, #fff 20%, #9dd5f0 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .cta-sub {
+      margin-top: 0.625rem;
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.5); line-height: 1.6;
+    }
+
+    .s6-asks {
+      flex: none;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+    .ask-card {
+      border-radius: 16px; padding: 1.5rem 1.75rem;
+      display: flex; flex-direction: column; gap: 0.625rem;
+      position: relative; overflow: hidden;
+    }
+    .ask-card::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .ask-card--a {
+      background: linear-gradient(135deg, rgba(29,184,242,0.15), rgba(29,184,242,0.06));
+    }
+    .ask-card--a::before { border-color: rgba(29,184,242,0.35); }
+    .ask-card--b {
+      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(124,58,237,0.06));
+    }
+    .ask-card--b::before { border-color: rgba(124,58,237,0.35); }
+    .ask-card--c {
+      background: linear-gradient(135deg, rgba(0,194,179,0.15), rgba(0,194,179,0.06));
+    }
+    .ask-card--c::before { border-color: rgba(0,194,179,0.35); }
+    .ask-num {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .ask-card--a .ask-num { color: var(--cyan); }
+    .ask-card--b .ask-num { color: rgba(167,139,250,0.9); }
+    .ask-card--c .ask-num { color: var(--teal); }
+    .ask-name {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: 1.3rem; color: rgba(255,255,255,0.95); line-height: 1.25;
+    }
+    .ask-desc {
+      font-size: 0.975rem;
+      color: rgba(255,255,255,0.55); line-height: 1.6; flex: 1;
+    }
+
+    .s6-contact {
+      flex-shrink: 0;
+      display: flex; align-items: center; gap: 1.25rem;
+      padding: 0.875rem 1.5rem;
+      background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--r); flex-wrap: wrap;
+    }
+    .s6-contact-group { display: flex; flex-direction: column; gap: 2px; }
+    .s6-contact-label {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(255,255,255,0.28);
+    }
+    .s6-contact-val { font-size: 0.95rem; color: var(--cyan); font-weight: 500; }
+    .s6-contact-secondary { font-size: 0.95rem; color: rgba(255,255,255,0.55); font-weight: 500; }
+    .s6-contact-divider { width: 1px; height: 2rem; background: rgba(255,255,255,0.1); }
+
+    /* ── Print ─────────────────────────────────────────────── */
+    @media print {
+      html, body { overflow: visible; height: auto; }
+      #deck { overflow: visible; height: auto; scroll-snap-type: none; }
+      .slide-snap { height: 1080px; page-break-after: always; break-after: page; }
+      .slide-snap:last-child { page-break-after: avoid; break-after: avoid; }
+      .slide { transform: none !important; }
+      nav.slide-nav { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="slide-nav">
+  <div class="nav-dot active" data-slide="0"></div>
+  <div class="nav-dot" data-slide="1"></div>
+  <div class="nav-dot" data-slide="2"></div>
+  <div class="nav-dot" data-slide="3"></div>
+  <div class="nav-dot" data-slide="4"></div>
+  <div class="nav-dot" data-slide="5"></div>
+</nav>
+
+<div id="deck">
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 1 — COVER
+════════════════════════════════════════════════════════ -->
+<div class="slide-snap"><section class="slide" id="slide-0">
+  <div class="orbs">
+    <div class="orb" style="--op:.24;width:580px;height:580px;background:var(--cyan);top:-18%;right:-6%;animation:appear 1.5s ease forwards,floatA 22s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.20;width:440px;height:440px;background:var(--teal);bottom:-14%;left:-5%;animation:appear 1.5s ease .3s forwards,floatB 28s ease-in-out infinite .3s;"></div>
+    <div class="orb" style="--op:.14;width:300px;height:300px;background:var(--green);top:38%;right:22%;animation:appear 1.5s ease .6s forwards,floatC 19s ease-in-out infinite .6s;"></div>
+  </div>
+
+  <header class="slide-header z">
+    <img src="assets/brand/capgemini-engineering-wordmark-dark.svg" class="cap-logo" alt="Capgemini Engineering">
+  </header>
+
+  <div class="slide-inner z">
+    <div class="s1-body">
+
+      <!-- Left: ES logo + Capgemini badge below -->
+      <div class="s1-visual">
+        <div class="s1-logo-glow">
+          <img src="assets/brand/es-lockup-dark.svg" class="s1-logo-img" alt="EnergySense">
+        </div>
+        <div class="s1-cap-below">
+          <img src="assets/brand/capgemini-engineering-wordmark-dark.svg" class="s1-cap-logo" alt="Capgemini Engineering">
+        </div>
+      </div>
+
+      <div class="s1-content">
+        <div>
+          <div class="accent-bar"></div>
+          <div class="slide-label">Capgemini Engineering · May 2026</div>
+          <h1 class="cover-title">From Insight<br>to Verified Savings</h1>
+          <p class="cover-tagline">The intelligence platform that turns building data into energy savings you can prove — automatically, continuously, and compliance-ready.</p>
+        </div>
+
+        <div class="glass s1-context-card">
+          <div class="s1-context-label">What is EnergySense</div>
+          <div class="s1-context-text">
+            <strong>EnergySense</strong> is an intelligence layer on top of existing building data systems. It finds which energy measures apply to each building, models ROI before any spend, verifies savings that materialised, and generates compliance reports automatically — the <strong>FAST Energy Management cycle</strong>.
+          </div>
+        </div>
+
+        <div class="glass s1-stats">
+          <div class="s1-stat">
+            <div class="s1-stat-val">12–18%</div>
+            <div class="s1-stat-lbl">Expected annual energy cost savings on a portfolio</div>
+          </div>
+          <div class="s1-stat-sep"></div>
+          <div class="s1-stat">
+            <div class="s1-stat-val">days → hours</div>
+            <div class="s1-stat-lbl">Monthly compliance reporting time, reduced to a few hours</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <span class="slide-num">1 / 6</span>
+</section></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 2 — THE PROBLEM
+════════════════════════════════════════════════════════ -->
+<div class="slide-snap"><section class="slide" id="slide-1">
+  <div class="orbs">
+    <div class="orb" style="--op:.22;width:520px;height:520px;background:var(--rose);top:-16%;left:-6%;animation:appear 1.5s ease forwards,floatB 26s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.18;width:400px;height:400px;background:var(--amber);bottom:-12%;right:-5%;animation:appear 1.5s ease .4s forwards,floatA 20s ease-in-out infinite .4s;"></div>
+    <div class="orb" style="--op:.13;width:260px;height:260px;background:var(--purple);top:34%;right:24%;animation:appear 1.5s ease .7s forwards,floatC 24s ease-in-out infinite .7s;"></div>
+  </div>
+
+  <header class="slide-header z">
+    <img src="assets/brand/capgemini-engineering-wordmark-dark.svg" class="cap-logo" alt="Capgemini Engineering">
+  </header>
+
+  <div class="slide-inner z">
+    <div class="accent-bar"></div>
+    <div class="slide-label">Discovery Research · 7 Organisations</div>
+    <h2 class="slide-title">Sound Familiar?</h2>
+
+    <div class="s2-body">
+      <div class="prob-grid">
+
+        <div class="prob-card">
+          <div class="prob-head">
+            <div class="icon-box icon-rose" style="width:3.25rem;height:3.25rem;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(225,29,72,0.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>
+            </div>
+            <div class="prob-title">Data is stale &amp; fragmented</div>
+          </div>
+          <div class="prob-body">
+            Energy data sits in meter portals, supplier systems, and Excel files. By the time it arrives it's <strong>too old to act on</strong> — consumption patterns have shifted and waste has gone undetected for months.
+          </div>
+        </div>
+
+        <div class="prob-card">
+          <div class="prob-head">
+            <div class="icon-box icon-amber" style="width:3.25rem;height:3.25rem;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(245,158,11,0.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+            </div>
+            <div class="prob-title">Reporting consumes managers</div>
+          </div>
+          <div class="prob-body">
+            Compliance reporting — CSRD, EED, CO₂ Prestatieladder — <strong>consumes the majority of an energy manager's month</strong>, leaving no bandwidth for actual optimisation work.
+          </div>
+        </div>
+
+        <div class="prob-card">
+          <div class="prob-head">
+            <div class="icon-box icon-purple" style="width:3.25rem;height:3.25rem;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(124,58,237,0.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div class="prob-title">Savings are claimed, never verified</div>
+          </div>
+          <div class="prob-body">
+            Every project promises ROI. But without a baseline and M&amp;V process, <strong>there is no way to know what actually delivered</strong> — making every future investment harder to approve.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="s2-quotes">
+
+        <div class="voice-card">
+          <div class="voice-quote">By the time we have the data, it's already a year ago.</div>
+          <div class="voice-source">Contract Manager · Municipality</div>
+        </div>
+
+        <div class="voice-card">
+          <div class="voice-quote">Every month I spend five working days just compiling the energy report.</div>
+          <div class="voice-source">Energy Manager · Rail Infrastructure</div>
+        </div>
+
+        <div class="voice-card">
+          <div class="voice-quote">We don't really know what our measures have actually delivered.</div>
+          <div class="voice-source">Director · Manufacturing</div>
+        </div>
+
+      </div>
+
+      <div class="s2-bottom-bar">
+        <div class="s2-stat">
+          <div class="s2-stat-val">12–16 months</div>
+          <div class="s2-stat-lbl">Average data lag in portfolios before corrective action is possible</div>
+        </div>
+        <div class="s2-stat">
+          <div class="s2-stat-val">5 days</div>
+          <div class="s2-stat-lbl">Lost per month on manual compliance reporting — per manager</div>
+        </div>
+        <div class="s2-stat">
+          <div class="s2-stat-val">2 of 7</div>
+          <div class="s2-stat-lbl">Organisations with any formal process to verify whether measures delivered savings</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">2 / 6</span>
+</section></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 3 — THE PLATFORM
+════════════════════════════════════════════════════════ -->
+<div class="slide-snap"><section class="slide" id="slide-2">
+  <div class="orbs">
+    <div class="orb" style="--op:.22;width:540px;height:540px;background:var(--cyan);top:-16%;right:-7%;animation:appear 1.5s ease forwards,floatA 22s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.18;width:390px;height:390px;background:var(--teal);bottom:-11%;left:-5%;animation:appear 1.5s ease .5s forwards,floatB 30s ease-in-out infinite .5s;"></div>
+    <div class="orb" style="--op:.12;width:240px;height:240px;background:var(--purple);top:30%;left:28%;animation:appear 1.5s ease .8s forwards,floatD 25s ease-in-out infinite .8s;"></div>
+  </div>
+
+  <header class="slide-header z">
+    <img src="assets/brand/capgemini-engineering-wordmark-dark.svg" class="cap-logo" alt="Capgemini Engineering">
+  </header>
+
+  <div class="slide-inner z">
+    <div class="accent-bar"></div>
+    <div class="slide-label">The Platform</div>
+    <h2 class="slide-title">One Intelligence Layer. All Your Building Systems.</h2>
+
+    <div class="s3-body">
+      <!-- Left: inverted funnel architecture diagram -->
+      <div class="s3-left">
+        <svg class="s3-arch-diagram" viewBox="0 0 840 678" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+
+          <!-- ── EnergySense bar (+10% taller: h=272) ───────────── -->
+          <rect x="80" y="0" width="680" height="272" rx="10"
+                fill="rgba(29,184,242,0.09)" stroke="rgba(29,184,242,0.50)" stroke-width="1.5"/>
+          <image href="assets/brand/es-lockup-dark.svg" x="277" y="14" width="286" height="82"
+                 preserveAspectRatio="xMidYMid meet"/>
+          <line x1="100" y1="104" x2="740" y2="104" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <text x="420" y="122" text-anchor="middle" font-size="13"
+                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif" letter-spacing="1.5">INTELLIGENCE LAYER</text>
+          <text x="420" y="150" text-anchor="middle" font-size="22" font-weight="700"
+                fill="rgba(255,255,255,0.92)" font-family="Ubuntu,sans-serif">Single source of truth</text>
+          <line x1="110" y1="164" x2="730" y2="164" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <text x="420" y="184" text-anchor="middle" font-size="16"
+                fill="rgba(255,255,255,0.55)" font-family="Plus Jakarta Sans,sans-serif">Turns building data into verified decisions</text>
+          <line x1="140" y1="198" x2="700" y2="198" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <text x="420" y="218" text-anchor="middle" font-size="13"
+                fill="rgba(255,255,255,0.36)" font-family="Plus Jakarta Sans,sans-serif">Unified portfolio view · all buildings · one platform</text>
+          <text x="420" y="238" text-anchor="middle" font-size="12"
+                fill="rgba(255,255,255,0.25)" font-family="Plus Jakarta Sans,sans-serif">Automated compliance · verified savings · live dashboards</text>
+
+          <!-- ── Funnel from ES card → integration band (inverted) ── -->
+          <!-- ES card bottom=272, band top=322 — narrows from card width to band width -->
+          <polygon points="80,272 760,272 665,322 175,322"
+                   fill="rgba(29,184,242,0.04)" stroke="none"/>
+          <line x1="80" y1="272" x2="175" y2="322"
+                stroke="rgba(29,184,242,0.18)" stroke-width="1"/>
+          <line x1="760" y1="272" x2="665" y2="322"
+                stroke="rgba(29,184,242,0.18)" stroke-width="1"/>
+
+          <!-- ── Data integration band (30% narrower: x=175 w=490) ── -->
+          <rect x="175" y="322" width="490" height="65" rx="5"
+                fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.11)" stroke-width="1"/>
+          <text x="420" y="350" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.40)" font-family="Plus Jakarta Sans,sans-serif" letter-spacing="0.8">DATA INTEGRATION</text>
+          <text x="420" y="370" text-anchor="middle" font-size="12"
+                fill="rgba(255,255,255,0.26)" font-family="Plus Jakarta Sans,sans-serif">any protocol · any system · multiple buildings</text>
+
+          <!-- ── Funnel: band bottom (387) → row 1 tiles (452) ─── -->
+          <polygon points="0,452 840,452 665,387 175,387"
+                   fill="rgba(29,184,242,0.04)" stroke="none"/>
+          <line x1="0" y1="452" x2="175" y2="387"
+                stroke="rgba(29,184,242,0.22)" stroke-width="1"/>
+          <line x1="840" y1="452" x2="665" y2="387"
+                stroke="rgba(29,184,242,0.22)" stroke-width="1"/>
+
+          <!-- ── "CUSTOMER'S EXISTING LANDSCAPE" header ─────────── -->
+          <text x="420" y="432" text-anchor="middle" font-size="16"
+                fill="rgba(255,255,255,0.28)" font-family="Plus Jakarta Sans,sans-serif" letter-spacing="1">CUSTOMER'S EXISTING LANDSCAPE</text>
+          <line x1="0" y1="438" x2="112" y2="438" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <line x1="728" y1="438" x2="840" y2="438" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+          <!-- ── Row 1 tiles (y=452, h=115) ────────────────────── -->
+          <!-- BMS -->
+          <rect x="0" y="452" width="272" height="115" rx="8"
+                fill="rgba(255,255,255,0.055)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          <text x="136" y="480" text-anchor="middle" font-size="19" font-weight="700"
+                fill="rgba(255,255,255,0.90)" font-family="Ubuntu,sans-serif">BMS</text>
+          <line x1="14" y1="490" x2="258" y2="490" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <text x="136" y="508" text-anchor="middle" font-size="16"
+                fill="rgba(255,255,255,0.52)" font-family="Plus Jakarta Sans,sans-serif">Building controls</text>
+          <text x="136" y="524" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">HVAC · lighting · setpoints</text>
+          <text x="136" y="539" text-anchor="middle" font-size="13"
+                fill="rgba(255,255,255,0.22)" font-family="Plus Jakarta Sans,sans-serif">ventilation · schedules</text>
+
+          <!-- Meters -->
+          <rect x="284" y="452" width="272" height="115" rx="8"
+                fill="rgba(255,255,255,0.055)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          <text x="420" y="480" text-anchor="middle" font-size="19" font-weight="700"
+                fill="rgba(255,255,255,0.90)" font-family="Ubuntu,sans-serif">Meters</text>
+          <line x1="298" y1="490" x2="542" y2="490" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <text x="420" y="508" text-anchor="middle" font-size="16"
+                fill="rgba(255,255,255,0.52)" font-family="Plus Jakarta Sans,sans-serif">Smart metering</text>
+          <text x="420" y="524" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">electricity · gas · water</text>
+          <text x="420" y="539" text-anchor="middle" font-size="13"
+                fill="rgba(255,255,255,0.22)" font-family="Plus Jakarta Sans,sans-serif">P1 · DSMR · pulse</text>
+
+          <!-- Sensors -->
+          <rect x="568" y="452" width="272" height="115" rx="8"
+                fill="rgba(255,255,255,0.055)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          <text x="704" y="480" text-anchor="middle" font-size="19" font-weight="700"
+                fill="rgba(255,255,255,0.90)" font-family="Ubuntu,sans-serif">Sensors</text>
+          <line x1="582" y1="490" x2="826" y2="490" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <text x="704" y="508" text-anchor="middle" font-size="16"
+                fill="rgba(255,255,255,0.52)" font-family="Plus Jakarta Sans,sans-serif">IoT environment</text>
+          <text x="704" y="524" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">CO₂ · occupancy · air</text>
+          <text x="704" y="539" text-anchor="middle" font-size="13"
+                fill="rgba(255,255,255,0.22)" font-family="Plus Jakarta Sans,sans-serif">temperature · humidity</text>
+
+          <!-- ── Row 2 tiles (y=585, h=85) ──────────────────────── -->
+          <!-- EV Charging -->
+          <rect x="0" y="585" width="272" height="85" rx="8"
+                fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <text x="136" y="607" text-anchor="middle" font-size="17" font-weight="700"
+                fill="rgba(255,255,255,0.60)" font-family="Ubuntu,sans-serif">EV Charging</text>
+          <line x1="14" y1="616" x2="258" y2="616" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <text x="136" y="633" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">charge points · load mgmt</text>
+          <text x="136" y="649" text-anchor="middle" font-size="12"
+                fill="rgba(255,255,255,0.20)" font-family="Plus Jakarta Sans,sans-serif">OCPP · smart charging</text>
+
+          <!-- Renewables -->
+          <rect x="284" y="585" width="272" height="85" rx="8"
+                fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <text x="420" y="607" text-anchor="middle" font-size="17" font-weight="700"
+                fill="rgba(255,255,255,0.60)" font-family="Ubuntu,sans-serif">Renewables</text>
+          <line x1="298" y1="616" x2="542" y2="616" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <text x="420" y="633" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">solar PV · wind · battery</text>
+          <text x="420" y="649" text-anchor="middle" font-size="12"
+                fill="rgba(255,255,255,0.20)" font-family="Plus Jakarta Sans,sans-serif">generation · self-consumption</text>
+
+          <!-- + any system -->
+          <rect x="568" y="585" width="272" height="85" rx="8"
+                fill="rgba(255,255,255,0.020)" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="6,3"/>
+          <text x="704" y="607" text-anchor="middle" font-size="17" font-weight="700"
+                fill="rgba(255,255,255,0.55)" font-family="Ubuntu,sans-serif">+ any system</text>
+          <text x="704" y="633" text-anchor="middle" font-size="14"
+                fill="rgba(255,255,255,0.40)" font-family="Plus Jakarta Sans,sans-serif">ERP · CMMS · GIS · BIM</text>
+          <text x="704" y="649" text-anchor="middle" font-size="12"
+                fill="rgba(255,255,255,0.30)" font-family="Plus Jakarta Sans,sans-serif">if it has data, we connect</text>
+        </svg>
+      </div>
+      <!-- Right: FAST cycle ring -->
+      <div class="s3-right">
+        <svg class="s3-fast-wheel" viewBox="0 0 720 720" xmlns="http://www.w3.org/2000/svg">
+
+          <!-- ── Ring borders (center shifted right to 360,360) ─── -->
+          <circle cx="360" cy="360" r="217" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+          <circle cx="360" cy="360" r="173" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+          <!-- ── Gradient defs for arc strokes ─────────────────────── -->
+          <defs>
+            <linearGradient id="grad-find" x1="360" y1="165" x2="555" y2="360" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#1DB8F2" stop-opacity="0.72"/>
+              <stop offset="100%" stop-color="#00C2B3" stop-opacity="0.22"/>
+            </linearGradient>
+            <linearGradient id="grad-act" x1="555" y1="360" x2="360" y2="555" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#F59E0B" stop-opacity="0.70"/>
+              <stop offset="100%" stop-color="#FBBF24" stop-opacity="0.20"/>
+            </linearGradient>
+            <linearGradient id="grad-save" x1="360" y1="555" x2="165" y2="360" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#10B981" stop-opacity="0.70"/>
+              <stop offset="100%" stop-color="#34D399" stop-opacity="0.20"/>
+            </linearGradient>
+            <linearGradient id="grad-tell" x1="165" y1="360" x2="360" y2="165" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#A78BFA" stop-opacity="0.60"/>
+              <stop offset="100%" stop-color="#7C3AED" stop-opacity="0.16"/>
+            </linearGradient>
+          </defs>
+
+          <!-- ── Arc quadrants (r=195, stroke-width=42, center 360,360) ── -->
+          <path d="M 360 165 A 195 195 0 0 1 555 360"
+                fill="none" stroke="url(#grad-find)" stroke-width="42" stroke-linecap="butt"/>
+          <path d="M 555 360 A 195 195 0 0 1 360 555"
+                fill="none" stroke="url(#grad-act)"  stroke-width="42" stroke-linecap="butt"/>
+          <path d="M 360 555 A 195 195 0 0 1 165 360"
+                fill="none" stroke="url(#grad-save)" stroke-width="42" stroke-linecap="butt"/>
+          <path d="M 165 360 A 195 195 0 0 1 360 165"
+                fill="none" stroke="url(#grad-tell)" stroke-width="42" stroke-linecap="butt"/>
+
+          <!-- ── Center circle (r=110) ──────────────────────────── -->
+          <circle cx="360" cy="360" r="110" fill="rgba(11,17,32,0.92)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <text x="360" y="334" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-weight="700" font-size="47" fill="rgba(255,255,255,0.92)">FAST</text>
+          <text x="360" y="360" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="22" fill="rgba(29,184,242,0.82)">Energy Management</text>
+          <text x="360" y="384" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="22" fill="rgba(29,184,242,0.82)">cycle</text>
+          <text x="360" y="406" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.40)" letter-spacing="0.3">Based on ISO 50001</text>
+
+          <!-- ── FIND node (r=38, top, center 360,165) ──────────── -->
+          <circle cx="360" cy="165" r="38" fill="rgba(11,17,32,0.95)" stroke="rgba(29,184,242,0.72)" stroke-width="2"/>
+          <text x="360" y="171" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-weight="700" font-size="21" fill="rgba(29,184,242,0.95)">FIND</text>
+          <text x="360" y="72" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="15" fill="rgba(255,255,255,0.78)">Spot savings opportunities</text>
+          <text x="360" y="92" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.50)">across the live portfolio</text>
+          <text x="360" y="110" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.36)">anomalies · waste · quick wins</text>
+
+          <!-- ── ACT node (r=38, right, center 555,360) ─────────── -->
+          <circle cx="555" cy="360" r="38" fill="rgba(11,17,32,0.95)" stroke="rgba(245,158,11,0.72)" stroke-width="2"/>
+          <text x="555" y="366" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-weight="700" font-size="21" fill="rgba(245,158,11,0.95)">ACT</text>
+          <text x="605" y="342" text-anchor="start" font-family="Ubuntu,sans-serif"
+                font-size="15" fill="rgba(255,255,255,0.78)">Model ROI</text>
+          <text x="605" y="362" text-anchor="start" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.55)">plan &amp; prioritise</text>
+          <text x="605" y="382" text-anchor="start" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.38)">track measures</text>
+          <text x="605" y="402" text-anchor="start" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.26)">follow through</text>
+
+          <!-- ── SAVE node (r=38, bottom, center 360,555) ──────── -->
+          <circle cx="360" cy="555" r="38" fill="rgba(11,17,32,0.95)" stroke="rgba(16,185,129,0.72)" stroke-width="2"/>
+          <text x="360" y="561" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-weight="700" font-size="21" fill="rgba(16,185,129,0.95)">SAVE</text>
+          <text x="360" y="612" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="15" fill="rgba(255,255,255,0.78)">Verified savings</text>
+          <text x="360" y="632" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.50)">proven by IPMVP</text>
+          <text x="360" y="650" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.36)">not estimated · audit-proof</text>
+
+          <!-- ── TELL node (r=38, left, center 165,360) ─────────── -->
+          <circle cx="165" cy="360" r="38" fill="rgba(11,17,32,0.95)" stroke="rgba(124,58,237,0.72)" stroke-width="2"/>
+          <text x="165" y="366" text-anchor="middle" font-family="Ubuntu,sans-serif"
+                font-weight="700" font-size="21" fill="rgba(124,58,237,0.95)">TELL</text>
+          <text x="116" y="342" text-anchor="end" font-family="Ubuntu,sans-serif"
+                font-size="15" fill="rgba(255,255,255,0.78)">Reporting</text>
+          <text x="116" y="362" text-anchor="end" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.55)">CSRD · EED</text>
+          <text x="116" y="382" text-anchor="end" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.38)">ISO 50001</text>
+          <text x="116" y="402" text-anchor="end" font-family="Ubuntu,sans-serif"
+                font-size="13" fill="rgba(255,255,255,0.26)">client reports</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">3 / 6</span>
+</section></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 4 — THE RESULTS
+════════════════════════════════════════════════════════ -->
+<div class="slide-snap"><section class="slide" id="slide-3">
+  <div class="orbs">
+    <div class="orb" style="--op:.20;width:500px;height:500px;background:var(--teal);top:-16%;right:-6%;animation:appear 1.5s ease forwards,floatC 24s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.18;width:370px;height:370px;background:var(--cyan);bottom:-12%;left:-4%;animation:appear 1.5s ease .4s forwards,floatA 20s ease-in-out infinite .4s;"></div>
+    <div class="orb" style="--op:.12;width:230px;height:230px;background:var(--blue);top:36%;right:26%;animation:appear 1.5s ease .7s forwards,floatB 28s ease-in-out infinite .7s;"></div>
+  </div>
+
+  <header class="slide-header z">
+    <img src="assets/brand/capgemini-engineering-wordmark-dark.svg" class="cap-logo" alt="Capgemini Engineering">
+  </header>
+
+  <div class="slide-inner z">
+    <div class="accent-bar"></div>
+    <div class="slide-label">Measured · Verified · Proven</div>
+    <h2 class="slide-title">What EnergySense Delivers</h2>
+
+    <div class="s4-body">
+
+      <div class="s4-metrics">
+
+        <!-- Find -->
+        <div class="metric-panel metric-panel--a">
+          <div>
+            <div class="metric-icon-row">
+              <div class="metric-icon-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(29,184,242,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </div>
+              <div class="metric-eyebrow">Find — Data freshness</div>
+            </div>
+            <div class="metric-delta">
+              <div class="metric-before">12–16 months lag</div>
+              <div class="metric-arrow-row">
+                <span class="metric-arrow">↓</span>
+                <div class="metric-after">Near-live</div>
+              </div>
+            </div>
+          </div>
+          <div class="metric-desc">Identify measures across the portfolio — on current data, not last year's.</div>
+          <div class="metric-tags">
+            <span class="tag tag--cyan">Find phase</span>
+            <span class="tag tag--muted">Real-time</span>
+          </div>
+        </div>
+
+        <!-- Act -->
+        <div class="metric-panel metric-panel--b">
+          <div>
+            <div class="metric-icon-row">
+              <div class="metric-icon-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(245,158,11,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <div class="metric-eyebrow">Act — ROI modelling time</div>
+            </div>
+            <div class="metric-delta">
+              <div class="metric-before">Weeks</div>
+              <div class="metric-arrow-row">
+                <span class="metric-arrow" style="color:var(--amber);">↓</span>
+                <div class="metric-after">&lt; 2 hours</div>
+              </div>
+            </div>
+          </div>
+          <div class="metric-desc">Automated ROI simulation — every measure, every building, instantly.</div>
+          <div class="metric-tags">
+            <span class="tag tag--amber">Act phase</span>
+            <span class="tag tag--muted">Automated</span>
+          </div>
+        </div>
+
+        <!-- Save -->
+        <div class="metric-panel metric-panel--c">
+          <div>
+            <div class="metric-icon-row">
+              <div class="metric-icon-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(16,185,129,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              </div>
+              <div class="metric-eyebrow">Save — Annual savings</div>
+            </div>
+            <div class="metric-delta">
+              <div class="metric-before">Unverified</div>
+              <div class="metric-arrow-row">
+                <span class="metric-arrow" style="color:var(--green);">↑</span>
+                <div class="metric-after">12–18%</div>
+              </div>
+            </div>
+          </div>
+          <div class="metric-desc">IPMVP-verified savings. Payback &lt;3 years across the portfolio.</div>
+          <div class="metric-tags">
+            <span class="tag tag--green">Save phase</span>
+            <span class="tag tag--muted">IPMVP</span>
+          </div>
+        </div>
+
+        <!-- Tell -->
+        <div class="metric-panel metric-panel--d">
+          <div>
+            <div class="metric-icon-row">
+              <div class="metric-icon-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              </div>
+              <div class="metric-eyebrow">Tell — Monthly reporting time</div>
+            </div>
+            <div class="metric-delta">
+              <div class="metric-before">5 days</div>
+              <div class="metric-arrow-row">
+                <span class="metric-arrow" style="color:#a78bfa;">↓</span>
+                <div class="metric-after">&lt; 1 hour</div>
+              </div>
+            </div>
+          </div>
+          <div class="metric-desc">One-click compliance output — CSRD, EED, ISO 50001 — always ready.</div>
+          <div class="metric-tags">
+            <span class="tag" style="background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.25);color:#a78bfa;">Tell phase</span>
+            <span class="tag tag--muted">Automated</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+  <span class="slide-num">4 / 6</span>
+</section></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 5 — IMPLEMENTATION
+════════════════════════════════════════════════════════ -->
+<div class="slide-snap"><section class="slide" id="slide-4">
+  <div class="orbs">
+    <div class="orb" style="--op:.20;width:500px;height:500px;background:var(--blue);top:-14%;right:-5%;animation:appear 1.5s ease forwards,floatA 20s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.16;width:370px;height:370px;background:var(--purple);bottom:-10%;left:-4%;animation:appear 1.5s ease .4s forwards,floatB 26s ease-in-out infinite .4s;"></div>
+    <div class="orb" style="--op:.12;width:230px;height:230px;background:var(--cyan);top:32%;left:30%;animation:appear 1.5s ease .7s forwards,floatC 22s ease-in-out infinite .7s;"></div>
+  </div>
+
+  <header class="slide-header z">
+    <div class="brand-pair">
+      <img src="assets/brand/capgemini-engineering-wordmark-dark.svg" class="cap-logo" alt="Capgemini Engineering">
+      <span class="brand-sep">×</span>
+      <img src="assets/brand/schneider-electric-logo.png" class="se-logo" alt="Schneider Electric">
+    </div>
+  </header>
+
+  <div class="slide-inner z">
+    <div class="accent-bar"></div>
+    <div class="slide-label">Getting Started</div>
+    <h2 class="slide-title">From First Conversation to Roadmap — <span style="-webkit-text-fill-color:var(--cyan);color:var(--cyan);">4–6 Weeks</span></h2>
+
+    <div class="s5-body">
+
+      <!-- Left: Radar chart -->
+      <div class="s5-dims">
+        <div class="s5-section-label">6 Dimensions Assessed</div>
+
+        <div class="s5-radar-wrap">
+          <svg viewBox="-120 -30 960 480" xmlns="http://www.w3.org/2000/svg" class="s5-radar-svg" preserveAspectRatio="xMidYMid meet">
+            <!-- scale diagram geometry 15% around center (360,215), labels stay fixed -->
+            <g transform="translate(360,215) scale(1.15) translate(-360,-215)">
+              <polygon points="360,183 387.71,199 387.71,231 360,247 332.29,231 332.29,199" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+              <polygon points="360,151 415.42,183 415.42,247 360,279 304.58,247 304.58,183" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+              <polygon points="360,119 443.14,167 443.14,263 360,311 276.86,263 276.86,167" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+              <polygon points="360,87 470.85,151 470.85,279 360,343 249.15,279 249.15,151" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+              <polygon points="360,55 498.56,135 498.56,295 360,375 221.44,295 221.44,135" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+              <line x1="360" y1="215" x2="360"    y2="55"  stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <line x1="360" y1="215" x2="498.56" y2="135" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <line x1="360" y1="215" x2="498.56" y2="295" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <line x1="360" y1="215" x2="360"    y2="375" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <line x1="360" y1="215" x2="221.44" y2="295" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <line x1="360" y1="215" x2="221.44" y2="135" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <polygon points="360,151 415.42,183 387.71,231 360,247 304.58,247 304.58,183"
+                       fill="rgba(29,184,242,0.14)" stroke="rgba(29,184,242,0.65)" stroke-width="1.5" stroke-linejoin="round"/>
+              <circle cx="360"    cy="151" r="4.5" fill="#1DB8F2"/>
+              <circle cx="415.42" cy="183" r="4.5" fill="#1DB8F2"/>
+              <circle cx="387.71" cy="231" r="4.5" fill="#1DB8F2"/>
+              <circle cx="360"    cy="247" r="4.5" fill="#1DB8F2"/>
+              <circle cx="304.58" cy="247" r="4.5" fill="#1DB8F2"/>
+              <circle cx="304.58" cy="183" r="4.5" fill="#1DB8F2"/>
+            </g>
+            <text x="374" y="144" font-size="9" fill="rgba(255,255,255,0.28)" font-family="Ubuntu,sans-serif">2</text>
+            <text x="374" y="34"  font-size="9" fill="rgba(255,255,255,0.28)" font-family="Ubuntu,sans-serif">5</text>
+            <text x="360" y="-11" text-anchor="middle" font-size="22" font-weight="700" fill="rgba(255,255,255,0.85)" font-family="Ubuntu,sans-serif">Energy Governance</text>
+            <text x="535" y="106" text-anchor="start"  font-size="22" font-weight="700" fill="rgba(255,255,255,0.85)" font-family="Ubuntu,sans-serif">Data &amp; Metering</text>
+            <text x="535" y="297" text-anchor="start"  font-size="22" font-weight="700" fill="rgba(255,255,255,0.85)" font-family="Ubuntu,sans-serif">Reporting &amp; Compliance</text>
+            <text x="360" y="421" text-anchor="middle" font-size="22" font-weight="700" fill="rgba(255,255,255,0.85)" font-family="Ubuntu,sans-serif">Demand Flexibility</text>
+            <text x="184" y="297" text-anchor="end"    font-size="22" font-weight="700" fill="rgba(255,255,255,0.85)" font-family="Ubuntu,sans-serif">Investment &amp; Business Case</text>
+            <text x="184" y="106" text-anchor="end"    font-size="22" font-weight="700" fill="rgba(255,255,255,0.85)" font-family="Ubuntu,sans-serif">Technology &amp; Systems</text>
+          </svg>
+          <div class="s5-radar-legend">● Typical client starting point before EnergySense assessment</div>
+        </div>
+      </div>
+
+      <div class="s5-divider"></div>
+
+      <!-- Right: 4-step process + Schneider partnership at bottom -->
+      <div class="s5-process">
+        <div class="s5-section-label">The Process</div>
+
+        <div class="s5-timeline">
+
+          <div class="s5-step">
+            <div class="s5-step-track">
+              <div class="s5-step-node">01</div>
+              <div class="s5-step-line"></div>
+            </div>
+            <div class="s5-step-content">
+              <div class="s5-step-name">Discovery Interviews</div>
+              <div class="s5-step-dur">Weeks 1–2</div>
+              <div class="s5-step-desc">Structured sessions with energy manager, FM, finance, and operations — across all six maturity dimensions.</div>
+            </div>
+          </div>
+
+          <div class="s5-step">
+            <div class="s5-step-track">
+              <div class="s5-step-node">02</div>
+              <div class="s5-step-line"></div>
+            </div>
+            <div class="s5-step-content">
+              <div class="s5-step-name">System &amp; Data Audit</div>
+              <div class="s5-step-dur">Weeks 2–3</div>
+              <div class="s5-step-desc">Review of tools, meter configurations, reporting workflows, compliance status, and technology landscape.</div>
+            </div>
+          </div>
+
+          <div class="s5-step">
+            <div class="s5-step-track">
+              <div class="s5-step-node">03</div>
+              <div class="s5-step-line"></div>
+            </div>
+            <div class="s5-step-content">
+              <div class="s5-step-name">Maturity Scoring</div>
+              <div class="s5-step-dur">Weeks 3–4</div>
+              <div class="s5-step-desc">Each dimension scored 1–5 against industry benchmark — critical gaps identified, quick wins separated from structural improvements.</div>
+            </div>
+          </div>
+
+          <div class="s5-step">
+            <div class="s5-step-track">
+              <div class="s5-step-node">04</div>
+              <div class="s5-step-line"></div>
+            </div>
+            <div class="s5-step-content">
+              <div class="s5-step-name">Roadmap &amp; Report</div>
+              <div class="s5-step-dur">Weeks 4–6</div>
+              <div class="s5-step-desc">Full maturity report: scored dimensions, regulatory gap analysis, prioritised actions, and a 3-year improvement horizon.</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Bottom row: equal-height cards — same grid row, auto-matched height -->
+      <div class="s5-deliverable">
+        <div class="s5-del-label">Deliverables</div>
+        <div class="s5-del-items">
+          <div class="s5-del-item"><div class="s5-del-dot"></div> Scored maturity report — 6 dimensions</div>
+          <div class="s5-del-item"><div class="s5-del-dot"></div> Prioritised roadmap — quick wins &amp; 3-year horizon</div>
+          <div class="s5-del-item"><div class="s5-del-dot"></div> Regulatory gap analysis (CSRD, EED, ISO 50001)</div>
+        </div>
+      </div>
+
+      <div class="s5-se-block">
+        <img src="assets/brand/schneider-electric-logo.png" style="height:2.2rem;width:auto;opacity:0.85;flex-shrink:0;" alt="Schneider Electric">
+        <div class="s5-se-text">
+          <strong>Schneider Electric</strong> conducts the energy flexibility study — measure identification &amp; technical feasibility. <strong>Capgemini Engineering</strong> delivers the governance, compliance roadmap, and organisational readiness programme.
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <span class="slide-num">5 / 6</span>
+</section></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 6 — THE ASK
+════════════════════════════════════════════════════════ -->
+<div class="slide-snap"><section class="slide" id="slide-5">
+  <div class="orbs">
+    <div class="orb" style="--op:.22;width:540px;height:540px;background:var(--cyan);top:-16%;right:-7%;animation:appear 1.5s ease forwards,floatA 22s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.16;width:390px;height:390px;background:var(--teal);bottom:-11%;left:-5%;animation:appear 1.5s ease .5s forwards,floatB 30s ease-in-out infinite .5s;"></div>
+    <div class="orb" style="--op:.10;width:240px;height:240px;background:var(--purple);top:30%;left:28%;animation:appear 1.5s ease .8s forwards,floatD 25s ease-in-out infinite .8s;"></div>
+  </div>
+
+  <header class="slide-header z">
+    <img src="assets/brand/capgemini-engineering-wordmark-dark.svg" class="cap-logo" alt="Capgemini Engineering">
+  </header>
+
+  <div class="slide-inner z">
+    <div class="accent-bar"></div>
+    <div class="slide-label">Next Steps</div>
+
+    <div class="s6-body">
+
+      <div class="s6-headline-block">
+        <h2 class="cta-headline">Let's put EnergySense<br>in front of your clients.</h2>
+        <p class="cta-sub">We're demo-ready today. Three things make this happen — all low effort on your side.</p>
+      </div>
+
+      <div class="s6-asks">
+
+        <div class="ask-card ask-card--a">
+          <div class="ask-num">Ask 01</div>
+          <div class="ask-name">Introduce us to 2–3 accounts</div>
+          <div class="ask-desc">Where energy costs or CSRD compliance is a live topic. We handle qualification, deck, and demo — you just make the introduction.</div>
+        </div>
+
+        <div class="ask-card ask-card--b">
+          <div class="ask-num">Ask 02</div>
+          <div class="ask-name">Flag active sustainability proposals</div>
+          <div class="ask-desc">Any real estate or sustainability engagement we can attach EnergySense to — we become the intelligence layer on an existing deal, strengthening your offer.</div>
+        </div>
+
+        <div class="ask-card ask-card--c">
+          <div class="ask-num">Ask 03</div>
+          <div class="ask-name">Agree a joint client session</div>
+          <div class="ask-desc">Within the next 4 weeks. We bring the demo. Quick Scan → Pilot → Scale — low risk entry, fast time to value, and a clear story for the client.</div>
+        </div>
+
+      </div>
+
+      <div class="s6-contact glass">
+        <div class="s6-contact-group">
+          <div class="s6-contact-label">Email</div>
+          <div class="s6-contact-val">daniel.csonka@capgemini.com</div>
+        </div>
+        <div class="s6-contact-divider"></div>
+        <div class="s6-contact-group">
+          <div class="s6-contact-label">Response time</div>
+          <div class="s6-contact-secondary">Within 24 hours</div>
+        </div>
+        <div class="s6-contact-divider"></div>
+        <div class="s6-contact-group">
+          <div class="s6-contact-label">Entry point</div>
+          <div class="s6-contact-secondary">Quick Scan · 2 weeks · 1 building · low commitment</div>
+        </div>
+        <div class="s6-contact-divider"></div>
+        <div class="s6-contact-group">
+          <div class="s6-contact-label">Demo status</div>
+          <div class="s6-contact-val">Ready now</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <span class="slide-num">6 / 6</span>
+</section></div>
+
+</div><!-- #deck -->
+
+<script>
+  const deck    = document.getElementById('deck');
+  const snaps   = Array.from(document.querySelectorAll('.slide-snap'));
+  const slides  = Array.from(document.querySelectorAll('.slide'));
+  const dots    = Array.from(document.querySelectorAll('.nav-dot'));
+  let current   = 0;
+
+  function applyScale() {
+    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    slides.forEach(el => { el.style.transform = `scale(${s})`; });
+  }
+  window.addEventListener('resize', applyScale);
+  applyScale();
+
+  function goTo(n) {
+    current = Math.max(0, Math.min(snaps.length - 1, n));
+    snaps[current].scrollIntoView({ behavior: 'smooth' });
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'PageDown') goTo(current + 1);
+    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft'  || e.key === 'PageUp')   goTo(current - 1);
+  });
+
+  dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.slide)));
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        current = snaps.indexOf(e.target);
+        dots.forEach((d, i) => d.classList.toggle('active', i === current));
+      }
+    });
+  }, { threshold: 0.6 });
+  snaps.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

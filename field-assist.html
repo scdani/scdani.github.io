@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Field Assist — Capgemini Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:   #0B1120;
+      --cyan:   #1DB8F2;
+      --teal:   #00C2B3;
+      --purple: #7C3AED;
+      --blue:   #2563EB;
+      --rose:   #E11D48;
+      --amber:  #F59E0B;
+      --green:  #10B981;
+      --white:  #FFFFFF;
+      --border: rgba(255,255,255,0.10);
+      --glass:  rgba(255,255,255,0.055);
+      --r:      12px;
+      --font-head: 'Ubuntu', Helvetica, sans-serif;
+      --font-body: 'Plus Jakarta Sans', Helvetica, sans-serif;
+    }
+    html { scroll-snap-type: y mandatory; overflow-y: scroll; scroll-behavior: smooth; height: 100%; background: #000; }
+    body { font-family: var(--font-body); background: #000; color: var(--white); height: 100%; }
+    .slide { height: 100vh; width: 100%; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; overflow: hidden; background: var(--navy); }
+    .slide::before { content: ''; position: absolute; inset: 0; z-index: 0; background-image: radial-gradient(rgba(255,255,255,0.065) 1px, transparent 1px); background-size: 28px 28px; pointer-events: none; }
+    .orbs { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .orb  { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0; }
+    @keyframes appear { to { opacity: var(--op, 0.28); } }
+    @keyframes floatA { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(55px,-75px) scale(1.1)} 66%{transform:translate(-30px,40px) scale(0.95)} }
+    @keyframes floatB { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(65px,-50px) scale(1.12)} }
+    @keyframes floatC { 0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(-50px,35px) scale(0.9)} 80%{transform:translate(35px,-20px) scale(1.08)} }
+    @keyframes floatD { 0%,100%{transform:translate(0,0) scale(1)} 60%{transform:translate(-45px,-65px) scale(1.15)} }
+    .z { position: relative; z-index: 1; }
+    .slide-header { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 3.5rem 0; flex-shrink: 0; }
+    .brand-pair { display: flex; align-items: center; gap: 0.75rem; }
+    .cap-logo { height: 1.5rem; width: auto; display: block; flex-shrink: 0;  }
+    .slide-inner { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0.6rem 3.5rem 1.25rem; overflow: hidden; }
+    .slide-num { position: absolute; bottom: 0.875rem; right: 3.5rem; font-size: 0.7rem; color: rgba(255,255,255,0.15); z-index: 1; }
+    .accent-bar { width: 2.5rem; height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--cyan), var(--teal)); margin-bottom: 0.4rem; flex-shrink: 0; }
+    .slide-label { font-size: 0.95rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.3rem; flex-shrink: 0; }
+    .slide-title { font-family: var(--font-head); font-weight: 700; font-size: clamp(2.4rem, 4vw, 3.6rem); line-height: 1.15; margin-bottom: 0.75rem; background: linear-gradient(135deg, #fff 25%, #9dd5f0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0; }
+    .glass { background: var(--glass); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); border: 1px solid var(--border); border-radius: var(--r); }
+    nav.slide-nav { position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 7px; z-index: 200; }
+    .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.22); cursor: pointer; transition: background .2s, transform .2s; }
+    .nav-dot.active { background: var(--cyan); transform: scale(1.4); }
+
+    /* SLIDE 1 */
+    .s1-body { flex: 1; min-height: 0; display: flex; gap: 2.5rem; align-items: center; }
+    .s1-left { flex: 1; min-width: 0; }
+    .cover-title { font-family: var(--font-head); font-weight: 700; font-size: clamp(3rem, 6vw, 5rem); line-height: 1.1; margin-bottom: 0.5rem; background: linear-gradient(135deg, #fff 20%, #9dd5f0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .cover-sub { font-size: 1.4rem; color: rgba(255,255,255,0.55); margin-bottom: 0.6rem; font-weight: 500; }
+    .cover-tagline { font-size: 0.9rem; color: rgba(255,255,255,0.4); line-height: 1.65; margin-bottom: 1.3rem; max-width: 520px; }
+    .s1-pills { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.4rem; }
+    .pill { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; padding: 0.28rem 0.7rem; border-radius: 99px; border: 1px solid rgba(29,184,242,0.35); color: var(--cyan); background: rgba(29,184,242,0.07); }
+    .s1-right { width: 40%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .cover-visual { width: clamp(220px, 32vh, 380px); height: clamp(220px, 32vh, 380px); border-radius: 28px; background: linear-gradient(135deg, rgba(29,184,242,0.12), rgba(0,194,179,0.08)); border: 1px solid rgba(29,184,242,0.2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.9rem; padding: 2rem; position: relative; overflow: hidden; }
+    .cover-visual::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(29,184,242,0.15), transparent 60%); }
+    .cover-icon { font-size: 3.5rem; position: relative; z-index: 1; }
+    .cover-visual-title { font-family: var(--font-head); font-weight: 700; font-size: 1.4rem; color: #fff; position: relative; z-index: 1; text-align: center; }
+    .cover-visual-sub { font-size: 0.78rem; color: rgba(255,255,255,0.45); text-align: center; position: relative; z-index: 1; line-height: 1.5; }
+    .s1-meta { display: flex; gap: 2rem; }
+    .s1-meta-item { display: flex; flex-direction: column; }
+    .s1-meta-val { font-family: var(--font-head); font-weight: 700; font-size: 1.5rem; color: var(--cyan); }
+    .s1-meta-lbl { font-size: 0.68rem; color: rgba(255,255,255,0.38); }
+
+    /* SLIDE 2 */
+    .s2-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem; flex-shrink: 0; }
+    .prob-card { background: var(--glass); border: 1px solid var(--border); border-radius: var(--r); padding: 0.9rem; }
+    .prob-icon { font-size: 1.3rem; margin-bottom: 0.4rem; }
+    .prob-title { font-weight: 700; font-size: 1.35rem; margin-bottom: 0.35rem; color: #fff; }
+    .prob-body { font-size: 1.1rem; color: rgba(255,255,255,0.52); line-height: 1.55; margin-bottom: 0.5rem; }
+    .prob-quote { font-size: 0.7rem; color: var(--cyan); border-left: 2px solid rgba(29,184,242,0.4); padding-left: 0.55rem; font-style: italic; }
+    .s2-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; flex: 1; min-height: 0; }
+    .ba-panel { padding: 0.85rem 1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+    .ba-head { display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.25rem; }
+    .ba-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .ba-dot--red { background: var(--rose); } .ba-dot--green { background: var(--green); }
+    .ba-head-txt { font-weight: 700; font-size: 0.78rem; }
+    .ba-head-txt--red { color: var(--rose); } .ba-head-txt--green { color: var(--green); }
+    .ba-item { font-size: 1.1rem; color: rgba(255,255,255,0.58); display: flex; gap: 0.45rem; align-items: flex-start; }
+    .bm-r { color: var(--rose); font-weight: 700; flex-shrink: 0; }
+    .bm-g { color: var(--green); font-weight: 700; flex-shrink: 0; }
+
+    /* SLIDE 3 */
+    .s3-body { flex: 1; min-height: 0; display: flex; gap: 1.4rem; align-items: stretch; }
+    .s3-flow { flex: 1; display: flex; flex-direction: column; gap: 0.55rem; }
+    .flow-step { display: flex; gap: 0.9rem; align-items: flex-start; background: var(--glass); border: 1px solid var(--border); border-radius: var(--r); padding: 0.85rem 1rem; flex: 1; }
+    .flow-num { font-family: var(--font-head); font-weight: 700; font-size: 1.7rem; color: rgba(29,184,242,0.22); flex-shrink: 0; line-height: 1; }
+    .flow-title { font-weight: 700; font-size: 1.35rem; color: #fff; margin-bottom: 0.22rem; }
+    .flow-desc { font-size: 1.1rem; color: rgba(255,255,255,0.48); line-height: 1.55; margin-bottom: 0.4rem; }
+    .flow-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .flow-tag { display: inline-block; font-size: 0.63rem; font-weight: 600; letter-spacing: 0.05em; padding: 0.18rem 0.5rem; border-radius: 99px; background: rgba(29,184,242,0.1); color: var(--cyan); border: 1px solid rgba(29,184,242,0.22); }
+    .s3-right { width: 36%; display: flex; flex-direction: column; gap: 0.55rem; }
+    .kv-card { background: var(--glass); border: 1px solid var(--border); border-radius: var(--r); padding: 0.9rem; }
+    .kv-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.5rem; }
+    .kv-item { font-size: 1.1rem; color: rgba(255,255,255,0.56); display: flex; gap: 0.4rem; margin-bottom: 0.3rem; }
+    .kv-check { color: var(--teal); flex-shrink: 0; }
+
+    /* SLIDE 4 */
+    .s4-body { flex: 1; min-height: 0; display: flex; gap: 1.4rem; }
+    .s4-left { flex: 1; display: flex; flex-direction: column; gap: 0.6rem; }
+    .ai-step { display: flex; gap: 0.85rem; align-items: flex-start; background: var(--glass); border: 1px solid var(--border); border-radius: var(--r); padding: 0.8rem 0.9rem; }
+    .ai-icon { font-size: 1.15rem; flex-shrink: 0; margin-top: 0.05rem; }
+    .ai-step-title { font-weight: 700; font-size: 1.35rem; color: #fff; margin-bottom: 0.18rem; }
+    .ai-step-desc { font-size: 1.1rem; color: rgba(255,255,255,0.48); line-height: 1.5; }
+    .s4-right { width: 40%; display: flex; flex-direction: column; gap: 0.6rem; }
+    .ai-mock { flex: 1; background: rgba(11,17,32,0.85); border: 1px solid rgba(29,184,242,0.2); border-radius: 16px; padding: 1.1rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .ai-mock-header { font-size: 0.68rem; font-weight: 700; color: var(--cyan); letter-spacing: 0.1em; text-transform: uppercase; }
+    .ai-input { font-size: 0.7rem; color: rgba(255,255,255,0.3); }
+    .ai-bubble { background: rgba(29,184,242,0.08); border: 1px solid rgba(29,184,242,0.18); border-radius: 10px; padding: 0.7rem; font-size: 0.76rem; color: rgba(255,255,255,0.72); line-height: 1.5; }
+    .ai-qs { display: flex; flex-direction: column; gap: 0.35rem; }
+    .ai-q { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.45rem 0.7rem; font-size: 0.72rem; color: rgba(255,255,255,0.58); display: flex; gap: 0.4rem; }
+    .ai-qn { color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+    .ai-classify { display: flex; gap: 0.45rem; align-items: center; }
+    .ai-badge { padding: 0.22rem 0.55rem; border-radius: 99px; font-size: 0.66rem; font-weight: 700; }
+    .ai-badge--p { background: rgba(225,29,72,0.15); color: var(--rose); border: 1px solid rgba(225,29,72,0.3); }
+    .ai-badge--c { background: rgba(29,184,242,0.1); color: var(--cyan); border: 1px solid rgba(29,184,242,0.25); }
+    .ai-why { font-size: 0.66rem; color: rgba(255,255,255,0.3); }
+    .ai-confirm { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); border-radius: 8px; padding: 0.45rem 0.7rem; font-size: 0.71rem; color: var(--green); text-align: center; font-weight: 600; }
+    .guardrail { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.18); border-radius: var(--r); padding: 0.7rem 0.9rem; font-size: 0.73rem; color: rgba(255,255,255,0.52); display: flex; gap: 0.55rem; align-items: center; flex-shrink: 0; }
+
+    /* SLIDE 5 */
+    .s5-body { flex: 1; min-height: 0; display: flex; gap: 1.4rem; }
+    .s5-left { flex: 1; display: flex; flex-direction: column; gap: 0.6rem; }
+    .s5-right { width: 36%; display: flex; flex-direction: column; gap: 0.6rem; }
+    .scope-sec { background: var(--glass); border: 1px solid var(--border); border-radius: var(--r); padding: 0.85rem 1rem; flex: 1; }
+    .scope-head { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.55rem; }
+    .scope-head--in { color: var(--green); } .scope-head--out { color: rgba(255,255,255,0.3); }
+    .scope-item { font-size: 1.1rem; color: rgba(255,255,255,0.58); display: flex; gap: 0.4rem; margin-bottom: 0.28rem; }
+    .sc-in { color: var(--green); flex-shrink: 0; } .sc-out { color: rgba(255,255,255,0.22); flex-shrink: 0; }
+    .metric-card { background: var(--glass); border: 1px solid var(--border); border-radius: var(--r); padding: 0.85rem 1rem; }
+    .metric-head { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); margin-bottom: 0.55rem; }
+    .metric-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; }
+    .metric-lbl { font-size: 1.1rem; color: rgba(255,255,255,0.5); }
+    .metric-val { font-family: var(--font-head); font-weight: 700; font-size: 1.35rem; color: #fff; }
+    .tl-card { background: var(--glass); border: 1px solid var(--border); border-radius: var(--r); padding: 0.85rem 1rem; flex: 1; }
+    .tl-head { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.6rem; }
+    .tl-item { display: flex; gap: 0.7rem; align-items: flex-start; margin-bottom: 0.45rem; }
+    .tl-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); flex-shrink: 0; margin-top: 0.28rem; }
+    .tl-step { font-weight: 700; font-size: 1.15rem; color: #fff; }
+    .tl-desc { font-size: 0.85rem; color: rgba(255,255,255,0.42); }
+
+    /* SLIDE 6 */
+    .s6-body { flex: 1; min-height: 0; display: flex; gap: 1rem; }
+    .ss-wrap { flex: 1; display: flex; flex-direction: column; gap: 0.6rem; }
+    .ss-card { background: var(--glass); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; display: flex; flex-direction: row; flex: 1; min-height: 0; }
+    .ss-img { flex: 1; background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: rgba(255,255,255,0.2); position: relative; overflow: hidden; min-width: 0; }
+    .ss-img img { width: 100%; height: 100%; object-fit: contain; object-position: left center; display: block; }
+    .ss-cap { padding: 0.75rem 1rem; border-left: 1px solid var(--border); flex-shrink: 0; width: 180px; display: flex; flex-direction: column; justify-content: center; }
+    .ss-title { font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 0.35rem; }
+    .ss-desc { font-size: 1.05rem; color: rgba(255,255,255,0.38); }
+    /* SLIDE 10 — CLOSING */
+    .audience-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; padding: 2rem 3.5rem; position: relative; z-index: 1; }
+    .audience-img-wrap { flex: 1; width: 100%; max-height: 70vh; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: rgba(255,255,255,0.25); }
+    .audience-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .audience-footer { text-align: center; flex-shrink: 0; }
+    .audience-tagline { font-family: var(--font-head); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; background: linear-gradient(135deg, #fff 25%, #9dd5f0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1; }
+    .audience-sub { font-size: 1rem; color: rgba(255,255,255,0.4); margin-top: 0.4rem; }
+
+    /* SLIDE 7 */
+    .s7-body { flex: 1; min-height: 0; display: flex; gap: 1.4rem; }
+    .meta-col { flex: 1; display: flex; flex-direction: column; gap: 0.6rem; }
+    .meta-card { background: var(--glass); border: 1px solid var(--border); border-radius: var(--r); padding: 0.95rem; flex: 1; }
+    .meta-head { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.55rem; }
+    .meta-head--i { color: var(--amber); } .meta-head--a { color: var(--purple); } .meta-head--o { color: var(--green); }
+    .meta-item { font-size: 0.95rem; color: rgba(255,255,255,0.62); display: flex; gap: 0.5rem; line-height: 1.45; margin-bottom: 0.38rem; }
+    .md { flex-shrink: 0; width: 6px; height: 6px; border-radius: 50%; margin-top: 0.38rem; }
+    .md-a { background: var(--amber); } .md-p { background: var(--purple); } .md-g { background: var(--green); }
+    .meta-footer { background: rgba(29,184,242,0.06); border: 1px solid rgba(29,184,242,0.15); border-radius: var(--r); padding: 0.95rem 1.1rem; }
+    .meta-footer-text { font-size: 0.82rem; color: rgba(255,255,255,0.52); line-height: 1.65; }
+    .meta-footer-text strong { color: var(--cyan); }
+    .meta-time { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.55rem; }
+    .meta-time-val { font-family: var(--font-head); font-weight: 700; font-size: 1.55rem; color: #fff; }
+    .meta-time-lbl { font-size: 0.72rem; color: rgba(255,255,255,0.38); line-height: 1.35; }
+  </style>
+</head>
+<body>
+
+<nav class="slide-nav">
+  <div class="nav-dot" data-slide="0"></div>
+  <div class="nav-dot" data-slide="1"></div>
+  <div class="nav-dot" data-slide="2"></div>
+  <div class="nav-dot" data-slide="3"></div>
+  <div class="nav-dot" data-slide="4"></div>
+  <div class="nav-dot" data-slide="5"></div>
+  <div class="nav-dot" data-slide="6"></div>
+  <div class="nav-dot" data-slide="7"></div>
+  <div class="nav-dot" data-slide="8"></div>
+  <div class="nav-dot" data-slide="9"></div>
+</nav>
+
+<!-- SLIDE 1 — COVER -->
+<section class="slide">
+  <div class="orbs">
+    <div class="orb" style="--op:.24;width:clamp(260px,40vw,580px);height:clamp(260px,40vw,580px);background:var(--cyan);top:-18%;right:-6%;animation:appear 1.5s ease forwards,floatA 22s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.20;width:clamp(200px,30vw,440px);height:clamp(200px,30vw,440px);background:var(--teal);bottom:-14%;left:-5%;animation:appear 1.5s ease .3s forwards,floatB 28s ease-in-out infinite .3s;"></div>
+    <div class="orb" style="--op:.12;width:clamp(140px,20vw,300px);height:clamp(140px,20vw,300px);background:var(--blue);top:35%;right:22%;animation:appear 1.5s ease .6s forwards,floatC 19s ease-in-out infinite .6s;"></div>
+  </div>
+  <header class="slide-header z">
+    <div class="brand-pair">
+      <img src="assets/brand/capgemini-engineering-logo-transparent.png" class="cap-logo" alt="Capgemini Engineering">
+    </div>
+    <div style="font-size:0.72rem;color:rgba(255,255,255,0.22);">Client Presentation &middot; May 2025</div>
+  </header>
+  <div class="slide-inner z">
+    <div class="s1-body">
+      <div class="s1-left">
+        <div class="accent-bar"></div>
+        <div class="slide-label">Field Service Innovation</div>
+        <h1 class="cover-title">Field Assist</h1>
+        <p class="cover-sub">Tablet-first issue reporting with embedded AI</p>
+        <div class="s1-pills">
+          <span class="pill">Tablet-first</span>
+          <span class="pill">Offline tolerant</span>
+          <span class="pill">AI-assisted</span>
+          <span class="pill">Human-confirmed</span>
+        </div>
+        <div class="s1-meta">
+          <div class="s1-meta-item"><span class="s1-meta-val">&lt;60s</span><span class="s1-meta-lbl">to capture an issue</span></div>
+          <div class="s1-meta-item"><span class="s1-meta-val">3</span><span class="s1-meta-lbl">screens max for technicians</span></div>
+          <div class="s1-meta-item"><span class="s1-meta-val">&minus;50%</span><span class="s1-meta-lbl">triage follow-up calls</span></div>
+        </div>
+      </div>
+      <div class="s1-right">
+        <div class="cover-visual">
+          <div class="cover-icon">🔧</div>
+          <div class="cover-visual-title">Field Assist</div>
+          <div class="cover-visual-sub">Report &rarr; AI Assist &rarr; Submit<br>Built for the shop floor</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">1 / 7</span>
+</section>
+
+<!-- SLIDE 2 — PROBLEM -->
+<section class="slide">
+  <div class="orbs">
+    <div class="orb" style="--op:.22;width:clamp(240px,36vw,520px);height:clamp(240px,36vw,520px);background:var(--rose);top:-16%;left:-6%;animation:appear 1.5s ease forwards,floatB 26s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.16;width:clamp(180px,28vw,400px);height:clamp(180px,28vw,400px);background:var(--amber);bottom:-12%;right:-5%;animation:appear 1.5s ease .4s forwards,floatA 20s ease-in-out infinite .4s;"></div>
+    <div class="orb" style="--op:.12;width:clamp(120px,18vw,260px);height:clamp(120px,18vw,260px);background:var(--purple);top:34%;right:24%;animation:appear 1.5s ease .7s forwards,floatC 24s ease-in-out infinite .7s;"></div>
+  </div>
+  <header class="slide-header z">
+    <img src="assets/brand/capgemini-engineering-logo-transparent.png" class="cap-logo" alt="Capgemini Engineering">
+  </header>
+  <div class="slide-inner z">
+    <div class="accent-bar"></div>
+    <div class="slide-label">The Problem</div>
+    <h2 class="slide-title">Issue Reporting on the Shop Floor is Broken</h2>
+    <div class="s2-grid">
+      <div class="prob-card">
+        <div class="prob-icon">🗂️</div>
+        <div class="prob-title">Unstructured reporting</div>
+        <div class="prob-body">Teams, phone, handwritten notes — asset IDs and error codes routinely missing.</div>
+      </div>
+      <div class="prob-card">
+        <div class="prob-icon">🔁</div>
+        <div class="prob-title">10–15 min of follow-up per ticket</div>
+        <div class="prob-body">Triage asks 5+ questions every time. Context is already gone by then.</div>
+      </div>
+      <div class="prob-card">
+        <div class="prob-icon">📚</div>
+        <div class="prob-title">Knowledge buried</div>
+        <div class="prob-body">Guides live in PDFs. Tribal knowledge stays in people's heads.</div>
+      </div>
+    </div>
+    <div class="s2-bottom">
+      <div class="glass ba-panel">
+        <div class="ba-head"><div class="ba-dot ba-dot--red"></div><div class="ba-head-txt ba-head-txt--red">Today's reality</div></div>
+        <div class="ba-item"><span class="bm-r">✗</span> Reports missing asset ID, location, error codes, photos</div>
+        <div class="ba-item"><span class="bm-r">✗</span> Priority assigned inconsistently — depends on who's on shift</div>
+        <div class="ba-item"><span class="bm-r">✗</span> Free-text chaos — impossible to trend or analyse</div>
+        <div class="ba-item"><span class="bm-r">✗</span> Junior technicians under-report or over-escalate</div>
+      </div>
+      <div class="glass ba-panel">
+        <div class="ba-head"><div class="ba-dot ba-dot--green"></div><div class="ba-head-txt ba-head-txt--green">What better looks like</div></div>
+        <div class="ba-item"><span class="bm-g">✓</span> Issue captured in under 60 seconds — at the asset, on the tablet</div>
+        <div class="ba-item"><span class="bm-g">✓</span> AI asks only the missing critical questions — not a long form</div>
+        <div class="ba-item"><span class="bm-g">✓</span> Consistent structured data every time — ready for triage</div>
+        <div class="ba-item"><span class="bm-g">✓</span> Relevant guidance surfaced in context — not buried in PDFs</div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">2 / 7</span>
+</section>
+
+<!-- SLIDE 3 — SOLUTION -->
+<section class="slide">
+  <div class="orbs">
+    <div class="orb" style="--op:.22;width:clamp(260px,38vw,540px);height:clamp(260px,38vw,540px);background:var(--cyan);top:-18%;right:-6%;animation:appear 1.5s ease forwards,floatA 22s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.17;width:clamp(180px,28vw,390px);height:clamp(180px,28vw,390px);background:var(--teal);bottom:-11%;left:-5%;animation:appear 1.5s ease .5s forwards,floatB 30s ease-in-out infinite .5s;"></div>
+  </div>
+  <header class="slide-header z">
+    <img src="assets/brand/capgemini-engineering-logo-transparent.png" class="cap-logo" alt="Capgemini Engineering">
+  </header>
+  <div class="slide-inner z">
+    <div class="accent-bar"></div>
+    <div class="slide-label">The Solution</div>
+    <h2 class="slide-title">Field Assist — How It Works</h2>
+    <div class="s3-body">
+      <div class="s3-flow">
+        <div class="flow-step">
+          <div class="flow-num">01</div>
+          <div>
+            <div class="flow-title">Select asset &amp; describe the issue</div>
+            <div class="flow-desc">Type or dictate. Photo optional. Safety &amp; production impact in one tap. Under 60 seconds.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">02</div>
+          <div>
+            <div class="flow-title">AI Assist — structure + follow-up</div>
+            <div class="flow-desc">Summary generated. Missing fields detected. 3–5 targeted questions asked. Category, priority + rationale suggested.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">03</div>
+          <div>
+            <div class="flow-title">Confirm &amp; submit</div>
+            <div class="flow-desc">Technician reviews, edits any field, submits. Full structured report lands in backoffice queue instantly.</div>
+          </div>
+        </div>
+      </div>
+      <div class="s3-right">
+        <div class="kv-card">
+          <div class="kv-label">Design principles</div>
+          <div class="kv-item"><span class="kv-check">✓</span> 2–3 screens max for technicians</div>
+          <div class="kv-item"><span class="kv-check">✓</span> Touch targets ≥ 48px — works with gloves</div>
+          <div class="kv-item"><span class="kv-check">✓</span> High contrast for industrial lighting</div>
+          <div class="kv-item"><span class="kv-check">✓</span> Drafts stored locally when offline, sync on reconnect</div>
+          <div class="kv-item"><span class="kv-check">✓</span> AI degrades gracefully — manual entry always works</div>
+        </div>
+        <div class="kv-card" style="flex:1;">
+          <div class="kv-label">User roles</div>
+          <div class="kv-item"><span class="kv-check">→</span> <span><strong style="color:#fff">Technician</strong> — create report, answer AI questions, submit</span></div>
+          <div class="kv-item"><span class="kv-check">→</span> <span><strong style="color:#fff">Supervisor / Backoffice</strong> — review queue, reclassify, assign, convert to work order</span></div>
+          <div class="kv-item"><span class="kv-check">→</span> <span><strong style="color:#fff">IT / Security</strong> — data boundaries, auditability, retention policy</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">3 / 7</span>
+</section>
+
+<!-- SLIDE 4 — AI ASSIST -->
+<section class="slide">
+  <div class="orbs">
+    <div class="orb" style="--op:.20;width:clamp(240px,36vw,520px);height:clamp(240px,36vw,520px);background:var(--purple);top:-16%;right:-7%;animation:appear 1.5s ease forwards,floatD 25s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.16;width:clamp(180px,28vw,380px);height:clamp(180px,28vw,380px);background:var(--cyan);bottom:-12%;left:-5%;animation:appear 1.5s ease .4s forwards,floatA 20s ease-in-out infinite .4s;"></div>
+  </div>
+  <header class="slide-header z">
+    <img src="assets/brand/capgemini-engineering-logo-transparent.png" class="cap-logo" alt="Capgemini Engineering">
+  </header>
+  <div class="slide-inner z">
+    <div class="accent-bar"></div>
+    <div class="slide-label">AI Assist</div>
+    <h2 class="slide-title">Responsible AI — Embedded, Not Intrusive</h2>
+    <div class="s4-body">
+      <div class="s4-left">
+        <div class="ai-step"><div class="ai-icon">📝</div><div><div class="ai-step-title">Summarise the observation</div><div class="ai-step-desc">Structured summary from free-text or voice. Fully editable.</div></div></div>
+        <div class="ai-step"><div class="ai-icon">❓</div><div><div class="ai-step-title">Ask only what's missing</div><div class="ai-step-desc">Up to 5 targeted follow-up questions. "Unknown" always an option.</div></div></div>
+        <div class="ai-step"><div class="ai-icon">🏷️</div><div><div class="ai-step-title">Category + priority with rationale</div><div class="ai-step-desc">P1/P2/P3 suggestion with a short "why". Technician confirms or overrides.</div></div></div>
+        <div class="ai-step"><div class="ai-icon">🔍</div><div><div class="ai-step-title">Safe recommended checks</div><div class="ai-step-desc">Up to 3 non-invasive checks from approved knowledge base. Never unsafe instructions.</div></div></div>
+        <div class="guardrail"><span style="font-size:1rem;">🛡️</span><span>AI suggestions are <strong style="color:var(--amber)">never instructions</strong>. Human confirmation required on every field.</span></div>
+      </div>
+      <div class="s4-right">
+        <div class="ai-mock">
+          <div class="ai-mock-header">⚡ AI Assist — live example</div>
+          <div class="ai-input">Technician: "Motor on Line 3 overheats after 10 min, smell of burning"</div>
+          <div class="ai-bubble"><strong>What I understood:</strong> Overheating motor on Line 3, onset after ~10 min of operation, accompanied by burning smell. Emergency stop status unknown. Specific motor and load not yet recorded.</div>
+          <div style="font-size:0.66rem;color:rgba(255,255,255,0.3);">Missing 3 critical fields — asking:</div>
+          <div class="ai-qs">
+            <div class="ai-q"><span class="ai-qn">1</span> Which motor exactly? (asset ID or label)</div>
+            <div class="ai-q"><span class="ai-qn">2</span> Did it trigger an emergency stop? (Yes / No)</div>
+            <div class="ai-q"><span class="ai-qn">3</span> Any error code on the control panel?</div>
+          </div>
+          <div class="ai-classify">
+            <span class="ai-badge ai-badge--p">P2 — Production impact</span>
+            <span class="ai-badge ai-badge--c">Overheating</span>
+          </div>
+          <div class="ai-why">Why: production impacted, no confirmed safety risk, no workaround noted.</div>
+          <div class="ai-confirm">✓ Human confirmation required before submitting</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">4 / 7</span>
+</section>
+
+<!-- SLIDE 5 — MVP SCOPE -->
+<section class="slide">
+  <div class="orbs">
+    <div class="orb" style="--op:.20;width:clamp(240px,36vw,520px);height:clamp(240px,36vw,520px);background:var(--green);top:-16%;right:-7%;animation:appear 1.5s ease forwards,floatA 24s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.16;width:clamp(180px,28vw,380px);height:clamp(180px,28vw,380px);background:var(--teal);bottom:-12%;left:-5%;animation:appear 1.5s ease .4s forwards,floatB 28s ease-in-out infinite .4s;"></div>
+  </div>
+  <header class="slide-header z">
+    <img src="assets/brand/capgemini-engineering-logo-transparent.png" class="cap-logo" alt="Capgemini Engineering">
+  </header>
+  <div class="slide-inner z">
+    <div class="accent-bar"></div>
+    <div class="slide-label">MVP Scope &amp; Pilot</div>
+    <h2 class="slide-title">Small Enough to Test Fast. Meaningful Enough to Prove Value.</h2>
+    <div class="s5-body">
+      <div class="s5-left">
+        <div class="scope-sec">
+          <div class="scope-head scope-head--in">In scope — MVP</div>
+          <div class="scope-item"><span class="sc-in">✓</span> Tablet-first Report Issue flow (2–3 screens, glove-friendly)</div>
+          <div class="scope-item"><span class="sc-in">✓</span> Voice-to-text + photo attachments</div>
+          <div class="scope-item"><span class="sc-in">✓</span> AI Assist: summary, follow-ups, category, priority, safe checks</div>
+          <div class="scope-item"><span class="sc-in">✓</span> Human-confirmed before submit</div>
+          <div class="scope-item"><span class="sc-in">✓</span> Backoffice review queue with filters &amp; triage</div>
+          <div class="scope-item"><span class="sc-in">✓</span> Offline-tolerant — syncs on reconnect</div>
+        </div>
+        <div class="scope-sec" style="flex:0;padding-bottom:0.85rem;">
+          <div class="scope-head scope-head--out">Out of scope — MVP</div>
+          <div class="scope-item"><span class="sc-out">–</span> Full ITSM / work order system write-back (queue export first)</div>
+          <div class="scope-item"><span class="sc-out">–</span> Fully offline AI reasoning (graceful degradation to manual)</div>
+          <div class="scope-item"><span class="sc-out">–</span> Enterprise SSO / advanced RBAC (pilot-friendly login first)</div>
+        </div>
+      </div>
+      <div class="s5-right">
+        <div class="metric-card">
+          <div class="metric-head">Success targets</div>
+          <div class="metric-row"><span class="metric-lbl">Triage follow-up messages</span><span class="metric-val">&minus;50%</span></div>
+          <div class="metric-row"><span class="metric-lbl">Reports with asset ID</span><span class="metric-val">&gt;95%</span></div>
+          <div class="metric-row"><span class="metric-lbl">AI summary acceptance rate</span><span class="metric-val">&gt;70%</span></div>
+          <div class="metric-row"><span class="metric-lbl">Average report capture time</span><span class="metric-val">&lt;60s</span></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-head">Pilot plan</div>
+          <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-step">PRD + User stories</div></div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-step">Prototype 2–3 screens</div></div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-step">MVP build</div></div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-step">2-week pilot (5 techs, 1 zone)</div></div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-step">Evaluate &amp; expand</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">5 / 7</span>
+</section>
+
+<!-- SLIDE 6 — SCREENSHOT 1 -->
+<section class="slide">
+  <div class="orbs">
+    <div class="orb" style="--op:.18;width:clamp(240px,36vw,520px);height:clamp(240px,36vw,520px);background:var(--blue);top:-16%;right:-6%;animation:appear 1.5s ease forwards,floatB 26s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.14;width:clamp(180px,28vw,390px);height:clamp(180px,28vw,390px);background:var(--cyan);bottom:-11%;left:-5%;animation:appear 1.5s ease .4s forwards,floatA 22s ease-in-out infinite .4s;"></div>
+  </div>
+  <header class="slide-header z">
+    <img src="assets/brand/capgemini-engineering-logo-transparent.png" class="cap-logo" alt="Capgemini Engineering">
+  </header>
+  <div class="slide-inner z">
+    <div class="accent-bar"></div>
+    <div class="slide-label">The App · 1 of 3</div>
+    <h2 class="slide-title">Report Issue</h2>
+    <div class="s6-body">
+      <div class="ss-wrap">
+        <div class="ss-card" style="flex:1;">
+          <div class="ss-img" id="ss1-wrap" style="min-height:0;"><img id="ss1" src="assets/ss-report2.jpg" alt="Report Issue screen" style="display:block;"></div>
+          <div class="ss-cap" style="width:220px;"><div class="ss-title">Report Issue</div><div class="ss-desc">Asset selector, description, photo attachments, impact toggles — touch-first, glove-friendly</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">6 / 9</span>
+</section>
+
+<!-- SLIDE 7 — SCREENSHOT 2 -->
+<section class="slide">
+  <div class="orbs">
+    <div class="orb" style="--op:.18;width:clamp(240px,36vw,520px);height:clamp(240px,36vw,520px);background:var(--teal);top:-16%;left:-6%;animation:appear 1.5s ease forwards,floatA 24s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.14;width:clamp(180px,28vw,390px);height:clamp(180px,28vw,390px);background:var(--blue);bottom:-11%;right:-5%;animation:appear 1.5s ease .4s forwards,floatC 20s ease-in-out infinite .4s;"></div>
+  </div>
+  <header class="slide-header z">
+    <img src="assets/brand/capgemini-engineering-logo-transparent.png" class="cap-logo" alt="Capgemini Engineering">
+  </header>
+  <div class="slide-inner z">
+    <div class="accent-bar"></div>
+    <div class="slide-label">The App · 2 of 3</div>
+    <h2 class="slide-title">AI Assist</h2>
+    <div class="s6-body">
+      <div class="ss-wrap">
+        <div class="ss-card" style="flex:1;">
+          <div class="ss-img" id="ss2-wrap" style="min-height:0;"><img id="ss2" src="assets/ss-aiassist.jpg" alt="AI Assist screen" style="display:block;"></div>
+          <div class="ss-cap" style="width:220px;"><div class="ss-title">AI Assist</div><div class="ss-desc">Structured summary, targeted follow-up questions, suggested priority and category</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">7 / 9</span>
+</section>
+
+<!-- SLIDE 8 — SCREENSHOT 3 -->
+<section class="slide">
+  <div class="orbs">
+    <div class="orb" style="--op:.18;width:clamp(240px,36vw,520px);height:clamp(240px,36vw,520px);background:var(--purple);top:-16%;right:-6%;animation:appear 1.5s ease forwards,floatD 28s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.14;width:clamp(180px,28vw,390px);height:clamp(180px,28vw,390px);background:var(--cyan);bottom:-11%;left:-5%;animation:appear 1.5s ease .4s forwards,floatB 22s ease-in-out infinite .4s;"></div>
+  </div>
+  <header class="slide-header z">
+    <img src="assets/brand/capgemini-engineering-logo-transparent.png" class="cap-logo" alt="Capgemini Engineering">
+  </header>
+  <div class="slide-inner z">
+    <div class="accent-bar"></div>
+    <div class="slide-label">The App · 3 of 3</div>
+    <h2 class="slide-title">Backoffice Queue</h2>
+    <div class="s6-body">
+      <div class="ss-wrap">
+        <div class="ss-card" style="flex:1;">
+          <div class="ss-img" id="ss3-wrap" style="min-height:0;"><img id="ss3" src="assets/ss-queue.jpg" alt="Backoffice Queue" style="display:block;"></div>
+          <div class="ss-cap" style="width:220px;"><div class="ss-title">Backoffice Queue</div><div class="ss-desc">Filtered list view, structured detail panel, one-click triage — full context, no follow-up calls</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">8 / 9</span>
+</section>
+
+<!-- SLIDE 7 — META -->
+<section class="slide">
+  <div class="orbs">
+    <div class="orb" style="--op:.22;width:clamp(260px,38vw,540px);height:clamp(260px,38vw,540px);background:var(--cyan);top:-18%;right:-6%;animation:appear 1.5s ease forwards,floatA 22s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.16;width:clamp(180px,28vw,380px);height:clamp(180px,28vw,380px);background:var(--purple);bottom:-12%;left:-5%;animation:appear 1.5s ease .4s forwards,floatB 30s ease-in-out infinite .4s;"></div>
+  </div>
+  <header class="slide-header z">
+    <img src="assets/brand/capgemini-engineering-logo-transparent.png" class="cap-logo" alt="Capgemini Engineering">
+  </header>
+  <div class="slide-inner z">
+    <div class="accent-bar"></div>
+    <div class="slide-label">Behind the Scenes</div>
+    <h2 class="slide-title">This Presentation Was Built Live — by AI</h2>
+    <div class="s7-body">
+      <div class="meta-col">
+        <div class="meta-card">
+          <div class="meta-head meta-head--i">What I had</div>
+          <div class="meta-item"><div class="md md-a"></div>A 20-minute discovery call transcript — fictional client (Laura, Tom, Sofia, Priya) + Gonçalo &amp; Daniel from Capgemini Engineering</div>
+          <div class="meta-item"><div class="md md-a"></div>A full Product Requirements Document for "Field Assist" — personas, scope, functional requirements, NFRs, success metrics</div>
+          <div class="meta-item"><div class="md md-a"></div>A design reference (Energy Maturity Assessment) — fonts, colour palette, layout pattern, orb system, glassmorphism cards</div>
+          <div class="meta-item"><div class="md md-a"></div>Capgemini Engineering logo (white + colour), sent via Telegram</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-head meta-head--a">What I was asked</div>
+          <div class="meta-item"><div class="md md-p"></div>Build a client-ready HTML presentation matching the design guide</div>
+          <div class="meta-item"><div class="md md-p"></div>Cover: problem, what was built, how it works, MVP scope &amp; pilot plan</div>
+          <div class="meta-item"><div class="md md-p"></div>Add it to the demo page so it can be shown alongside other projects</div>
+          <div class="meta-item"><div class="md md-p"></div>Include this meta slide — to show what AI had and what it produced</div>
+        </div>
+      </div>
+      <div class="meta-col">
+        <div class="meta-card">
+          <div class="meta-head meta-head--o">What I produced</div>
+          <div class="meta-item"><div class="md md-g"></div>10-slide HTML presentation — cover, problem, solution, AI detail, MVP scope, 3 app screenshots, meta slide, live audience photo</div>
+          <div class="meta-item"><div class="md md-g"></div>Full design system match — same grid, orbs, glassmorphism, typography and colour palette as the reference</div>
+          <div class="meta-item"><div class="md md-g"></div>AI Assist mock-up with a real example from the discovery call (motor overheating on Line 3)</div>
+          <div class="meta-item"><div class="md md-g"></div>All content derived directly from the documents — no hallucination, no invented requirements</div>
+        </div>
+        <div class="meta-footer">
+          <div class="meta-footer-text">The request came via <strong>Telegram voice message</strong> during a live conversation. Documents were sent as attachments. The presentation was deployed to a web server and linked from the demo landing page — all in a single session.</div>
+          <div class="meta-time">
+            <div class="meta-time-val">~20 min</div>
+            <div class="meta-time-lbl">from first message<br>to live URL</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">9 / 10</span>
+</section>
+
+<!-- SLIDE 10 — CLOSING / AUDIENCE -->
+<section class="slide">
+  <div class="orbs">
+    <div class="orb" style="--op:.2;width:clamp(300px,45vw,600px);height:clamp(300px,45vw,600px);background:var(--cyan);top:-20%;left:50%;transform:translateX(-50%);animation:appear 1.5s ease forwards,floatA 28s ease-in-out infinite;"></div>
+    <div class="orb" style="--op:.14;width:clamp(200px,30vw,420px);height:clamp(200px,30vw,420px);background:var(--purple);bottom:-12%;right:-6%;animation:appear 1.5s ease .5s forwards,floatC 24s ease-in-out infinite .5s;"></div>
+  </div>
+  <div class="audience-wrap z">
+    <div class="audience-img-wrap" id="audience-wrap">
+      <span id="audience-ph">📸 Audience photo coming live</span>
+      <img id="audience-img" src="" alt="Audience" style="display:none;">
+    </div>
+    <div class="audience-footer">
+      <div class="audience-tagline">Thank you</div>
+      <div class="audience-sub">Questions? Let's talk.</div>
+    </div>
+  </div>
+  <span class="slide-num">10 / 10</span>
+</section>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dots   = document.querySelectorAll('.nav-dot');
+  function getActive() {
+    let best = 0, bestVis = -1;
+    slides.forEach((s, i) => {
+      const r = s.getBoundingClientRect();
+      const vis = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+      if (vis > bestVis) { bestVis = vis; best = i; }
+    });
+    return best;
+  }
+  function updateDots() {
+    const a = getActive();
+    dots.forEach((d, i) => d.classList.toggle('active', i === a));
+  }
+  document.addEventListener('scroll', updateDots, { passive: true });
+  updateDots();
+  dots.forEach((d, i) => d.addEventListener('click', () => slides[i].scrollIntoView({ behavior: 'smooth' })));
+</script>
+</body>
+</html>
