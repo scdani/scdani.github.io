@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🗺️ Választás 2026 — Térkép</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f1117;
+    color: #e8e8e8;
+    min-height: 100vh;
+    padding: 12px;
+  }
+  h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+  .subtitle { font-size: 12px; color: #888; margin-bottom: 10px; }
+  .updated { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .live-dot {
+    display: inline-block; width: 8px; height: 8px;
+    background: #f44336; border-radius: 50%;
+    margin-right: 5px; animation: pulse 1.5s infinite; vertical-align: middle;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  #map-wrap {
+    position: relative;
+    background: #1a1d27;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  canvas { display: block; width: 100%; touch-action: none; }
+  #tooltip {
+    display: none;
+    position: fixed;
+    background: #1e2130;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #ddd;
+    pointer-events: none;
+    z-index: 100;
+    min-width: 160px;
+    max-width: 250px;
+  }
+  .legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    background: #1a1d27;
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+  .leg-item { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+  .leg-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+  .back-link {
+    display: inline-block;
+    color: #64B5F6;
+    font-size: 13px;
+    text-decoration: none;
+    margin-bottom: 10px;
+  }
+  .stats {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .stat-pill {
+    background: #1a1d27;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .loading { text-align: center; padding: 60px 20px; color: #555; }
+</style>
+</head>
+<body>
+<a class="back-link" href="/">← Vissza</a>
+<h1>🗺️ Választói körzetek</h1>
+<div class="subtitle">106 egyéni választókörzet · élő eredmények</div>
+<div id="updated" class="updated"></div>
+
+<div id="stats" class="stats"></div>
+
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:#2196F3"></div><span>TISZA vezet</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#FF6F00"></div><span>Fidesz vezet</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#4CAF50"></div><span>Mi Hazánk vezet</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#9C27B0"></div><span>Más vezet</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#2a2d3a"></div><span>Nincs adat</span></div>
+</div>
+
+<div id="map-wrap">
+  <canvas id="map" height="500"></canvas>
+  <div id="loading" class="loading">Térkép betöltése...</div>
+</div>
+<div id="tooltip"></div>
+
+<script>
+const NVI_BASE = '/api';
+const ORG_COLOR = { 1010: '#2196F3', 1004: '#FF6F00', 1005: '#FF6F00', 1008: '#4CAF50' };
+const ORG_NAME  = { 1010: 'TISZA', 1004: 'Fidesz', 1005: 'KDNP', 1008: 'Mi Hazánk' };
+
+async function fetchJSON(url) {
+  const r = await fetch(url, { cache: 'no-store' });
+  return r.json();
+}
+
+let polygons = null; // static, loaded once
+let candMap = {};
+let leadMap = {};    // maz+evk → { ej_id, feldar }
+let currentConfig = null;
+
+// Parse polygon string "lat lon,lat lon,..."
+function parsePoly(str) {
+  return str.split(',').map(p => {
+    const [lat, lon] = p.trim().split(' ').map(Number);
+    return { lat, lon };
+  });
+}
+
+// Project lat/lon to SVG/canvas x,y
+function project(lat, lon, bbox, w, h, pad=12) {
+  const { minLat, maxLat, minLon, maxLon } = bbox;
+  const x = pad + (lon - minLon) / (maxLon - minLon) * (w - 2*pad);
+  // Invert lat (higher lat = smaller y)
+  const y = pad + (maxLat - lat) / (maxLat - minLat) * (h - 2*pad);
+  return { x, y };
+}
+
+function computeBBox(polys) {
+  let minLat=90, maxLat=-90, minLon=180, maxLon=-180;
+  for (const { poly } of polys) {
+    for (const { lat, lon } of poly) {
+      if (lat < minLat) minLat = lat;
+      if (lat > maxLat) maxLat = lat;
+      if (lon < minLon) minLon = lon;
+      if (lon > maxLon) maxLon = lon;
+    }
+  }
+  return { minLat, maxLat, minLon, maxLon };
+}
+
+let bbox = null;
+let drawnPolys = []; // for hit testing
+
+function draw() {
+  const canvas = document.getElementById('map');
+  const wrap = document.getElementById('map-wrap');
+  const w = wrap.clientWidth;
+  const ratio = window.devicePixelRatio || 1;
+  const h = Math.round(w * 0.58); // Hungary aspect ratio
+  canvas.style.height = h + 'px';
+  canvas.width  = w * ratio;
+  canvas.height = h * ratio;
+
+  const ctx = canvas.getContext('2d');
+  ctx.scale(ratio, ratio);
+  ctx.clearRect(0, 0, w, h);
+
+  drawnPolys = [];
+
+  if (!polygons || !bbox) return;
+
+  for (const { maz, evk, poly, centrum } of polygons) {
+    const key = `${maz}-${evk}`;
+    const lead = leadMap[key];
+    let color = '#2a2d3a';
+    if (lead && lead.ej_id) {
+      const cand = candMap[lead.ej_id];
+      if (cand) color = ORG_COLOR[cand.szkod] || '#9C27B0';
+    }
+
+    ctx.beginPath();
+    for (let i = 0; i < poly.length; i++) {
+      const { x, y } = project(poly[i].lat, poly[i].lon, bbox, w, h);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+
+    // Store for hit testing
+    const cp = project(centrum.lat, centrum.lon, bbox, w, h);
+    drawnPolys.push({ maz, evk, key, color, cx: cp.x, cy: cp.y });
+
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = '#0f1117';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+}
+
+function showTooltip(key, x, y) {
+  const tip = document.getElementById('tooltip');
+  const lead = leadMap[key];
+  const poly = polygons?.find(p => `${p.maz}-${p.evk}` === key);
+  if (!poly) return;
+
+  const name = poly.name || `Körzet ${poly.maz}/${poly.evk}`;
+  let html = `<strong>${name}</strong><br>`;
+
+  if (!lead || !lead.ej_id) {
+    html += '<span style="color:#555">Nincs adat</span>';
+  } else {
+    const cand = candMap[lead.ej_id];
+    const color = cand ? (ORG_COLOR[cand.szkod]||'#888') : '#888';
+    const party = cand ? (ORG_NAME[cand.szkod]||'?') : '?';
+    const neve = cand ? cand.neve : `#${lead.ej_id}`;
+    html += `<span style="color:${color}">${neve}</span> <small style="color:#888">(${party})</small><br>`;
+    html += `<span style="color:#555;font-size:11px">${lead.feldar?.toFixed(1)||0}% feldolg.</span>`;
+    if (lead.mandatum) html += ' <span style="color:#4CAF50">✓ nyert</span>';
+  }
+
+  tip.innerHTML = html;
+  tip.style.display = 'block';
+
+  // Position near click but not off screen
+  const sw = window.innerWidth, sh = window.innerHeight;
+  let tx = x + 12, ty = y + 12;
+  if (tx + 260 > sw) tx = x - 260;
+  if (ty + 100 > sh) ty = y - 100;
+  tip.style.left = tx + 'px';
+  tip.style.top  = ty + 'px';
+}
+
+function hideTooltip() {
+  document.getElementById('tooltip').style.display = 'none';
+}
+
+// Find nearest polygon centroid to click point
+function findNearest(cx, cy) {
+  let best = null, bestDist = Infinity;
+  for (const p of drawnPolys) {
+    const d = (p.cx - cx)**2 + (p.cy - cy)**2;
+    if (d < bestDist) { bestDist = d; best = p; }
+  }
+  return bestDist < 4000 ? best : null; // ~63px radius
+}
+
+function setupEvents() {
+  const canvas = document.getElementById('map');
+  const rect = () => canvas.getBoundingClientRect();
+
+  canvas.addEventListener('click', e => {
+    const r = rect();
+    const scaleX = canvas.width / (window.devicePixelRatio||1) / r.width;
+    const scaleY = canvas.height / (window.devicePixelRatio||1) / r.height;
+    const cx = (e.clientX - r.left) * scaleX;
+    const cy = (e.clientY - r.top) * scaleY;
+    const hit = findNearest(cx, cy);
+    if (hit) showTooltip(hit.key, e.clientX, e.clientY);
+    else hideTooltip();
+  });
+
+  canvas.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) return;
+    const t = e.touches[0];
+    const r = rect();
+    const scaleX = canvas.width / (window.devicePixelRatio||1) / r.width;
+    const scaleY = canvas.height / (window.devicePixelRatio||1) / r.height;
+    const cx = (t.clientX - r.left) * scaleX;
+    const cy = (t.clientY - r.top) * scaleY;
+    const hit = findNearest(cx, cy);
+    if (hit) showTooltip(hit.key, t.clientX, t.clientY);
+    else hideTooltip();
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#map')) hideTooltip();
+  });
+}
+
+function updateStats() {
+  const counts = {};
+  let total = 0;
+  for (const lead of Object.values(leadMap)) {
+    if (!lead.ej_id) continue;
+    const cand = candMap[lead.ej_id];
+    const party = cand ? (ORG_NAME[cand.szkod]||'Más') : 'Más';
+    counts[party] = (counts[party]||0) + 1;
+    total++;
+  }
+  const order = ['TISZA','Fidesz','Mi Hazánk','Más'];
+  const colors = { TISZA:'#2196F3', 'Fidesz':'#FF6F00', 'Mi Hazánk':'#4CAF50', 'Más':'#9C27B0' };
+  let html = '';
+  for (const p of order) {
+    if (counts[p]) {
+      html += `<div class="stat-pill" style="color:${colors[p]}">${p}: ${counts[p]}</div>`;
+    }
+  }
+  document.getElementById('stats').innerHTML = html;
+}
+
+async function loadPolygons(ver) {
+  const data = await fetchJSON(`${NVI_BASE}/${ver}/ver/OevkPoligonok.json`);
+  polygons = (data.list || []).map(e => ({
+    maz: e.maz, evk: e.evk,
+    centrum: { lat: parseFloat(e.centrum.split(' ')[0]), lon: parseFloat(e.centrum.split(' ')[1]) },
+    poly: parsePoly(e.poligon),
+    name: null,
+  }));
+  bbox = computeBBox(polygons);
+  document.getElementById('loading').style.display = 'none';
+}
+
+async function loadResults(szavossz) {
+  const [elsok, szoros] = await Promise.all([
+    fetchJSON(`${NVI_BASE}/${szavossz}/szavossz/OevkElsok.json`).catch(()=>null),
+    fetchJSON(`${NVI_BASE}/${szavossz}/szavossz/SzorosVerseny.json`).catch(()=>null),
+  ]);
+
+  // Build candidate map from SzorosVerseny
+  if (szoros?.list) {
+    for (const e of szoros.list) {
+      for (const key of ['jelolt1','jelolt2']) {
+        const j = e[key];
+        if (j?.ej_id) {
+          const szkod = (j.szervezetek||[{}])[0]?.szkod || 0;
+          candMap[j.ej_id] = { neve: j.neve, szkod };
+        }
+      }
+    }
+  }
+
+  // Also index from OevkJkv for better coverage
+  const oevk = await fetchJSON(`${NVI_BASE}/${szavossz}/szavossz/OevkJkv.json`).catch(()=>null);
+
+  // Build lead map from OevkElsok
+  leadMap = {};
+  if (elsok?.list) {
+    for (const e of elsok.list) {
+      leadMap[`${e.maz}-${e.evk}`] = { ej_id: e.ej_id, feldar: e.feldar };
+    }
+  }
+
+  // Add mandatum info from OevkJkv
+  if (oevk?.list) {
+    for (const e of oevk.list) {
+      const key = `${e.maz}-${e.evk}`;
+      const jkv = e.egyeni_jkv || {};
+      const winner = (jkv.tetelek||[]).find(t => t.mandatum);
+      if (winner && leadMap[key]) leadMap[key].mandatum = true;
+    }
+  }
+}
+
+async function refresh() {
+  try {
+    const config = await fetchJSON(`${NVI_BASE}/config.json`);
+    const { ver, szavossz } = config;
+    const timeStr = new Date().toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('updated').innerHTML = `<span class="live-dot"></span>Frissítve: ${timeStr} · ${szavossz}`;
+
+    if (!polygons) await loadPolygons(ver);
+    await loadResults(szavossz);
+
+    draw();
+    updateStats();
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+window.addEventListener('resize', () => { if (polygons) draw(); });
+setupEvents();
+refresh();
+setInterval(refresh, 30000);
+</script>
+</body>
+</html>

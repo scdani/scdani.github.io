@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic AI — Live Demos</title>
+<style>
+  :root { --bg: #0d1117; --card: #161b22; --border: #30363d; --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff; --green: #3fb950; --orange: #f78166; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 48px 20px; }
+  .inner { max-width: 1000px; margin: 0 auto; }
+
+  h1 { font-size: 2.4rem; font-weight: 800; text-align: center; margin-bottom: 8px; }
+  .subtitle { color: var(--muted); text-align: center; font-size: 0.95rem; margin-bottom: 14px; }
+  .infra { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 48px; }
+  .pill { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; color: var(--muted); }
+  .pill span { color: var(--text); font-weight: 600; }
+
+  .section-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
+
+  /* How it works */
+  .how { margin-bottom: 56px; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; margin-bottom: 20px; }
+  @media (max-width: 640px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  .step { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 16px; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #0d1117; font-weight: 800; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .step h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+  .step p { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+  .step .eg { font-size: 0.72rem; color: #58a6ff88; margin-top: 8px; font-style: italic; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  @media (max-width: 640px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .stat .num { font-size: 1.7rem; font-weight: 800; color: var(--accent); }
+  .stat .desc { font-size: 0.73rem; color: var(--muted); margin-top: 2px; }
+
+  /* Demo cards — input/output style */
+  .demos { margin-bottom: 56px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .dcard { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  .dcard-head { padding: 18px 18px 14px; border-bottom: 1px solid var(--border); }
+  .dcard-head .icon { font-size: 1.6rem; margin-bottom: 8px; }
+  .dcard-head h2 { font-size: 0.95rem; font-weight: 700; }
+  .dcard-body { padding: 14px 18px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .io-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+  .io-label.in { color: var(--orange); }
+  .io-label.out { color: var(--green); }
+  .bubble { border-radius: 10px; padding: 8px 12px; font-size: 0.78rem; line-height: 1.5; }
+  .bubble.in { background: #1f1a14; border: 1px solid #3d2e1a; color: #d4b896; }
+  .bubble.out { background: #121f12; border: 1px solid #1a3d1a; color: #96c896; }
+  .dcard-foot { padding: 12px 18px; border-top: 1px solid var(--border); }
+  .open-btn { display: block; text-align: center; background: var(--accent); color: #0d1117; font-weight: 700; font-size: 0.82rem; padding: 9px; border-radius: 8px; text-decoration: none; transition: opacity 0.15s; }
+  .open-btn:hover { opacity: 0.85; }
+
+  /* Story section */
+  .stories { margin-bottom: 48px; }
+  .story { background: var(--card); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 16px; overflow: hidden; }
+  .story-header { padding: 18px 24px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  .story-header .sicon { font-size: 1.5rem; }
+  .story-header h3 { font-size: 1rem; font-weight: 700; }
+  .story-header .desc { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+  .story-body { padding: 20px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 600px) { .story-body { grid-template-columns: 1fr; } }
+  .col-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+  .col-label.in { color: var(--orange); }
+  .col-label.out { color: var(--green); }
+  .tg-bubble { border-radius: 12px 12px 3px 12px; background: #1f2937; border: 1px solid #374151; padding: 10px 14px; font-size: 0.8rem; line-height: 1.55; color: #d1d5db; margin-bottom: 8px; }
+  .tg-bubble.voice { border-radius: 12px 12px 3px 12px; display: flex; align-items: center; gap: 8px; }
+  .tg-bubble.voice .mic { font-size: 1rem; }
+  .tg-bubble.voice .waveform { flex: 1; height: 20px; background: repeating-linear-gradient(90deg, #4b5563 0px, #4b5563 2px, transparent 2px, transparent 5px); border-radius: 2px; }
+  .tg-bubble.img { display: flex; align-items: center; gap: 8px; }
+  .tg-bubble.img .photo-icon { font-size: 1.5rem; }
+  .photo-strip { display: flex; gap: 6px; margin-bottom: 8px; }
+  .photo-strip img { width: 80px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+  .story-open { display: block; text-align: center; background: var(--accent); color: #0d1117; font-weight: 700; font-size: 0.85rem; padding: 11px; border-radius: 8px; text-decoration: none; margin: 0 24px 20px; transition: opacity 0.15s; }
+  .story-open:hover { opacity: 0.85; }
+  .result-bubble { border-radius: 12px 12px 12px 3px; background: #0d2010; border: 1px solid #1a4a1a; padding: 10px 14px; font-size: 0.8rem; line-height: 1.55; color: #86efac; margin-bottom: 8px; }
+  .result-tag { display: inline-flex; align-items: center; gap: 6px; background: #0d1f0d; border: 1px solid #1e4a1e; color: var(--green); border-radius: 20px; padding: 4px 12px; font-size: 0.75rem; margin-top: 4px; }
+
+  .dot { display: inline-block; width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; vertical-align: middle; margin-right: 4px; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  footer { text-align: center; color: var(--muted); font-size: 0.75rem; padding-top: 20px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<div class="inner">
+
+  <h1>Agentic AI</h1>
+  <p class="subtitle"><span class="dot"></span>Running live · Built by Daniel over Telegram</p>
+  <div class="infra">
+    <div class="pill">Runs on <span>Ubuntu VM</span></div>
+    <div class="pill">Hosted on <span>Proxmox homelab</span></div>
+    <div class="pill">Interface <span>Telegram (text + voice)</span></div>
+    <div class="pill">Model <span>Claude (Anthropic)</span></div>
+  </div>
+
+  <!-- How it works -->
+  <div class="how">
+    <div class="section-title">How it works</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Describe it</h3>
+        <p>Type or voice-message what you want. No spec, no ticket, no design doc.</p>
+        <div class="eg">"Make me an election results dashboard"</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>AI plans it</h3>
+        <p>Claude breaks it into steps, picks the right tools, and starts executing autonomously.</p>
+        <div class="eg">Write HTML → set up API → deploy</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Tools run</h3>
+        <p>Writes code, runs shell commands, calls APIs, restarts services — no human in the loop.</p>
+        <div class="eg">All on the VM, in the background</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Live result</h3>
+        <p>A working URL comes back in Telegram. Done.</p>
+        <div class="eg">http://100.93.75.34/election/</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="num">~5 min</div><div class="desc">idea → deployed app</div></div>
+      <div class="stat"><div class="num">0</div><div class="desc">lines of code written manually</div></div>
+      <div class="stat"><div class="num">Voice or text</div><div class="desc">the only input needed</div></div>
+      <div class="stat"><div class="num">24/7</div><div class="desc">always on, self-healing</div></div>
+    </div>
+  </div>
+
+  <!-- Demo tiles with input/output -->
+  <div class="demos">
+    <div class="section-title">Live demos — input that created them → open to explore</div>
+    <div class="grid">
+
+      <div class="dcard">
+        <div class="dcard-head">
+          <div class="icon">🔩</div>
+          <h2>Topology Optimization</h2>
+        </div>
+        <div class="dcard-body">
+          <div>
+            <div class="io-label in">Input</div>
+            <div class="bubble in">"Make me a nice interactive explainer page for topology optimization"</div>
+          </div>
+          <div>
+            <div class="io-label out">Output</div>
+            <div class="bubble out">Interactive explainer: process steps, algorithm comparison, real-world examples — deployed in ~4 min</div>
+          </div>
+        </div>
+        <div class="dcard-foot">
+          <a class="open-btn" href="/topology.html">Open demo →</a>
+        </div>
+      </div>
+
+      <div class="dcard">
+        <div class="dcard-head">
+          <div class="icon">🗳️</div>
+          <h2>Election UI</h2>
+        </div>
+        <div class="dcard-body">
+          <div>
+            <div class="io-label in">Input</div>
+            <div class="bubble in">"Make me a real-time Hungarian election dashboard, live data from the official NVI API"</div>
+          </div>
+          <div>
+            <div class="io-label out">Output</div>
+            <div class="bubble out">Live dashboard with seat counts, party bars, constituency map — Daniel followed election night results on his phone</div>
+          </div>
+        </div>
+        <div class="dcard-foot">
+          <a class="open-btn" href="/election/">Open demo →</a>
+        </div>
+      </div>
+
+      <div class="dcard">
+        <div class="dcard-head">
+          <div class="icon">🇳🇱</div>
+          <h2>Dutch Learning Game</h2>
+        </div>
+        <div class="dcard-body">
+          <div>
+            <div class="io-label in">Input</div>
+            <div class="bubble in">📸 [3 photos of Dutch textbook pages]<br>"Turn these into a Dutch vocab game"</div>
+          </div>
+          <div>
+            <div class="io-label out">Output</div>
+            <div class="bubble out">Full quiz game with multiple choice, fill-in-the-blank, and score tracking — content extracted directly from the photos</div>
+          </div>
+        </div>
+        <div class="dcard-foot">
+          <a class="open-btn" href="/dutch-game/">Open demo →</a>
+        </div>
+      </div>
+
+      <div class="dcard">
+        <div class="dcard-head">
+          <div class="icon">🕸️</div>
+          <h2>Knowledge Graph</h2>
+        </div>
+        <div class="dcard-body">
+          <div>
+            <div class="io-label in">Input</div>
+            <div class="bubble in">"Index my whole Obsidian vault and make a knowledge graph I can explore"</div>
+          </div>
+          <div>
+            <div class="io-label out">Output</div>
+            <div class="bubble out">180-node force graph: projects, integrations, people, ideas — all linked and explorable. Built from 80+ markdown files.</div>
+          </div>
+        </div>
+        <div class="dcard-foot">
+          <a class="open-btn" href="/graph/">Open demo →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Story deep-dives -->
+  <div class="stories">
+    <div class="section-title">Behind the scenes</div>
+
+    <div class="story">
+      <div class="story-header">
+        <div class="sicon">🇳🇱</div>
+        <div>
+          <h3>Dutch Learning Game</h3>
+          <div class="desc">Built from 3 iPhone photos of a textbook — no text typed, no data entered manually</div>
+        </div>
+      </div>
+      <div class="story-body">
+        <div>
+          <div class="col-label in">What Daniel sent</div>
+          <div class="photo-strip">
+            <img src="/demo/assets/dutch1.jpg" alt="Textbook page 1">
+            <img src="/demo/assets/dutch2.jpg" alt="Textbook page 2">
+            <img src="/demo/assets/dutch3.jpg" alt="Textbook page 3">
+          </div>
+          <div class="tg-bubble">"Can you make a sort of gamified way to learn these chapters?"</div>
+        </div>
+        <div>
+          <div class="col-label out">What came back</div>
+          <div class="result-bubble">Claude read the photos → extracted all vocabulary, grammar rules, and example sentences → generated a full interactive quiz game matching the exact content of the pages</div>
+          <div class="result-tag">✅ Deployed in ~6 minutes</div>
+        </div>
+      </div>
+      <a class="story-open" href="/dutch-game/">Open Dutch Game →</a>
+    </div>
+
+    <div class="story">
+      <div class="story-header">
+        <div class="sicon">🗳️</div>
+        <div>
+          <h3>Election UI</h3>
+          <div class="desc">Used live on election night to follow Hungarian parliament results in real-time</div>
+        </div>
+      </div>
+      <div class="story-body">
+        <div>
+          <div class="col-label in">What Daniel sent</div>
+          <div class="tg-bubble">"Make me a real-time Hungarian election dashboard, live data from the official NVI API"</div>
+        </div>
+        <div>
+          <div class="col-label out">What came back</div>
+          <div class="result-bubble">Full dashboard: seat counts per party, progress bars, two-thirds threshold tracker, constituency breakdown — pulling from the official valasztas.hu API, auto-refreshing every 30s</div>
+          <div class="result-tag">✅ Used live on election night</div>
+        </div>
+      </div>
+      <a class="story-open" href="/election/">Open Election UI →</a>
+    </div>
+
+    <div class="story">
+      <div class="story-header">
+        <div class="sicon">🕸️</div>
+        <div>
+          <h3>Knowledge Graph</h3>
+          <div class="desc">80+ personal Obsidian notes → interactive semantic graph, queryable by AI</div>
+        </div>
+      </div>
+      <div class="story-body">
+        <div>
+          <div class="col-label in">What Daniel sent</div>
+          <div class="tg-bubble">"Index my whole Obsidian vault and make a knowledge graph I can explore"</div>
+        </div>
+        <div>
+          <div class="col-label out">What came back</div>
+          <div class="result-bubble">Claude parsed 80+ markdown files → extracted entities and relationships → built a force-directed graph with community clustering, search, and zoom. The same graph powers AI queries: "What are Daniel's active projects?"</div>
+          <div class="result-tag">✅ 180 nodes, fully interactive</div>
+        </div>
+      </div>
+      <a class="story-open" href="/graph/">Open Knowledge Graph →</a>
+    </div>
+
+  </div>
+
+  <footer>All demos built via Telegram — text or voice &nbsp;·&nbsp; Claude Code on Ubuntu VM &nbsp;·&nbsp; Proxmox homelab (Lenovo M700)</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇳🇱 Dutch Exam — H11–H16</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f1117; --card: #1a1d27; --border: #2a2d3a;
+  --accent: #f59e0b; --accent2: #3b82f6; --green: #22c55e; --red: #ef4444;
+  --text: #e2e8f0; --muted: #64748b; --r: 14px;
+}
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+.header { padding: 16px 20px 0; display: flex; align-items: center; justify-content: space-between; }
+.logo { font-size: 18px; font-weight: 700; }
+.logo span { color: var(--accent); }
+.stats { display: flex; gap: 12px; align-items: center; }
+.xp-badge { background: var(--accent); color: #000; font-weight: 700; font-size: 12px; padding: 4px 10px; border-radius: 20px; }
+.streak { font-size: 12px; color: var(--muted); } .streak b { color: var(--accent); }
+
+.progress-wrap { padding: 12px 20px 0; }
+.progress-track { height: 4px; background: var(--border); border-radius: 4px; }
+.progress-fill { height: 4px; background: var(--accent); border-radius: 4px; transition: width 0.4s ease; }
+.progress-label { font-size: 11px; color: var(--muted); margin-top: 5px; }
+
+.section-title { padding: 16px 20px 8px; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* Chapter grid */
+.ch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px 16px; }
+.ch-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 12px; cursor: pointer; transition: all 0.2s; text-align: center; }
+.ch-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.ch-card.all { grid-column: 1 / -1; border-color: var(--accent); }
+.ch-card .num { font-size: 22px; font-weight: 800; color: var(--accent); }
+.ch-card .title { font-size: 11px; color: var(--text); margin: 3px 0; }
+.ch-card .cnt { font-size: 10px; color: var(--muted); }
+
+/* Mode grid */
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px 20px; }
+.mode-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 18px 14px; cursor: pointer; transition: all 0.2s; text-align: center; }
+.mode-card:hover { border-color: var(--accent); }
+.mode-card .icon { font-size: 28px; margin-bottom: 6px; }
+.mode-card .name { font-size: 13px; font-weight: 600; }
+.mode-card .desc { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+/* Quiz card */
+.main { padding: 0 20px 40px; max-width: 620px; margin: 0 auto; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 28px 24px; margin-bottom: 14px; min-height: 240px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; position: relative;
+}
+.ch-tag { position: absolute; top: 14px; left: 14px; font-size: 10px; color: var(--muted); background: var(--bg); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--border); }
+.type-tag { position: absolute; top: 14px; right: 14px; font-size: 10px; color: var(--accent); font-weight: 600; }
+.q-text { font-size: 24px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
+.q-hint { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+.answer-reveal { font-size: 19px; color: var(--green); font-weight: 600; margin-top: 14px; display: none; }
+.feedback { font-size: 13px; margin-top: 10px; min-height: 18px; font-weight: 500; }
+.feedback.ok { color: var(--green); } .feedback.ko { color: var(--red); }
+
+/* Options */
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; max-width: 460px; margin-top: 6px; }
+.opt { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 11px 14px; border-radius: 10px; font-size: 13px; cursor: pointer; transition: all 0.15s; text-align: left; }
+.opt:hover:not(:disabled) { border-color: var(--accent2); background: #1e2235; }
+.opt.correct { border-color: var(--green); background: #0d2318; color: var(--green); }
+.opt.wrong { border-color: var(--red); background: #2a0d0d; color: var(--red); }
+.opt:disabled { cursor: default; }
+
+/* Fill input */
+.fill-input { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 11px 16px; border-radius: 10px; font-size: 17px; width: 100%; max-width: 320px; text-align: center; outline: none; margin-top: 6px; }
+.fill-input:focus { border-color: var(--accent2); }
+.fill-input.correct { border-color: var(--green); background: #0d2318; }
+.fill-input.wrong { border-color: var(--red); background: #2a0d0d; }
+
+/* Buttons */
+.btn-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.btn { padding: 11px 26px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+.btn-primary { background: var(--accent); color: #000; }
+.btn-primary:hover { background: #d97706; }
+.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.btn-ghost:hover { border-color: var(--accent); }
+
+/* Score */
+.score-screen { text-align: center; padding: 32px 20px; }
+.score-big { font-size: 64px; font-weight: 800; color: var(--accent); }
+.score-msg { font-size: 17px; margin: 6px 0 20px; }
+.score-breakdown { display: flex; gap: 20px; justify-content: center; margin: 12px 0 28px; flex-wrap: wrap; }
+.score-stat .n { font-size: 26px; font-weight: 700; }
+.score-stat .l { font-size: 11px; color: var(--muted); }
+
+/* Combo pop */
+.combo { position: fixed; top: 70px; right: 20px; font-size: 26px; font-weight: 800; color: var(--accent); pointer-events: none; animation: popUp 0.6s ease forwards; z-index: 100; }
+@keyframes popUp { 0%{opacity:0;transform:translateY(10px) scale(0.8)} 30%{opacity:1;transform:translateY(-4px) scale(1.1)} 70%{opacity:1} 100%{opacity:0;transform:translateY(-20px)} }
+
+/* XP rain */
+.xp-pop { position: fixed; font-size: 14px; font-weight: 700; color: var(--green); pointer-events: none; animation: xpUp 0.8s ease forwards; z-index: 100; }
+@keyframes xpUp { 0%{opacity:1;transform:translateY(0)} 100%{opacity:0;transform:translateY(-40px)} }
+
+.hidden { display: none !important; }
+@media(max-width:480px) { .options{grid-template-columns:1fr} .q-text{font-size:18px} .mode-grid{grid-template-columns:1fr} .ch-grid{grid-template-columns:repeat(2,1fr)} .ch-card.all{grid-column:1/-1} }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">🇳🇱 <span>NL</span> Exam Prep</div>
+  <div class="stats">
+    <div class="xp-badge">⭐ <span id="xp">0</span></div>
+    <div class="streak">🔥 <b id="streak">0</b></div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="screen-home">
+  <div class="section-title">Select chapters</div>
+  <div class="ch-grid">
+    <div class="ch-card all" onclick="sel('all')">
+      <div class="num">All</div>
+      <div class="title">Full Exam — H11 to H16</div>
+      <div class="cnt" id="cnt-all">loading...</div>
+    </div>
+    <div class="ch-card" onclick="sel(11)"><div class="num">H11</div><div class="title">Op een verjaardag</div><div class="cnt" id="cnt-11">-</div></div>
+    <div class="ch-card" onclick="sel(12)"><div class="num">H12</div><div class="title">Naar de Evenementenhal</div><div class="cnt" id="cnt-12">-</div></div>
+    <div class="ch-card" onclick="sel(13)"><div class="num">H13</div><div class="title">Bij vrienden</div><div class="cnt" id="cnt-13">-</div></div>
+    <div class="ch-card" onclick="sel(14)"><div class="num">H14</div><div class="title">In de sportschool</div><div class="cnt" id="cnt-14">-</div></div>
+    <div class="ch-card" onclick="sel(15)"><div class="num">H15</div><div class="title">In de trein</div><div class="cnt" id="cnt-15">-</div></div>
+    <div class="ch-card" onclick="sel(16)"><div class="num">H16</div><div class="title">Naar de bioscoop</div><div class="cnt" id="cnt-16">-</div></div>
+  </div>
+</div>
+
+<!-- MODE -->
+<div id="screen-mode" class="hidden">
+  <div class="section-title">Choose a mode</div>
+  <div class="mode-grid">
+    <div class="mode-card" onclick="start('flash')"><div class="icon">🃏</div><div class="name">Flashcards</div><div class="desc">Tap to reveal</div></div>
+    <div class="mode-card" onclick="start('mc')"><div class="icon">🎯</div><div class="name">Multiple Choice</div><div class="desc">Pick the right answer</div></div>
+    <div class="mode-card" onclick="start('fill')"><div class="icon">✏️</div><div class="name">Fill in the Blank</div><div class="desc">Type the missing word</div></div>
+    <div class="mode-card" onclick="start('grammar')"><div class="icon">📐</div><div class="name">Grammar Drill</div><div class="desc">Reflexive, separable, zullen, conjuncties</div></div>
+  </div>
+  <div style="padding:0 20px"><button class="btn btn-ghost" onclick="go('home')">← Back</button></div>
+</div>
+
+<!-- QUIZ -->
+<div id="screen-quiz" class="hidden">
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="prog-bar" style="width:0%"></div></div>
+    <div class="progress-label" id="prog-label">0 / 0</div>
+  </div>
+  <div class="main">
+    <div class="card" id="quiz-card">
+      <span class="ch-tag" id="q-ch"></span>
+      <span class="type-tag" id="q-type"></span>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-hint" id="q-hint"></div>
+      <div class="options" id="q-opts"></div>
+      <input class="fill-input hidden" id="q-fill" placeholder="type here..." autocomplete="off" autocorrect="off" spellcheck="false">
+      <div class="answer-reveal" id="q-ans"></div>
+      <div class="feedback" id="q-fb"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary hidden" id="btn-next" onclick="next()">Next →</button>
+      <button class="btn btn-ghost hidden" id="btn-flip" onclick="flip()">Reveal answer</button>
+      <button class="btn btn-primary hidden" id="btn-knew" onclick="mark(true)">✓ Knew it</button>
+      <button class="btn btn-ghost hidden" id="btn-didnt" onclick="mark(false)">✗ Still learning</button>
+    </div>
+    <div style="text-align:center;margin-top:16px">
+      <button class="btn btn-ghost" onclick="go('mode')" style="font-size:12px;padding:7px 18px">← Menu</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCORE -->
+<div id="screen-score" class="hidden">
+  <div class="main score-screen">
+    <div class="score-big" id="sc-pct">0%</div>
+    <div class="score-msg" id="sc-msg"></div>
+    <div class="score-breakdown">
+      <div class="score-stat"><div class="n" style="color:var(--green)" id="sc-ok">0</div><div class="l">Correct</div></div>
+      <div class="score-stat"><div class="n" style="color:var(--red)" id="sc-no">0</div><div class="l">Wrong</div></div>
+      <div class="score-stat"><div class="n" style="color:var(--accent)" id="sc-xp">0</div><div class="l">XP earned</div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="go('mode')">Play Again</button>
+      <button class="btn btn-ghost" onclick="go('home')">Home</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════
+
+const V = {
+  11:[
+    ["de buurvrouw","neighbour (f)"],["hoera","hooray"],["van harte gefeliciteerd","happy birthday / congratulations"],
+    ["feliciteren met","congratulate on"],["het cadeautje","gift / present"],["het kaartje","ticket / card"],
+    ["hopen","hope"],["nog geen","not yet"],["gek zijn op","to be crazy about"],["zich herinneren","to remember"],
+    ["de taart","cake"],["je weet de weg","you know the way"],["het bedrijf","company"],
+    ["zich vergissen","to be mistaken"],["eigen baas","own boss"],["het druk hebben","to be busy"],
+    ["zich vervelen","to be bored"],["nooit","never"],["het buitenland","abroad"],
+    ["dat klopt","that's right"],["sinds kort","recently"],["het bevalt me","I enjoy it"],
+    ["studeren","to study"],["de logopedie","speech therapy"],["het bijbaantje","part-time job"],
+    ["iedere","each / every"],["de bioscoop","cinema"],["zich interesseren voor","to be interested in"],
+    ["begrijpen","to understand"],["zwemmen","swimming"],["wandelen","walking / hiking"],
+    ["wat toevallig","what a coincidence"],["de Wandelbeurs","Walking Fair"],
+    ["bereid me voor op","am getting ready for"],["de wandelreis","walking tour"],
+    ["de reis","trip"],["de informatie","information"],["interessant","interesting"],
+    ["opschrijven","write down"],["onthouden","remember"],["langzamer","more slowly"],
+    ["Wat leuk!","How nice!"],["Wat jammer!","What a pity!"],["Wat vervelend!","How annoying!"],
+    ["Wat toevallig!","What a coincidence!"],["Wat gezellig!","How cosy!"],["Wat interessant!","How interesting!"],
+    ["Lang niet gezien!","Long time no see!"],["Hoe is het met je?","How are you?"],
+  ],
+  12:[
+    ["Bent u hier bekend?","Do you know your way around here?"],["de voorbijganger","passer-by"],
+    ["de buschauffeur","bus driver"],["lopen","walk"],["zeker","certainly"],["de tram","tram"],
+    ["geluk hebben","to be lucky"],["aankomen","to arrive"],["direct","straightaway"],
+    ["instappen","get in / board"],["oversteken","to cross"],["de balie","information desk"],
+    ["de portier","porter"],["boven","upstairs"],["opgaan","go up"],["de trap","stairs"],
+    ["rechtdoor","straight ahead"],["herkennen","to recognize"],["linksaf","to the left"],
+    ["rechtsaf","to the right"],["meenemen","take along"],["de plattegrond","map"],
+    ["de toiletten","toilets"],["beneden","downstairs"],["de hoek","corner"],
+    ["omgaan","turn"],["afgaan","go down"],["vanzelf","as a matter of course"],
+    ["de bordjes","signs"],["volgen","follow"],["makkelijker","easier"],
+    ["Mag ik u iets vragen?","May I ask you something?"],["Ik zoek ...","I'm looking for ..."],
+    ["Weet u waar ... is?","Do you know where ... is?"],["U gaat hier rechtdoor.","You go straight ahead."],
+    ["U gaat linksaf.","You turn left."],["U gaat rechtsaf.","You turn right."],
+    ["U neemt de eerste straat rechts.","You take the first street on the right."],
+    ["De tram stopt tegenover de ingang.","The tram stops opposite the entrance."],
+    ["Kunt u dat nog een keer zeggen?","Can you say that again?"],
+  ],
+  13:[
+    ["bezoeken","to visit"],["kom binnen","come in"],["de kerk","church"],
+    ["gelukkig","fortunately / lucky"],["meegenomen (meenemen)","brought"],
+    ["de auto brengen","take the car"],["de groeten","greetings"],
+    ["Doe haar de groeten terug.","Give her our regards."],["vroeg","early"],
+    ["verontschuldigen","apologize"],["uitdoen","take off"],["hè","isn't it"],
+    ["Zeg dat wel!","You can say that again!"],["koud","cold"],["nat","wet"],
+    ["verkouden zijn","to have a cold"],["toe zijn aan","to need"],["aanhebben","to have on"],
+    ["de verwarming","heating"],["belachelijk","ridiculous"],["schijnen","seems"],
+    ["de doos bonbons","box of chocolates"],["de bos bloemen","bunch of flowers"],
+    ["de vaas","vase"],["zetten","put"],["afsnijden","cut off"],["houden van","to like / love"],
+    ["de dieren","animals"],["de hond","dog"],["de katten","cats"],["de vissen","fish"],
+    ["jawel","oh yes"],["meestal","usually"],["gezellig","pleasant / sociable"],
+    ["het ongeluk","accident"],["verdriet hebben om","to be grieved for"],
+    ["de dood","death"],["volgens mij","in my opinion"],["de gezondheid","health"],
+    ["lachen","laugh"],["gezond","healthy"],["iemand","someone"],
+    ["zullen (zal)","will / shall"],["Wat vind je van ...?","What do you think of ...?"],
+    ["Hoe vind je ...?","How do you like ...?"],["Ik vind ...","I think / find ..."],
+    ["Volgens mij ...","In my opinion ..."],["Lang niet gezien!","Long time no see!"],
+  ],
+  14:[
+    ["de sportschool","sports club / gym"],["inschrijven","to register / sign up"],
+    ["lid worden","to become a member"],["het lid","member"],
+    ["het abonnement","subscription / membership"],["het maandabonnement","monthly membership"],
+    ["het jaarabonnement","annual membership"],["het verschil","difference"],
+    ["beide","both"],["onbeperkt","unlimited"],["betaalt","pays"],
+    ["speciaal","special"],["korting","discount"],["gratis","free"],
+    ["de conditie","physical condition / fitness"],["verbeteren","improve"],
+    ["de spieren (de spier)","muscles"],["versterken","strengthen"],
+    ["verliezen","lose"],["het gewicht","weight"],["regelmatig","regularly"],
+    ["op die manier","in that way"],["veranderen","change"],["virtueel","virtual"],
+    ["bieden","offer"],["de groepsles","group lesson"],["de cardio","cardio fitness"],
+    ["het rooster","schedule / timetable"],["aantrekkelijk","attractive"],
+    ["het leven","life"],["de liefde","love"],["van plan zijn","to intend / plan to"],
+    ["trouw","loyal / faithful"],["nogal","quite / rather"],
+    ["de spierpijn","muscle pain"],["het plezier","fun / pleasure"],["bang","afraid"],
+    ["de automaat","vending machine"],["het muntgeld","cash / coins"],
+    ["de energiedrank","energy drink"],["eraan wennen","get used to it"],
+    ["zullen + wel","will probably (waarschijnlijkheid)"],
+    ["Ik zal het morgen wel voelen.","I will probably feel it tomorrow."],
+    ["Jij zult morgen wel spierpijn hebben.","You'll probably have muscle pain tomorrow."],
+  ],
+  15:[
+    ["het openbaar vervoer","public transport"],["weg (gaan)","went / left"],
+    ["helaas","unfortunately"],["duurde (duren)","lasted"],["ver","far"],
+    ["de koffer","suitcase"],["de tas","bag"],["safe","safe / no problem"],
+    ["eten","food"],["blader","pages"],["de kaas","cheese"],
+    ["het broodje","bread roll"],["de molen","windmill"],["het schilderij","painting"],
+    ["het stuk","piece"],["de lucht","sky / air"],["echt","real / really"],
+    ["het gebied","area"],["de natuur","nature"],["het natuurgebied","nature reserve"],
+    ["zo meteen","very soon"],["optreden","pay attention"],["gewend","used to"],
+    ["de berg","mountain"],["plat","flat"],["anders","different"],
+    ["het landschap","landscape"],["de shetlandpony","Shetland pony"],
+    ["buiten","outside"],["moe","tired"],["goede reis","have a good trip"],
+    ["wakker maken","wake you up"],["onderweg","on the way"],
+    ["dit is / dat is","this is / that is (singular)"],
+    ["die zijn / dat zijn","those are / these are (plural)"],
+    ["die","that/those (de-woorden)"],["dat","that/those (het-woorden)"],
+    ["Kijk eens...","Look at that..."],["Moet je eens zien...","You should see this..."],
+  ],
+  16:[
+    ["de cassière","box office assistant"],["de voorstelling","show / session"],
+    ["bekeken (bekijken)","looked / watched"],["is al begonnen","has already started"],
+    ["de zomerhitte","summer heat"],["draaien","is showing / filmed"],
+    ["eerder","earlier"],["opgenomen (opnemen)","filmed / recorded"],
+    ["gemist (missen)","missed"],["de ondertiteling","subtitles"],
+    ["de documentaire","documentary"],["gesproken","spoken"],
+    ["de rang","aisle / row"],["bijna","almost / nearly"],
+    ["reserveren","to reserve"],["de natuur","nature"],
+    ["Alstublieft.","Here you are. / Please."],["Geen kaartje voor ...","No ticket for ..."],
+    ["want","because (conjunction)"],["of","or (conjunction)"],
+    ["maar","but (conjunction)"],["dus","so / therefore (conjunction)"],
+    ["Ik ga zondag naar de film, want ik houd van actiefilms.","I'm going to the cinema on Sunday because I like action films."],
+    ["Ze spreekt geen Nederlands, maar ze woont wel in Amsterdam.","She doesn't speak Dutch but she does live in Amsterdam."],
+    ["Je kunt online kopen of je koopt aan de balie.","You can buy online or you buy at the counter."],
+    ["De film begint om 20:00, dus we moeten vroeg gaan.","The film starts at 8pm so we have to go early."],
+    ["de kijkwijzer","age rating system (Dutch)"],["een uitnodiging schrijven","write an invitation"],
+  ],
+};
+
+const GRAMMAR = [
+  // H11 — Reflexive verbs
+  {ch:11,q:"Reflexive pronoun — 'ik': Ik kan het ___ herinneren.",a:"me",opts:["me","zich","je","ons"],hint:"1st person singular"},
+  {ch:11,q:"Reflexive pronoun — 'hij/zij': Hij vergist ___.",a:"zich",opts:["zich","me","je","ons"],hint:"3rd person → zich"},
+  {ch:11,q:"Reflexive pronoun — 'wij': Wij bereiden ___ voor.",a:"ons",opts:["ons","me","je","zich"],hint:"1st person plural"},
+  {ch:11,q:"Reflexive pronoun — 'jullie': Jullie vergissen ___.",a:"je",opts:["je","zich","ons","me"],hint:"2nd person plural → je"},
+  {ch:11,q:"Reflexive pronoun — 'u': U vergist ___.",a:"u / zich",opts:["u / zich","me","ons","je"],hint:"Formal 2nd person"},
+  {ch:11,q:"Complete: 'Ze voelt ___ thuis in Nederland.'",a:"zich",opts:["zich","me","je","ons"],hint:"zij → zich"},
+  {ch:11,q:"Complete: 'Ik verveel ___ nooit.'",a:"me",opts:["me","zich","je","ons"],hint:"ik → me"},
+  {ch:11,q:"Reaction — good news (new job):",a:"Wat leuk!",opts:["Wat leuk!","Wat jammer!","Wat vervelend!","Wat belachelijk!"],hint:"Wat + adjective"},
+  {ch:11,q:"Reaction — bike is broken:",a:"Wat vervelend!",opts:["Wat vervelend!","Wat leuk!","Wat gezellig!","Wat toevallig!"],hint:"Wat + adjective"},
+  {ch:11,q:"Reaction — can't come to birthday:",a:"Wat jammer!",opts:["Wat jammer!","Wat leuk!","Wat toevallig!","Wat interessant!"],hint:"disappointment"},
+  {ch:11,q:"Reaction — same hobby / coincidence:",a:"Wat toevallig!",opts:["Wat toevallig!","Wat leuk!","Wat gezellig!","Wat interessant!"],hint:"coincidence"},
+
+  // H12 — Separable verbs
+  {ch:12,q:"'instappen' (presens): Hij ___ bij het station ___.",a:"stapt … in",opts:["stapt … in","instapt …","instap …","stap … in"],hint:"Separable: prefix to end"},
+  {ch:12,q:"'meenemen' (perfectum): Ik heb de plattegrond ___.",a:"meegenomen",opts:["meegenomen","genomen mee","megenomen","genomenmee"],hint:"ge- between prefix and stem"},
+  {ch:12,q:"'oversteken' (presens): U ___ de straat ___.",a:"steekt … over",opts:["steekt … over","oversteekt","over … steekt","steek … over"],hint:"Separable verb rule"},
+  {ch:12,q:"'aankomen' (imperfectum): De tram ___ om 12 uur ___.",a:"kwam … aan",opts:["kwam … aan","aankwam","is … aangekomen","kwamen … aan"],hint:"Past tense of aankomen"},
+  {ch:12,q:"Direction: 'Turn left at the end of the street':",a:"Aan het eind van de straat gaat u linksaf.",opts:["Aan het eind van de straat gaat u linksaf.","U gaat linksaf aan het eind.","Linksaf gaat u aan het eind.","U neemt linksaf."],hint:"Standard direction phrase"},
+  {ch:12,q:"Direction: 'Take the first street on the right':",a:"U neemt de eerste straat rechts.",opts:["U neemt de eerste straat rechts.","U gaat de eerste rechts.","U loopt de eerste rechts.","De eerste rechts neemt u."],hint:"meenemen → neemt"},
+
+  // H13 — Zullen + mening
+  {ch:13,q:"'zullen' — ik: Ik ___ koffie voor je halen.",a:"zal",opts:["zal","zullen","zult","zou"],hint:"Future / promise: ik → zal"},
+  {ch:13,q:"'zullen' — wij: Wij ___ de groeten doen.",a:"zullen",opts:["zullen","zal","zult","zal"],hint:"1st person plural → zullen"},
+  {ch:13,q:"'zullen' — jij: Jij ___ morgen ook komen.",a:"zult",opts:["zult","zal","zullen","zul"],hint:"2nd person → zult / zul"},
+  {ch:13,q:"Asking opinion: correct phrase?",a:"Wat vind je van ...?",opts:["Wat vind je van ...?","Wat denk je van ...?","Hoe heet je ...?","Wat zoek je ...?"],hint:"mening vragen"},
+  {ch:13,q:"Giving opinion: correct phrase?",a:"Ik vind ...",opts:["Ik vind ...","Ik denk dat ...","Ik zeg dat ...","Ik weet ..."],hint:"mening geven"},
+  {ch:13,q:"Response to 'Hoe is het met je?':",a:"Prima. Met jou ook?",opts:["Prima. Met jou ook?","Jawel, lekker hè.","Zeg dat wel!","Dat klopt niet."],hint:"Standard polite response"},
+
+  // H14 — Zullen (waarschijnlijkheid met wel)
+  {ch:14,q:"Future probability: 'I'll probably feel it tomorrow':",a:"Ik zal het morgen wel voelen.",opts:["Ik zal het morgen wel voelen.","Ik zal het morgen voelen.","Ik ga het morgen voelen.","Ik word het morgen voelen."],hint:"zullen + wel = waarschijnlijkheid"},
+  {ch:14,q:"'zullen + wel' expresses:",a:"probability / likelihood",opts:["probability / likelihood","a command","a wish","a past action"],hint:"Waarschijnlijkheid"},
+  {ch:14,q:"Complete: 'Jij ___ morgen wel spierpijn ___.'",a:"zult … hebben",opts:["zult … hebben","zal … hebben","zullen … hebben","hebt … zullen"],hint:"jij + zullen + well"},
+  {ch:14,q:"Future plan sentence — correct word order with 'zullen':",a:"Ik zal volgende week sporten.",opts:["Ik zal volgende week sporten.","Ik sporten zal volgende week.","Volgende week ik zal sporten.","Ik zullen volgende week sporten."],hint:"zullen in main clause: zal + infinitive at end"},
+
+  // H15 — Demonstratief + die/dat
+  {ch:15,q:"Point at a 'de'-word (close): 'Look at ___ windmill!'",a:"die",opts:["die","dat","deze","dit"],hint:"de-word far/pointing → die"},
+  {ch:15,q:"Point at a 'het'-word (far): '___ schilderij is mooi.'",a:"Dat",opts:["Dat","Die","Dit","Deze"],hint:"het-word far → dat"},
+  {ch:15,q:"Demonstratief standalone — 'Who is that?' (de-person):",a:"Wie is die?",opts:["Wie is die?","Wie is dat?","Wie is dit?","Wie is deze?"],hint:"Demonstratief pronomen zelfstandig"},
+  {ch:15,q:"'De trein' — demonstratief zelfstandig (far):",a:"Die is nieuw.",opts:["Die is nieuw.","Dat is nieuw.","Dit is nieuw.","Deze is nieuw."],hint:"de-word → die"},
+  {ch:15,q:"'Het station' — demonstratief zelfstandig (far):",a:"Dat is groot.",opts:["Dat is groot.","Die is groot.","Dit is groot.","Deze is groot."],hint:"het-word → dat"},
+
+  // H16 — Conjuncties
+  {ch:16,q:"'want' connects two clauses. Word order after 'want'?",a:"Normal (subject-verb) — same as main clause",opts:["Normal (subject-verb) — same as main clause","Verb goes to end (subordinate)","Verb goes to front","Inverted subject-verb"],hint:"want = nevengeschikte conjunctie"},
+  {ch:16,q:"Complete with the right conjunction: 'Ik ga naar de film, ___ ik houd van actie.'",a:"want",opts:["want","omdat","maar","dus"],hint:"because / reason"},
+  {ch:16,q:"Complete: 'Ze spreekt geen Nederlands, ___ ze woont wel in Amsterdam.'",a:"maar",opts:["maar","want","dus","of"],hint:"contrast / but"},
+  {ch:16,q:"Complete: 'De film begint om 20:00, ___ we moeten vroeg gaan.'",a:"dus",opts:["dus","want","maar","of"],hint:"therefore / so"},
+  {ch:16,q:"Complete: 'Je kunt online kopen ___ je koopt aan de balie.'",a:"of",opts:["of","want","maar","dus"],hint:"or / alternative"},
+  {ch:16,q:"After 'want', 'maar', 'of', 'dus' — subject comes:",a:"Right after the conjunction (normal order)",opts:["Right after the conjunction (normal order)","At the end of the clause","Before the conjunction","After the verb"],hint:"Nevengeschikte conjuncties keep normal word order"},
+];
+
+const FILL = [
+  // H11
+  {ch:11,q:"Ik ben ___ op Cubaanse muziek.",a:"gek",hint:"crazy about"},
+  {ch:11,q:"Dat kon ik me ___.",a:"herinneren",hint:"reflexive: remember"},
+  {ch:11,q:"Ik zal me even ___.",a:"voorstellen",hint:"introduce myself"},
+  {ch:11,q:"Hij interesseert ___ niet voor films.",a:"zich",hint:"reflexive 3rd person"},
+  {ch:11,q:"We bereiden ___ voor op een wandelreis.",a:"ons",hint:"reflexive wij"},
+  {ch:11,q:"___ niet gezien!",a:"Lang",hint:"Long time no see"},
+  {ch:11,q:"Wat ___! Mijn fiets is kapot.",a:"vervelend",hint:"Wat + adjective (bad)"},
+  {ch:11,q:"Ik heb het ___. Ik werk 60 uur per week.",a:"druk",hint:"busy"},
+  // H12
+  {ch:12,q:"___ u hier bekend?",a:"Bent",hint:"Do you know your way around here?"},
+  {ch:12,q:"U gaat hier ___.",a:"rechtdoor",hint:"straight ahead"},
+  {ch:12,q:"De tram stopt ___ de ingang.",a:"tegenover",hint:"opposite"},
+  {ch:12,q:"Ga de ___ op naar boven.",a:"trap",hint:"stairs"},
+  {ch:12,q:"Aan het eind van de gang gaat u ___.",a:"linksaf",hint:"to the left"},
+  {ch:12,q:"Hij ___ bij het station ___. (instappen, presens)",a:"stapt … in",hint:"separable verb"},
+  {ch:12,q:"Ik heb de plattegrond ___. (meenemen, perfectum)",a:"meegenomen",hint:"ge- between parts"},
+  // H13
+  {ch:13,q:"Ik ___ koffie voor je halen.",a:"zal",hint:"future / promise (ik)"},
+  {ch:13,q:"Wij ___ de groeten doen.",a:"zullen",hint:"wij + zullen"},
+  {ch:13,q:"___ mij is lachen goed voor de gezondheid.",a:"Volgens",hint:"in my opinion"},
+  {ch:13,q:"___ dat wel! Het is koud vandaag.",a:"Zeg",hint:"You can say that again!"},
+  {ch:13,q:"Ik ben ___ aan koffie.",a:"toe",hint:"I need (toe zijn aan)"},
+  {ch:13,q:"Hoe ___ je deze film?",a:"vind",hint:"vinden (opinion)"},
+  // H14
+  {ch:14,q:"Ik zal het morgen ___ voelen.",a:"wel",hint:"zullen + wel = probably"},
+  {ch:14,q:"Jij ___ morgen wel spierpijn hebben.",a:"zult",hint:"jij + zullen"},
+  {ch:14,q:"Ik ga naar de sportschool om mijn ___ te verbeteren.",a:"conditie",hint:"physical condition"},
+  {ch:14,q:"Het jaarabonnement geeft ___ op het maandtarief.",a:"korting",hint:"discount"},
+  {ch:14,q:"De groepslessen zijn ___ bij het abonnement.",a:"onbeperkt",hint:"unlimited"},
+  // H15
+  {ch:15,q:"Kijk eens, ___ molen is prachtig!",a:"die",hint:"de-word + pointing → die"},
+  {ch:15,q:"___ is het station.",a:"Dat",hint:"het-word demonstratief zelfstandig"},
+  {ch:15,q:"Ik vind het ___ dat je niet kunt komen.",a:"jammer",hint:"What a pity"},
+  {ch:15,q:"Het landschap is heel ___.",a:"plat",hint:"flat (Netherlands)"},
+  {ch:15,q:"We gaan met het ___ vervoer.",a:"openbaar",hint:"public transport"},
+  // H16
+  {ch:16,q:"Ik ga naar de film, ___ ik houd van actie.",a:"want",hint:"because"},
+  {ch:16,q:"Ze spreekt geen Nederlands, ___ ze woont wel hier.",a:"maar",hint:"but"},
+  {ch:16,q:"De film begint om 8, ___ we moeten vroeg gaan.",a:"dus",hint:"so / therefore"},
+  {ch:16,q:"Je kunt online kopen ___ je koopt aan de balie.",a:"of",hint:"or"},
+  {ch:16,q:"De film is al ___.",a:"begonnen",hint:"has already started"},
+  {ch:16,q:"Die film ___ al twee maanden in het bioscoop.",a:"draait",hint:"is showing"},
+];
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+let xp=0, streak=0, sessionXP=0, correct=0, wrong=0;
+let queue=[], qi=0, mode='', chapter='all', flipped=false;
+
+// ═══════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════
+const $=id=>document.getElementById(id);
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function go(s){['home','mode','quiz','score'].forEach(n=>$('screen-'+n).classList.toggle('hidden',n!==s));}
+function show(id){$(id).classList.remove('hidden');}
+function hide(id){$(id).classList.add('hidden');}
+
+function addXP(n){xp+=n;sessionXP+=n;$('xp').textContent=xp;$('streak').textContent=streak;}
+
+function showCombo(){
+  if(streak<3)return;
+  const el=document.createElement('div');
+  el.className='combo';
+  el.textContent=streak>=5?`🔥×${streak}`:`×${streak} combo!`;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),700);
+}
+
+function xpPop(n,el){
+  const r=el.getBoundingClientRect();
+  const d=document.createElement('div');
+  d.className='xp-pop';
+  d.textContent=`+${n} XP`;
+  d.style.left=(r.left+r.width/2-20)+'px';
+  d.style.top=(r.top+window.scrollY-10)+'px';
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(),900);
+}
+
+// ═══════════════════════════════════════════════════
+// COUNTS
+// ═══════════════════════════════════════════════════
+function counts(){
+  const chs=[11,12,13,14,15,16];
+  let tot=0;
+  chs.forEach(c=>{
+    const n=V[c].length+GRAMMAR.filter(g=>g.ch===c).length+FILL.filter(f=>f.ch===c).length;
+    $('cnt-'+c).textContent=n+' items';
+    tot+=n;
+  });
+  $('cnt-all').textContent=tot+' items total';
+}
+
+// ═══════════════════════════════════════════════════
+// CHAPTER & MODE SELECT
+// ═══════════════════════════════════════════════════
+function sel(ch){chapter=ch;go('mode');}
+
+function getV(){const chs=chapter==='all'?[11,12,13,14,15,16]:[chapter];return chs.flatMap(c=>V[c].map(([nl,en])=>({ch:c,nl,en})));}
+function getG(){const chs=chapter==='all'?[11,12,13,14,15,16]:[chapter];return GRAMMAR.filter(g=>chs.includes(g.ch));}
+function getF(){const chs=chapter==='all'?[11,12,13,14,15,16]:[chapter];return FILL.filter(f=>chs.includes(f.ch));}
+
+function start(m){
+  mode=m; correct=0; wrong=0; sessionXP=0; qi=0;
+  const voc=getV();
+  if(m==='flash') queue=shuffle(voc);
+  else if(m==='mc'){
+    queue=shuffle(voc).slice(0,25).map(it=>{
+      const wo=shuffle(voc.filter(v=>v.nl!==it.nl)).slice(0,3).map(v=>v.nl);
+      return{...it,opts:shuffle([it.nl,...wo]),correct_ans:it.nl,display:it.en};
+    });
+  }
+  else if(m==='fill') queue=shuffle(getF());
+  else if(m==='grammar') queue=shuffle(getG());
+  go('quiz');
+  render();
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER QUESTION
+// ═══════════════════════════════════════════════════
+function render(){
+  if(qi>=queue.length){showScore();return;}
+  const q=queue[qi];
+  const pct=Math.round((qi/queue.length)*100);
+  $('prog-bar').style.width=pct+'%';
+  $('prog-label').textContent=(qi+1)+' / '+queue.length;
+  $('q-ch').textContent='H'+q.ch;
+  $('q-fb').textContent=''; $('q-fb').className='feedback';
+  $('q-ans').style.display='none';
+  $('q-fill').classList.remove('correct','wrong'); $('q-fill').value='';
+  $('q-opts').innerHTML=''; $('q-opts').classList.remove('hidden');
+  $('q-fill').classList.add('hidden');
+  flipped=false;
+  hide('btn-next'); hide('btn-flip'); hide('btn-knew'); hide('btn-didnt');
+  $('quiz-card').onclick=null; $('quiz-card').classList.remove('flip-card');
+
+  if(mode==='flash'){
+    $('q-type').textContent='🃏 Flashcard';
+    $('q-text').textContent=q.en;
+    $('q-hint').textContent='Tap to reveal the Dutch word';
+    $('q-opts').classList.add('hidden');
+    $('q-ans').textContent=q.nl;
+    show('btn-flip');
+    $('quiz-card').onclick=flip;
+    $('quiz-card').style.cursor='pointer';
+  }
+  else if(mode==='mc'){
+    $('q-type').textContent='🎯 Multiple Choice';
+    $('quiz-card').style.cursor='default';
+    $('q-text').textContent=q.display||q.en;
+    $('q-hint').textContent='Type the Dutch word:';
+    const oe=$('q-opts');
+    oe.innerHTML='';
+    q.opts.forEach(opt=>{
+      const b=document.createElement('button');
+      b.className='opt'; b.textContent=opt;
+      b.onclick=()=>checkMC(b,opt,q.correct_ans,oe);
+      oe.appendChild(b);
+    });
+  }
+  else if(mode==='fill'){
+    $('q-type').textContent='✏️ Fill in';
+    $('quiz-card').style.cursor='default';
+    $('q-text').textContent=q.q;
+    $('q-hint').textContent='💡 '+q.hint;
+    $('q-opts').classList.add('hidden');
+    $('q-fill').classList.remove('hidden');
+    setTimeout(()=>$('q-fill').focus(),50);
+    $('q-fill').onkeydown=e=>{if(e.key==='Enter')checkFill(q);};
+    show('btn-next');
+    $('btn-next').textContent='Check ✓';
+    $('btn-next').onclick=()=>checkFill(q);
+  }
+  else if(mode==='grammar'){
+    $('q-type').textContent='📐 Grammar';
+    $('quiz-card').style.cursor='default';
+    $('q-text').textContent=q.q;
+    $('q-hint').textContent='💡 '+q.hint;
+    const oe=$('q-opts');
+    oe.innerHTML='';
+    (q.opts||[]).forEach(opt=>{
+      const b=document.createElement('button');
+      b.className='opt'; b.textContent=opt;
+      b.onclick=()=>checkMC(b,opt,q.a,oe);
+      oe.appendChild(b);
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// FLASHCARD
+// ═══════════════════════════════════════════════════
+function flip(){
+  if(flipped)return;
+  flipped=true;
+  $('q-ans').style.display='block';
+  $('q-hint').textContent='';
+  hide('btn-flip');
+  show('btn-knew'); show('btn-didnt');
+}
+
+function mark(knew){
+  const xpG=streak>=3?15:10;
+  if(knew){
+    correct++; streak++;
+    addXP(xpG); showCombo();
+    $('q-fb').textContent='✓ +'+xpG+' XP';
+    $('q-fb').className='feedback ok';
+  } else {
+    wrong++; streak=0;
+    $('q-fb').textContent='✗ Keep reviewing';
+    $('q-fb').className='feedback ko';
+  }
+  hide('btn-knew'); hide('btn-didnt');
+  setTimeout(next,700);
+}
+
+// ═══════════════════════════════════════════════════
+// MULTIPLE CHOICE
+// ═══════════════════════════════════════════════════
+function checkMC(btn,chosen,answer,container){
+  container.querySelectorAll('.opt').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===answer)b.classList.add('correct');
+  });
+  const xpG=streak>=3?15:10;
+  if(chosen===answer){
+    btn.classList.add('correct');
+    correct++; streak++;
+    addXP(xpG); showCombo();
+    xpPop(xpG,btn);
+    $('q-fb').textContent='✓ Correct! +'+xpG+' XP';
+    $('q-fb').className='feedback ok';
+    setTimeout(next,900);
+  } else {
+    btn.classList.add('wrong');
+    wrong++; streak=0;
+    $('xp').textContent=xp; $('streak').textContent=streak;
+    $('q-fb').textContent='✗ Answer: '+answer;
+    $('q-fb').className='feedback ko';
+    setTimeout(next,1600);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// FILL IN
+// ═══════════════════════════════════════════════════
+function checkFill(q){
+  const inp=$('q-fill');
+  const val=inp.value.trim().toLowerCase();
+  const ans=q.a.toLowerCase();
+  const norm=v=>v.replace(/[.!?,;]/g,'').trim();
+  const ok=norm(val)===norm(ans)||(norm(ans).includes(norm(val))&&norm(val).length>2);
+  const xpG=streak>=3?20:15;
+  if(ok){
+    inp.classList.add('correct');
+    correct++; streak++;
+    addXP(xpG); showCombo();
+    xpPop(xpG,inp);
+    $('q-fb').textContent='✓ Correct! +'+xpG+' XP';
+    $('q-fb').className='feedback ok';
+    $('btn-next').textContent='Next →';
+    $('btn-next').onclick=next;
+    setTimeout(next,1000);
+  } else {
+    inp.classList.add('wrong');
+    wrong++; streak=0;
+    $('xp').textContent=xp; $('streak').textContent=streak;
+    $('q-fb').textContent='✗ Answer: '+q.a;
+    $('q-fb').className='feedback ko';
+    $('btn-next').textContent='Next →';
+    $('btn-next').onclick=next;
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// NAV & SCORE
+// ═══════════════════════════════════════════════════
+function next(){qi++;render();}
+
+function showScore(){
+  go('score');
+  const tot=correct+wrong;
+  const pct=tot>0?Math.round((correct/tot)*100):0;
+  $('sc-pct').textContent=pct+'%';
+  $('sc-ok').textContent=correct;
+  $('sc-no').textContent=wrong;
+  $('sc-xp').textContent='+'+sessionXP;
+  const msgs=['Keep at it! 💪','Getting there! 🙂','Solid work! 👍','Nice! 🎉','Excellent! 🌟','Perfect! 🏆'];
+  $('sc-msg').textContent=msgs[Math.min(Math.floor(pct/20),5)];
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+counts();
+go('home');
+</script>
+</body>
+</html>

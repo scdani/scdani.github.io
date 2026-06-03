@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🗳️ Választás 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f1117;
+    color: #e8e8e8;
+    min-height: 100vh;
+    padding: 16px;
+  }
+  h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
+  .updated { font-size: 13px; color: #666; margin-bottom: 16px; }
+  .stat-box {
+    background: #1a1d27;
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+  }
+  .party-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .party-name { font-size: 16px; font-weight: 700; }
+  .party-count { font-size: 30px; font-weight: 800; }
+  .bar-wrap { background: #262a38; border-radius: 8px; height: 11px; margin-bottom: 5px; }
+  .bar { height: 11px; border-radius: 8px; transition: width 0.5s ease; }
+  .bar-detail { font-size: 12px; color: #666; }
+  .tisza   .bar { background: linear-gradient(90deg, #2196F3, #1976D2); }
+  .fidesz  .bar { background: linear-gradient(90deg, #FF6F00, #E65100); }
+  .mihazank .bar { background: linear-gradient(90deg, #4CAF50, #388E3C); }
+  .other   .bar { background: #444; }
+  .party-name.tisza   { color: #64B5F6; }
+  .party-name.fidesz  { color: #FFA726; }
+  .party-name.mihazank { color: #81C784; }
+  .divider { height: 1px; background: #262a38; margin: 16px 0; }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 8px;
+  }
+  .info-val { color: #ccc; font-weight: 600; }
+  .threshold-box {
+    background: #1a1d27;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+  }
+  .threshold-label { font-size: 13px; color: #aaa; margin-bottom: 8px; }
+  .threshold-bar-wrap { background: #262a38; border-radius: 8px; height: 14px; margin-bottom: 6px; position: relative; }
+  .threshold-bar { height: 14px; border-radius: 8px; transition: width 0.5s ease; background: linear-gradient(90deg,#2196F3,#1976D2); }
+  .threshold-marker {
+    position: absolute;
+    top: -3px; bottom: -3px;
+    width: 3px;
+    background: #FFD700;
+    border-radius: 2px;
+  }
+  .threshold-detail { font-size: 13px; color: #aaa; }
+  .threshold-detail strong { color: #64B5F6; font-size: 16px; }
+  .loading { text-align: center; padding: 40px; color: #555; font-size: 15px; }
+  .error { text-align: center; padding: 20px; color: #f44336; font-size: 14px; }
+  .pulse { animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .live-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: #f44336;
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: pulse 1.5s infinite;
+    vertical-align: middle;
+  }
+
+  /* Donut chart */
+  .donut-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #1a1d27;
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+  }
+  .donut-wrap svg { flex-shrink: 0; }
+  .donut-legend { flex: 1; }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-val { margin-left: auto; font-weight: 700; font-size: 16px; }
+</style>
+</head>
+<body>
+<h1>🗳️ Választás 2026</h1>
+<div class="subtitle">Forrás: NVI · valasztas.hu · <a href="/map.html" style="color:#64B5F6;text-decoration:none">🗺️ Térkép</a></div>
+<div id="app"><div class="loading pulse">Betöltés...</div></div>
+
+<script>
+const NVI_BASE = '/election/data';
+const PARTIES = {
+  3600: { name: 'TISZA',       cls: 'tisza',    color: '#2196F3' },
+  3644: { name: 'Fidesz-KDNP', cls: 'fidesz',   color: '#FF6F00' },
+  3592: { name: 'Mi Hazánk',   cls: 'mihazank', color: '#4CAF50' },
+};
+const KETHARMAD = 133;
+const OSSZES = 199;
+
+// Watched constituencies
+const WATCHED = [
+  { maz: '01', evk: '13', name: 'Rákospalota (Bp. 15. ker.)' },
+  { maz: '14', evk: '05', name: 'Dunakeszi' },
+];
+async function fetchJSON(url) {
+  const r = await fetch(url, { cache: 'no-store' });
+  return r.json();
+}
+
+async function load() {
+  try {
+    const config = await fetchJSON(`${NVI_BASE}/config.json`);
+    const szavossz = config.szavossz;
+    if (!szavossz) { render(null, null, null); return; }
+    const [patko, oevk, szoros] = await Promise.all([
+      fetchJSON(`${NVI_BASE}/${szavossz}/szavossz/Patko.json`),
+      fetchJSON(`${NVI_BASE}/${szavossz}/szavossz/OevkJkv.json`).catch(() => null),
+      fetchJSON(`${NVI_BASE}/${szavossz}/szavossz/SzorosVerseny.json`).catch(() => null),
+    ]);
+    render(patko, oevk, szoros);
+  } catch(e) {
+    document.getElementById('app').innerHTML = `<div class="error">Hiba: ${e.message}</div>`;
+  }
+}
+
+function donutSVG(slices, size=120) {
+  const r = 42, cx = size/2, cy = size/2, strokeW = 18;
+  const circ = 2 * Math.PI * r;
+  let offset = 0;
+  let paths = '';
+  for (const {pct, color} of slices) {
+    const dash = circ * pct / 100;
+    const gap = circ - dash;
+    paths += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${color}"
+      stroke-width="${strokeW}" stroke-dasharray="${dash} ${gap}"
+      stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})" />`;
+    offset += dash;
+  }
+  return `<svg width="${size}" height="${size}">${paths}</svg>`;
+}
+
+const ORG_COLOR = { 1010: '#2196F3', 1004: '#FF6F00', 1005: '#FF6F00', 1008: '#4CAF50' };
+const ORG_NAME  = { 1010: 'TISZA', 1004: 'Fidesz', 1005: 'KDNP', 1008: 'Mi Hazánk' };
+
+function render(patko, oevk, szoros) {
+  if (!patko) {
+    document.getElementById('app').innerHTML = '<div class="loading">Nincs még eredmény...</div>';
+    return;
+  }
+  const data = patko.data || {};
+  const feldar = data.feldar || 0;
+  const mand_kioszt = data.mand_kioszt || 0;
+  const mand_ures = data.mand_ures || 0;
+  const eredmenyek = data.eredmenyek || [];
+  const generated = patko.PvOnHeader?.generated || '';
+  const timeStr = generated ? generated.substring(11, 16) : '?';
+
+  const byKod = {};
+  for (const e of eredmenyek) byKod[e.jlcs_kod] = e;
+
+  const mainParties = [3600, 3644, 3592];
+  const otherTotal = eredmenyek
+    .filter(e => !mainParties.includes(e.jlcs_kod))
+    .reduce((s, e) => s + (e.mand_ossz || 0), 0);
+  const undecided = OSSZES - mand_kioszt;
+
+  let html = '';
+  html += `<div class="updated"><span class="live-dot"></span>Utoljára: ${timeStr} · ${feldar.toFixed(1)}% feldolgozva</div>`;
+
+  // Donut chart
+  const slices = mainParties.map(k => ({
+    pct: ((byKod[k]?.mand_ossz || 0) / OSSZES) * 100,
+    color: PARTIES[k].color
+  }));
+  if (otherTotal > 0) slices.push({ pct: (otherTotal/OSSZES)*100, color: '#666' });
+  if (undecided > 0)  slices.push({ pct: (undecided/OSSZES)*100, color: '#222' });
+
+  let legendHtml = '';
+  for (const kod of mainParties) {
+    const val = byKod[kod]?.mand_ossz || 0;
+    if (val === 0) continue;
+    legendHtml += `<div class="legend-item">
+      <span class="legend-dot" style="background:${PARTIES[kod].color}"></span>
+      <span style="color:${PARTIES[kod].color};font-weight:600">${PARTIES[kod].name}</span>
+      <span class="legend-val" style="color:${PARTIES[kod].color}">${val}</span>
+    </div>`;
+  }
+  if (undecided > 0) legendHtml += `<div class="legend-item">
+    <span class="legend-dot" style="background:#333"></span>
+    <span style="color:#666">Nyitott</span>
+    <span class="legend-val" style="color:#555">${undecided}</span>
+  </div>`;
+
+  html += `<div class="donut-wrap">${donutSVG(slices)}<div class="donut-legend">${legendHtml}</div></div>`;
+
+  // Kétharmad progress
+  const tiszaMand = byKod[3600]?.mand_ossz || 0;
+  const ketharmadPct = Math.min(100, (tiszaMand / KETHARMAD) * 100);
+  const markerLeft = (KETHARMAD / OSSZES * 100).toFixed(1);
+  html += `<div class="threshold-box">
+    <div class="threshold-label">TISZA kétharmad felé</div>
+    <div class="threshold-bar-wrap">
+      <div class="threshold-bar" style="width:${(tiszaMand/OSSZES*100).toFixed(1)}%"></div>
+      <div class="threshold-marker" style="left:${markerLeft}%"></div>
+    </div>
+    <div class="threshold-detail"><strong>${tiszaMand}</strong> / ${KETHARMAD} — ${tiszaMand >= KETHARMAD ? '✅ KÉTHARMAD!' : `még ${KETHARMAD - tiszaMand} kell`}</div>
+  </div>`;
+
+  // Party bars
+  for (const kod of mainParties) {
+    const e = byKod[kod] || {};
+    const party = PARTIES[kod];
+    const ossz = e.mand_ossz || 0;
+    const egyeni = e.mand_egyeni || 0;
+    const listas = e.mand_listas || 0;
+    const pct = (ossz / OSSZES * 100);
+    html += `<div class="stat-box ${party.cls}">
+      <div class="party-row">
+        <span class="party-name ${party.cls}">${party.name}</span>
+        <span class="party-count" style="color:${party.color}">${ossz}</span>
+      </div>
+      <div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div>
+      <div class="bar-detail">${egyeni} egyéni + ${listas} listás · ${pct.toFixed(1)}%</div>
+    </div>`;
+  }
+
+  html += '<div class="divider"></div>';
+
+  // Build candidate lookup from SzorosVerseny
+  const candMap = {};
+  if (szoros && szoros.list) {
+    for (const e of szoros.list) {
+      for (const key of ['jelolt1','jelolt2']) {
+        const j = e[key];
+        if (j && j.ej_id) {
+          const szkod = (j.szervezetek||[{}])[0]?.szkod || 0;
+          candMap[j.ej_id] = { neve: j.neve, szkod, color: ORG_COLOR[szkod]||'#888', part: ORG_NAME[szkod]||'' };
+        }
+      }
+    }
+  }
+
+  // Watched constituencies
+  if (oevk && oevk.list) {
+    const evkList = oevk.list;
+    html += `<div class="stat-box" style="margin-bottom:10px">
+      <div style="font-size:14px;font-weight:700;color:#aaa;margin-bottom:12px">📍 Figyelt körzetek</div>`;
+
+    for (const w of WATCHED) {
+      const evkData = evkList.find(e => e.maz === w.maz && e.evk === w.evk);
+      if (!evkData || !evkData.egyeni_jkv) {
+        html += `<div style="margin-bottom:12px">
+          <div style="font-size:13px;font-weight:700;color:#ccc;margin-bottom:4px">${w.name}</div>
+          <div style="font-size:12px;color:#555">Nincs adat még</div>
+        </div>`;
+        continue;
+      }
+      const jkv = evkData.egyeni_jkv;
+      const feldar = jkv.feldar || 0;
+      const tetelek = (jkv.tetelek || []).slice().sort((a,b)=>(b.szavazat||0)-(a.szavazat||0)).slice(0,3);
+      const maxSzav = tetelek[0]?.szavazat || 1;
+      html += `<div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:13px;font-weight:700;color:#ccc">${w.name}</span>
+          <span style="font-size:11px;color:#555">${feldar.toFixed(1)}% feldolg.</span>
+        </div>`;
+      if (feldar === 0) {
+        html += `<div style="font-size:12px;color:#555">Még nincs feldolgozva</div>`;
+      } else {
+        for (const t of tetelek) {
+          const eid = t.ej_id;
+          const cand = candMap[eid] || { neve: `Jelölt #${eid}`, color: '#888', part: '' };
+          const pct = (t.szavazat_szaz || 0).toFixed(1);
+          const barPct = ((t.szavazat||0) / maxSzav * 100).toFixed(1);
+          const winner = t.mandatum ? ' ✓' : '';
+          html += `<div style="margin-bottom:6px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+              <span style="color:#ddd">${cand.neve}${winner} <span style="color:${cand.color};font-size:11px">${cand.part}</span></span>
+              <span style="color:#bbb;font-weight:700">${pct}%</span>
+            </div>
+            <div class="bar-wrap"><div class="bar" style="background:${cand.color};width:${barPct}%"></div></div>
+          </div>`;
+        }
+      }
+      html += `</div>`;
+    }
+    html += `</div>`;
+  }
+
+  html += '<div class="divider"></div>';
+
+  // Processing progress bars
+  const feldar_egyeni = data.feldar_egyeni || 0;
+  const feldar_listas = data.feldar_listas || 0;
+  html += `<div class="stat-box" style="margin-bottom:10px">
+    <div style="font-size:14px;font-weight:700;color:#aaa;margin-bottom:12px">Feldolgozottság</div>
+
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:#888;margin-bottom:5px">
+        <span>Összesen</span><span style="color:#ccc;font-weight:700">${feldar.toFixed(1)}%</span>
+      </div>
+      <div class="bar-wrap"><div class="bar" style="background:linear-gradient(90deg,#7B1FA2,#6A1B9A);width:${Math.min(100,feldar)}%"></div></div>
+    </div>
+
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:#888;margin-bottom:5px">
+        <span>Egyéni körzetek</span><span style="color:#ccc;font-weight:700">${feldar_egyeni.toFixed(1)}%</span>
+      </div>
+      <div class="bar-wrap"><div class="bar" style="background:linear-gradient(90deg,#1565C0,#0D47A1);width:${Math.min(100,feldar_egyeni)}%"></div></div>
+    </div>
+
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:#888;margin-bottom:5px">
+        <span>Listás szavazatok</span><span style="color:#ccc;font-weight:700">${feldar_listas.toFixed(1)}%</span>
+      </div>
+      <div class="bar-wrap"><div class="bar" style="background:linear-gradient(90deg,#00695C,#004D40);width:${Math.min(100,feldar_listas)}%"></div></div>
+    </div>
+  </div>`;
+
+  html += `<div class="info-row"><span>Kiosztott mandátum</span><span class="info-val">${mand_kioszt} / ${OSSZES}</span></div>`;
+
+  document.getElementById('app').innerHTML = html;
+}
+
+load();
+
+</script>
+</body>
+</html>

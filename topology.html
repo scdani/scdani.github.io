@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topology Optimization</title>
+<style>
+:root {
+  --bg: #0d1117; --card: #161b22; --border: #30363d;
+  --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff;
+  --orange: #f78166; --green: #3fb950; --yellow: #e8c547;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  max-width: 980px; margin: 0 auto; padding: 24px 16px; line-height: 1.5;
+}
+h1 { font-size: 1.9rem; font-weight: 700; text-align: center; margin-bottom: 6px; }
+.subtitle { text-align: center; color: var(--muted); margin-bottom: 28px; font-size: 0.93rem; }
+h2 { font-size: 1.05rem; font-weight: 600; color: var(--accent); margin-bottom: 14px; }
+
+/* Process steps */
+.steps { display: flex; gap: 3px; margin-bottom: 28px; overflow-x: auto; }
+.step-wrap { display: flex; align-items: center; gap: 3px; flex: 1; min-width: 0; }
+.step {
+  flex: 1; min-width: 100px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 10px; text-align: center;
+}
+.step-num {
+  width: 30px; height: 30px; border-radius: 50%; background: var(--accent);
+  color: #0d1117; font-weight: 700; font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;
+}
+.step h3 { font-size: 0.78rem; color: var(--text); margin-bottom: 4px; font-weight: 600; }
+.step p { font-size: 0.68rem; color: var(--muted); }
+.arrow { color: #444; font-size: 1.1rem; flex-shrink: 0; }
+
+/* Cards */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; margin-bottom: 22px;
+}
+.card-top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+}
+
+/* Buttons */
+.btns { display: flex; gap: 8px; }
+.btn {
+  padding: 7px 16px; border: none; border-radius: 6px; cursor: pointer;
+  font-size: 0.84rem; font-weight: 600; transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.8; }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-run { background: var(--accent); color: #0d1117; }
+.btn-reset { background: var(--border); color: var(--text); }
+
+/* Problem diagram */
+.prob-svg { display: block; width: 100%; max-height: 110px; margin-bottom: 10px; }
+
+/* Canvas */
+#topoCanvas {
+  display: block; width: 100%; border-radius: 6px;
+  background: #000; image-rendering: pixelated;
+}
+
+/* Legend */
+.legend {
+  display: flex; gap: 14px; margin-top: 10px; font-size: 0.72rem;
+  color: var(--muted); flex-wrap: wrap;
+}
+.leg { display: flex; align-items: center; gap: 5px; }
+.leg-box { width: 13px; height: 13px; border-radius: 2px; }
+
+/* Metrics */
+.metrics { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.metric {
+  flex: 1; min-width: 110px; background: var(--bg);
+  border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px;
+}
+.metric-lbl { font-size: 0.68rem; color: var(--muted); margin-bottom: 2px; }
+.metric-val { font-size: 1.1rem; font-weight: 700; font-family: monospace; color: var(--accent); }
+
+/* Convergence chart */
+#convChart {
+  display: block; width: 100%; height: 70px; margin-top: 10px;
+  border-radius: 6px; background: var(--bg);
+}
+
+/* Examples */
+.ex-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 580px) { .ex-grid { grid-template-columns: 1fr; } }
+.ex-item { }
+.ex-img {
+  width: 100%; border-radius: 8px; background: #1a1a2e;
+  display: block; min-height: 140px; object-fit: cover;
+}
+.ex-cap { font-size: 0.72rem; color: var(--muted); margin-top: 6px; text-align: center; }
+.ex-svg { width: 100%; border-radius: 8px; background: #0a0a1a; }
+.note {
+  margin-top: 14px; font-size: 0.82rem; color: var(--muted);
+  border-left: 3px solid var(--border); padding-left: 12px;
+}
+</style>
+</head>
+<body>
+
+<h1>Topology Optimization</h1>
+<p class="subtitle">How finite element analysis iteratively carves material into the stiffest possible structure</p>
+
+<!-- Process -->
+<div class="steps">
+  <div class="step-wrap">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Design Space</h3>
+      <p>Full solid block + load cases + constraints</p>
+    </div>
+    <div class="arrow">›</div>
+  </div>
+  <div class="step-wrap">
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>FEA</h3>
+      <p>Solve displacement field via finite elements</p>
+    </div>
+    <div class="arrow">›</div>
+  </div>
+  <div class="step-wrap">
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Sensitivity</h3>
+      <p>Each element's contribution to compliance</p>
+    </div>
+    <div class="arrow">›</div>
+  </div>
+  <div class="step-wrap">
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>SIMP Update</h3>
+      <p>Remove low-stress material, keep load paths</p>
+    </div>
+    <div class="arrow">›</div>
+  </div>
+  <div class="step-wrap" style="flex:0.8">
+    <div class="step">
+      <div class="step-num">5</div>
+      <h3>Converge</h3>
+      <p>Repeat ~40× until shape stabilises</p>
+    </div>
+  </div>
+</div>
+
+<!-- Simulation -->
+<div class="card">
+  <div class="card-top">
+    <h2 style="margin:0">Live Simulation — Cantilever Beam (SIMP)</h2>
+    <div class="btns">
+      <button class="btn btn-run" id="btnRun">▶ Run</button>
+      <button class="btn btn-reset" id="btnReset">↺ Reset</button>
+    </div>
+  </div>
+
+  <!-- Problem sketch -->
+  <svg class="prob-svg" viewBox="0 0 800 100">
+    <rect width="800" height="100" fill="#0d1117"/>
+    <rect x="70" y="10" width="660" height="80" fill="none" stroke="#30363d" stroke-width="1.5" stroke-dasharray="6,3"/>
+    <text x="390" y="55" fill="#30363d" font-size="12" text-anchor="middle" font-family="monospace">40 × 20 elements</text>
+    <!-- Wall -->
+    <rect x="45" y="5" width="22" height="90" fill="#1f2937" stroke="#58a6ff" stroke-width="1.5" rx="2"/>
+    <line x1="45" y1="15" x2="30" y2="28" stroke="#58a6ff" stroke-width="1.2"/>
+    <line x1="45" y1="28" x2="30" y2="41" stroke="#58a6ff" stroke-width="1.2"/>
+    <line x1="45" y1="41" x2="30" y2="54" stroke="#58a6ff" stroke-width="1.2"/>
+    <line x1="45" y1="54" x2="30" y2="67" stroke="#58a6ff" stroke-width="1.2"/>
+    <line x1="45" y1="67" x2="30" y2="80" stroke="#58a6ff" stroke-width="1.2"/>
+    <text x="24" y="52" fill="#58a6ff" font-size="10" text-anchor="middle">Fixed</text>
+    <!-- Load arrow -->
+    <defs>
+      <marker id="ah" markerWidth="7" markerHeight="7" refX="3" refY="3.5" orient="auto">
+        <polygon points="0,0 7,3.5 0,7" fill="#f78166"/>
+      </marker>
+    </defs>
+    <line x1="730" y1="35" x2="730" y2="72" stroke="#f78166" stroke-width="2.5" marker-end="url(#ah)"/>
+    <text x="750" y="57" fill="#f78166" font-size="11" font-family="monospace">F↓</text>
+  </svg>
+
+  <canvas id="topoCanvas" width="800" height="400"></canvas>
+
+  <div class="legend">
+    <div class="leg"><div class="leg-box" style="background:#06080f"></div>Void (ρ≈0)</div>
+    <div class="leg"><div class="leg-box" style="background:#0f2d55"></div>Low density</div>
+    <div class="leg"><div class="leg-box" style="background:#1b6ca8"></div>Medium</div>
+    <div class="leg"><div class="leg-box" style="background:#d97706"></div>High</div>
+    <div class="leg"><div class="leg-box" style="background:#fde68a"></div>Solid (ρ=1)</div>
+    <div class="leg" style="margin-left:auto"><span style="color:#f78166">■</span> Load point &nbsp; <span style="color:#58a6ff">|</span> Fixed edge</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-lbl">Iteration</div><div class="metric-val" id="mIter">0 / 50</div></div>
+    <div class="metric"><div class="metric-lbl">Compliance (stiffness⁻¹)</div><div class="metric-val" id="mComp">—</div></div>
+    <div class="metric"><div class="metric-lbl">Volume fraction</div><div class="metric-val" id="mVol">40.0%</div></div>
+    <div class="metric"><div class="metric-lbl">Max density change</div><div class="metric-val" id="mChg">—</div></div>
+  </div>
+  <canvas id="convChart" width="800" height="70"></canvas>
+</div>
+
+<!-- Real-world models -->
+<div class="card">
+  <h2>Real-World Process — What It Looks Like in NX / Inspire</h2>
+  <div class="ex-grid">
+
+    <!-- SVG: before/after -->
+    <div class="ex-item">
+      <svg class="ex-svg" viewBox="0 0 420 220">
+        <rect width="420" height="220" fill="#0a0a1a"/>
+        <!-- Before -->
+        <rect x="20" y="40" width="130" height="70" fill="#1b3a6b" rx="4" stroke="#58a6ff" stroke-width="1.5"/>
+        <text x="85" y="30" fill="#8b949e" font-size="10" text-anchor="middle" font-family="sans-serif">① Design space</text>
+        <!-- Hatch for fixed wall -->
+        <rect x="10" y="35" width="12" height="80" fill="#1f2937" stroke="#58a6ff" stroke-width="1"/>
+        <!-- Load arrow -->
+        <line x1="150" y1="65" x2="150" y2="95" stroke="#f78166" stroke-width="2" marker-end="url(#ah2)"/>
+        <defs>
+          <marker id="ah2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <polygon points="0,0 6,3 0,6" fill="#f78166"/>
+          </marker>
+        </defs>
+
+        <!-- Arrow between -->
+        <text x="195" y="80" fill="#30363d" font-size="22" text-anchor="middle">→</text>
+
+        <!-- After -->
+        <g transform="translate(220, 30)">
+          <text x="95" y="0" fill="#8b949e" font-size="10" text-anchor="middle" font-family="sans-serif">⑤ Optimised topology</text>
+          <!-- Organic shape approximation via paths -->
+          <!-- Top chord -->
+          <rect x="5" y="12" width="170" height="14" fill="#d97706" rx="3"/>
+          <!-- Bottom chord -->
+          <rect x="5" y="80" width="80" height="14" fill="#d97706" rx="3"/>
+          <!-- Diagonal web members -->
+          <polygon points="20,26 40,26 120,80 100,80" fill="#b45309" opacity="0.85"/>
+          <polygon points="60,26 80,26 170,94 150,94" fill="#b45309" opacity="0.85"/>
+          <polygon points="100,26 120,26 80,80 60,80" fill="#b45309" opacity="0.7"/>
+          <!-- Vertical near load -->
+          <rect x="155" y="26" width="14" height="68" fill="#d97706" rx="2"/>
+        </g>
+      </svg>
+      <div class="ex-cap">Classic cantilever result — top/bottom chords + diagonal web members emerge naturally from the math</div>
+    </div>
+
+    <!-- Real photo from web with fallback -->
+    <div class="ex-item">
+      <img class="ex-img" id="webImg"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Topology_optimisation_of_an_eyelet_joint.png/480px-Topology_optimisation_of_an_eyelet_joint.png"
+        alt="Topology optimization example"
+        onerror="this.style.display='none';document.getElementById('imgFallback').style.display='block'"/>
+      <svg id="imgFallback" class="ex-svg" viewBox="0 0 420 220" style="display:none">
+        <rect width="420" height="220" fill="#0a0a1a"/>
+        <!-- Simulate a bracket cross-section -->
+        <text x="210" y="20" fill="#8b949e" font-size="11" text-anchor="middle" font-family="sans-serif">Topology-optimised aerospace bracket</text>
+        <!-- Outer shell -->
+        <ellipse cx="210" cy="120" rx="170" ry="85" fill="none" stroke="#1b6ca8" stroke-width="2" stroke-dasharray="4,2"/>
+        <!-- Internal lattice approximation -->
+        <line x1="80" y1="70" x2="200" y2="150" stroke="#d97706" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+        <line x1="200" y1="60" x2="200" y2="160" stroke="#d97706" stroke-width="12" stroke-linecap="round" opacity="0.9"/>
+        <line x1="320" y1="70" x2="200" y2="150" stroke="#d97706" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+        <line x1="80" y1="150" x2="200" y2="150" stroke="#b45309" stroke-width="6" stroke-linecap="round" opacity="0.8"/>
+        <line x1="200" y1="150" x2="320" y2="150" stroke="#b45309" stroke-width="6" stroke-linecap="round" opacity="0.8"/>
+        <circle cx="200" cy="150" r="15" fill="#fde68a"/>
+        <circle cx="80" cy="70" r="12" fill="#374151" stroke="#58a6ff" stroke-width="2"/>
+        <circle cx="320" cy="70" r="12" fill="#374151" stroke="#58a6ff" stroke-width="2"/>
+        <circle cx="80" cy="150" r="10" fill="#374151" stroke="#58a6ff" stroke-width="2"/>
+        <circle cx="320" cy="150" r="10" fill="#374151" stroke="#58a6ff" stroke-width="2"/>
+        <text x="210" y="205" fill="#6b7280" font-size="9" text-anchor="middle" font-family="sans-serif">Typical result: 60% mass reduction, same stiffness as solid</text>
+      </svg>
+      <div class="ex-cap">Eyelet joint optimised in Siemens NX — material removed everywhere except the principal stress paths (Wikimedia Commons)</div>
+    </div>
+
+  </div>
+
+  <!-- Process comparison -->
+  <div style="margin-top:16px">
+    <svg viewBox="0 0 800 60" style="width:100%;display:block">
+      <rect width="800" height="60" fill="#0d1117"/>
+      <!-- Timeline -->
+      <line x1="20" y1="30" x2="780" y2="30" stroke="#30363d" stroke-width="1.5"/>
+      <!-- Steps -->
+      <g transform="translate(20,0)">
+        <circle cx="0" cy="30" r="6" fill="#58a6ff"/>
+        <text x="0" y="18" fill="#58a6ff" font-size="9" text-anchor="middle" font-family="sans-serif">CAD</text>
+        <text x="0" y="50" fill="#6b7280" font-size="8" text-anchor="middle" font-family="sans-serif">solid block</text>
+      </g>
+      <g transform="translate(180,0)">
+        <circle cx="0" cy="30" r="6" fill="#58a6ff"/>
+        <text x="0" y="18" fill="#58a6ff" font-size="9" text-anchor="middle" font-family="sans-serif">Load setup</text>
+        <text x="0" y="50" fill="#6b7280" font-size="8" text-anchor="middle" font-family="sans-serif">forces + constraints</text>
+      </g>
+      <g transform="translate(340,0)">
+        <circle cx="0" cy="30" r="6" fill="#f78166"/>
+        <text x="0" y="18" fill="#f78166" font-size="9" text-anchor="middle" font-family="sans-serif">FEA + SIMP</text>
+        <text x="0" y="50" fill="#6b7280" font-size="8" text-anchor="middle" font-family="sans-serif">~30–60 iterations</text>
+      </g>
+      <g transform="translate(520,0)">
+        <circle cx="0" cy="30" r="6" fill="#3fb950"/>
+        <text x="0" y="18" fill="#3fb950" font-size="9" text-anchor="middle" font-family="sans-serif">Smooth &amp; rebuild</text>
+        <text x="0" y="50" fill="#6b7280" font-size="8" text-anchor="middle" font-family="sans-serif">mesh → solid in NX</text>
+      </g>
+      <g transform="translate(720,0)">
+        <circle cx="0" cy="30" r="6" fill="#e8c547"/>
+        <text x="0" y="18" fill="#e8c547" font-size="9" text-anchor="middle" font-family="sans-serif">Print / mill</text>
+        <text x="0" y="50" fill="#6b7280" font-size="8" text-anchor="middle" font-family="sans-serif">metal AM or CNC</text>
+      </g>
+    </svg>
+  </div>
+
+  <p class="note">
+    Siemens NX runs this with the <em>Convergent Modeling</em> kernel — you import the mesh result directly and it keeps it as-is for further analysis.
+    Altair Inspire adds a real-time preview that updates as you drag load arrows.
+    Simufact is separate — it simulates the <em>printing process</em> itself (residual stress, warping) after you've already optimised the shape.
+  </p>
+</div>
+
+<script>
+'use strict';
+
+// ── SIMP Topology Optimization ────────────────────────────────────────
+// Problem : Cantilever beam  (fixed left edge, downward load mid-right)
+// Method  : SIMP (Solid Isotropic Material with Penalization)
+// Solver  : Conjugate Gradient (matrix-free, on-the-fly assembly)
+// ─────────────────────────────────────────────────────────────────────
+
+const NX = 40, NY = 20;
+const NELEM = NX * NY;
+const NNODE = (NX+1) * (NY+1);
+const NDOF  = 2 * NNODE;
+const E_MIN = 1e-9, E_0 = 1.0, NU = 0.3;
+const PENAL = 3.0, RMIN = 1.5, VOLFRAC = 0.4, MOVE = 0.2;
+
+// ── Element stiffness matrix (E=1, nu=NU, unit square) ────────────────
+function buildKe() {
+  const Ke = new Float64Array(64);
+  const d11 = 1/(1-NU*NU), d12 = NU*d11, d33 = (1-NU)/(2*(1-NU*NU));
+  const g = 1/Math.sqrt(3);
+
+  for (const xi of [-g, g]) for (const eta of [-g, g]) {
+    // Shape fn ξ-derivatives  (nodes: BL, BR, TR, TL)
+    const dNxi  = [-(1-eta)/4,  (1-eta)/4,  (1+eta)/4, -(1+eta)/4];
+    const dNeta = [-(1-xi) /4, -(1+xi) /4,  (1+xi) /4,  (1-xi) /4];
+    // Physical derivatives: J = I/2 for unit square → J⁻¹ = 2I
+    const dNx = dNxi .map(v => 2*v);
+    const dNy = dNeta.map(v => 2*v);
+    // B matrix (3×8): ε = B·u
+    const B = [new Float64Array(8), new Float64Array(8), new Float64Array(8)];
+    for (let k = 0; k < 4; k++) {
+      B[0][2*k]   = dNx[k];   // εxx
+      B[1][2*k+1] = dNy[k];   // εyy
+      B[2][2*k]   = dNy[k];   // γxy
+      B[2][2*k+1] = dNx[k];
+    }
+    // Ke += Bᵀ D B |J| w   (|J|=1/4, w=1 each Gauss point)
+    for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) {
+      const v = B[0][i]*(d11*B[0][j] + d12*B[1][j])
+              + B[1][i]*(d12*B[0][j] + d11*B[1][j])
+              + B[2][i]* d33*B[2][j];
+      Ke[i*8+j] += v * 0.25;
+    }
+  }
+  return Ke;
+}
+const KE = buildKe();
+
+// ── Element DOF mapping ───────────────────────────────────────────────
+// Nodes: BL=(ex,ey), BR=(ex+1,ey), TR=(ex+1,ey+1), TL=(ex,ey+1)
+const EDOF = new Int32Array(NELEM * 8);
+for (let ey = 0; ey < NY; ey++) for (let ex = 0; ex < NX; ex++) {
+  const e  = ey*NX + ex;
+  const n  = [ey*(NX+1)+ex, ey*(NX+1)+ex+1, (ey+1)*(NX+1)+ex+1, (ey+1)*(NX+1)+ex];
+  for (let k = 0; k < 4; k++) { EDOF[e*8+2*k] = 2*n[k]; EDOF[e*8+2*k+1] = 2*n[k]+1; }
+}
+
+// ── Boundary conditions ───────────────────────────────────────────────
+const fixedSet = new Set();
+for (let ey = 0; ey <= NY; ey++) {
+  const n = ey*(NX+1); fixedSet.add(2*n); fixedSet.add(2*n+1);
+}
+const free = [], g2f = new Int32Array(NDOF).fill(-1);
+for (let i = 0; i < NDOF; i++) if (!fixedSet.has(i)) { g2f[i] = free.length; free.push(i); }
+const nfree = free.length;
+
+// ── Load vector (downward at mid-right node) ──────────────────────────
+const loadNode = Math.floor(NY/2)*(NX+1) + NX;
+const Ff = new Float64Array(nfree);
+Ff[g2f[2*loadNode+1]] = -1.0;
+
+// ── Sparse sensitivity filter ─────────────────────────────────────────
+const filterNb  = [];
+const filterHs  = new Float32Array(NELEM);
+for (let ey = 0; ey < NY; ey++) for (let ex = 0; ex < NX; ex++) {
+  const i = ey*NX + ex;
+  const nb = [];
+  for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
+    const ex2 = ex+dx, ey2 = ey+dy;
+    if (ex2 < 0 || ex2 >= NX || ey2 < 0 || ey2 >= NY) continue;
+    const d = Math.hypot(dx, dy);
+    if (d >= RMIN) continue;
+    nb.push(ey2*NX + ex2, RMIN - d);
+    filterHs[i] += RMIN - d;
+  }
+  filterNb.push(nb);
+}
+
+// ── CG solver (matrix-free) ───────────────────────────────────────────
+let density = null;
+
+function matvec(v) {
+  const r = new Float64Array(nfree);
+  for (let e = 0; e < NELEM; e++) {
+    const Ee = E_MIN + Math.pow(density[e], PENAL) * (E_0 - E_MIN);
+    const off = e * 8;
+    // Gather local DOF
+    const ue = new Float64Array(8);
+    for (let i = 0; i < 8; i++) { const fi = g2f[EDOF[off+i]]; if (fi>=0) ue[i] = v[fi]; }
+    // Scatter Ke·ue
+    for (let i = 0; i < 8; i++) {
+      const fi = g2f[EDOF[off+i]]; if (fi < 0) continue;
+      let s = 0; for (let j = 0; j < 8; j++) s += KE[i*8+j] * ue[j];
+      r[fi] += Ee * s;
+    }
+  }
+  return r;
+}
+
+function dot(a, b) { let s = 0; for (let i = 0; i < a.length; i++) s += a[i]*b[i]; return s; }
+
+function cgSolve(b, tol=1e-6, maxIter=600) {
+  const x = new Float64Array(nfree);
+  const r = b.slice(); const p = r.slice();
+  let rsold = dot(r, r);
+  for (let it = 0; it < maxIter && rsold > tol*tol; it++) {
+    const Ap   = matvec(p);
+    const alpha = rsold / dot(p, Ap);
+    for (let i = 0; i < nfree; i++) { x[i] += alpha*p[i]; r[i] -= alpha*Ap[i]; }
+    const rsnew = dot(r, r);
+    const beta  = rsnew / rsold;
+    for (let i = 0; i < nfree; i++) p[i] = r[i] + beta*p[i];
+    rsold = rsnew;
+  }
+  return x;
+}
+
+// ── One SIMP iteration ────────────────────────────────────────────────
+function simpIter() {
+  const uf = cgSolve(Ff);
+  const U  = new Float64Array(NDOF);
+  for (let i = 0; i < nfree; i++) U[free[i]] = uf[i];
+
+  let compliance = 0;
+  const dc = new Float64Array(NELEM);
+  for (let e = 0; e < NELEM; e++) {
+    const off = e * 8;
+    let ce = 0;
+    for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++)
+      ce += U[EDOF[off+i]] * KE[i*8+j] * U[EDOF[off+j]];
+    compliance += Math.pow(density[e], PENAL) * ce;
+    dc[e] = -PENAL * Math.pow(density[e], PENAL-1) * ce;
+  }
+  return { compliance, dc };
+}
+
+// ── Sensitivity filter ────────────────────────────────────────────────
+function filterSens(dc) {
+  const dcf = new Float64Array(NELEM);
+  for (let i = 0; i < NELEM; i++) {
+    const nb = filterNb[i];
+    let num = 0;
+    for (let k = 0; k < nb.length; k += 2) num += nb[k+1] * density[nb[k]] * dc[nb[k]];
+    dcf[i] = num / (filterHs[i] * Math.max(1e-3, density[i]));
+  }
+  return dcf;
+}
+
+// ── OC update (bisection on Lagrange multiplier) ──────────────────────
+function ocUpdate(dc) {
+  let lo = 0, hi = 1e9;
+  const xnew = density.slice();
+  while ((hi-lo) / (hi+lo) > 1e-4) {
+    const mid = 0.5*(lo+hi);
+    for (let e = 0; e < NELEM; e++) {
+      const Be = Math.sqrt(-dc[e]/mid);
+      xnew[e] = Math.max(1e-3, Math.max(density[e]-MOVE,
+                  Math.min(1, Math.min(density[e]+MOVE, density[e]*Be))));
+    }
+    const vol = xnew.reduce((a,b)=>a+b,0)/NELEM;
+    if (vol > VOLFRAC) lo = mid; else hi = mid;
+  }
+  return xnew;
+}
+
+// ── Canvas drawing ────────────────────────────────────────────────────
+const cvs = document.getElementById('topoCanvas');
+const ctx = cvs.getContext('2d');
+const cW = cvs.width, cH = cvs.height;
+const cellW = cW / NX, cellH = cH / NY;
+
+function densityColor(rho) {
+  const r = Math.max(0, Math.min(1, rho));
+  // void=dark navy → dense=warm yellow/white
+  if (r < 0.15) return [6, 8, 20];
+  if (r < 0.35) {
+    const t = (r-0.15)/0.2;
+    return [Math.round(6+t*15), Math.round(8+t*35), Math.round(20+t*90)];
+  }
+  if (r < 0.6) {
+    const t = (r-0.35)/0.25;
+    return [Math.round(21+t*85), Math.round(43+t*70), Math.round(110-t*10)];
+  }
+  if (r < 0.85) {
+    const t = (r-0.6)/0.25;
+    return [Math.round(106+t*127), Math.round(113+t*65), Math.round(100-t*60)];
+  }
+  const t = (r-0.85)/0.15;
+  return [Math.round(233+t*10), Math.round(178+t*54), Math.round(40+t*28)];
+}
+
+function draw() {
+  const img = ctx.createImageData(cW, cH);
+  const d = img.data;
+  for (let ey = 0; ey < NY; ey++) for (let ex = 0; ex < NX; ex++) {
+    const [r,g,b] = densityColor(density[ey*NX+ex]);
+    const px0 = Math.round(ex*cellW), py0 = Math.round((NY-1-ey)*cellH);
+    const px1 = Math.round((ex+1)*cellW), py1 = Math.round((NY-ey)*cellH);
+    for (let py = py0; py < py1; py++) for (let px = px0; px < px1; px++) {
+      const i = (py*cW+px)*4;
+      d[i]=r; d[i+1]=g; d[i+2]=b; d[i+3]=255;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+
+  // Fixed edge indicator
+  ctx.strokeStyle = '#58a6ff'; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.moveTo(2,0); ctx.lineTo(2,cH); ctx.stroke();
+
+  // Load arrow
+  const lx = Math.round(NX*cellW) - 8;
+  const ly = Math.round((NY-1-Math.floor(NY/2))*cellH + cellH/2);
+  ctx.strokeStyle = '#f78166'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(lx, ly-28); ctx.lineTo(lx, ly+4); ctx.stroke();
+  ctx.fillStyle = '#f78166';
+  ctx.beginPath(); ctx.moveTo(lx, ly+10); ctx.lineTo(lx-6, ly-4); ctx.lineTo(lx+6, ly-4); ctx.fill();
+}
+
+// ── Convergence chart ─────────────────────────────────────────────────
+const cvc = document.getElementById('convChart');
+const cctx = cvc.getContext('2d');
+const compHist = [];
+
+function drawConv() {
+  const W = cvc.width, H = cvc.height;
+  cctx.fillStyle = '#0d1117'; cctx.fillRect(0,0,W,H);
+  if (compHist.length < 2) return;
+  const mx = Math.max(...compHist), mn = Math.min(...compHist);
+  const rng = mx-mn || 1;
+  cctx.strokeStyle = '#58a6ff'; cctx.lineWidth = 2;
+  cctx.beginPath();
+  compHist.forEach((c,i) => {
+    const x = i/(compHist.length-1)*W;
+    const y = H - ((c-mn)/rng)*(H-10) - 5;
+    i===0 ? cctx.moveTo(x,y) : cctx.lineTo(x,y);
+  });
+  cctx.stroke();
+  cctx.fillStyle = '#8b949e'; cctx.font = '10px monospace';
+  cctx.fillText('Compliance history (↓ = structure getting stiffer)', 8, 14);
+}
+
+// ── UI ────────────────────────────────────────────────────────────────
+let running = false;
+
+function updateMetrics(iter, comp, chg) {
+  document.getElementById('mIter').textContent = `${iter} / 50`;
+  document.getElementById('mComp').textContent = comp ? comp.toFixed(4) : '—';
+  const vol = density.reduce((a,b)=>a+b,0)/NELEM*100;
+  document.getElementById('mVol').textContent = `${vol.toFixed(1)}%`;
+  document.getElementById('mChg').textContent = chg != null ? chg.toFixed(4) : '—';
+}
+
+function reset() {
+  running = false;
+  density = new Float32Array(NELEM).fill(VOLFRAC);
+  compHist.length = 0;
+  draw(); drawConv();
+  updateMetrics(0, null, null);
+  document.getElementById('btnRun').disabled = false;
+  document.getElementById('btnRun').textContent = '▶ Run';
+}
+
+async function runOpt() {
+  document.getElementById('btnRun').disabled = true;
+  document.getElementById('btnRun').textContent = '⏳ Running...';
+  running = true;
+
+  for (let iter = 1; iter <= 50 && running; iter++) {
+    const { compliance, dc } = simpIter();
+    const dcf  = filterSens(dc);
+    const xnew = ocUpdate(dcf);
+    const chg  = xnew.reduce((acc,v,i) => Math.max(acc, Math.abs(v-density[i])), 0);
+    density = xnew;
+
+    compHist.push(compliance);
+    draw(); drawConv();
+    updateMetrics(iter, compliance, chg);
+
+    await new Promise(r => setTimeout(r, 30));
+    if (chg < 0.005) break;
+  }
+
+  running = false;
+  document.getElementById('btnRun').disabled = false;
+  document.getElementById('btnRun').textContent = '▶ Run again';
+}
+
+document.getElementById('btnRun').addEventListener('click', runOpt);
+document.getElementById('btnReset').addEventListener('click', reset);
+
+// Init
+reset();
+</script>
+</body>
+</html>

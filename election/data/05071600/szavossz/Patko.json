@@ -1,0 +1,1213 @@
+{
+  "PvOnHeader" : {
+    "generated" : "2026-05-07T16:00:00.071656894+02:00",
+    "val_dat" : "2026-04-12T00:00:00+02:00",
+    "vl_id" : 467,
+    "nvv_id" : 542
+  },
+  "data" : {
+    "feldar" : 100.0,
+    "mand_listas" : 93,
+    "mand_evk" : 106,
+    "szoszolok" : 12,
+    "mand_ossz" : 199,
+    "mand_kioszt" : 199,
+    "mand_ures" : 0,
+    "vp_njben" : 7303591,
+    "vp_megjelent" : 5770351,
+    "feldar_listas" : 100.0,
+    "feldar_egyeni" : 100.0,
+    "rar_belf" : 79.69,
+    "vp_osszes" : 8112646,
+    "vp_szavazott" : 6408362,
+    "rar_ossz" : 78.99,
+    "eredmenyek" : [ {
+      "jlcs_kod" : 3600,
+      "mand_egyeni" : 96,
+      "mand_egyeni_szaz" : 90.57,
+      "mand_listas" : 45,
+      "mand_listas_szaz" : 48.39,
+      "mand_ossz" : 141,
+      "mand_ossz_szaz" : 70.85
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_egyeni" : 10,
+      "mand_egyeni_szaz" : 9.43,
+      "mand_listas" : 42,
+      "mand_listas_szaz" : 45.16,
+      "mand_ossz" : 52,
+      "mand_ossz_szaz" : 26.13
+    }, {
+      "jlcs_kod" : 3592,
+      "mand_egyeni" : 0,
+      "mand_egyeni_szaz" : 0.0,
+      "mand_listas" : 6,
+      "mand_listas_szaz" : 6.45,
+      "mand_ossz" : 6,
+      "mand_ossz_szaz" : 3.02
+    } ],
+    "jeloltek" : [ ],
+    "mandatumok" : [ {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "09",
+      "evk" : "05",
+      "ej_id" : 140513
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "05",
+      "evk" : "05",
+      "ej_id" : 140514
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "02",
+      "evk" : "01",
+      "ej_id" : 140515
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "10",
+      "ej_id" : 140516
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "02",
+      "evk" : "02",
+      "ej_id" : 140517
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "18",
+      "evk" : "01",
+      "ej_id" : 140519
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "13",
+      "ej_id" : 140520
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "09",
+      "ej_id" : 140530
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "06",
+      "evk" : "01",
+      "ej_id" : 140533
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "15",
+      "evk" : "04",
+      "ej_id" : 140534
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "10",
+      "ej_id" : 140537
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "16",
+      "evk" : "02",
+      "ej_id" : 140539
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "12",
+      "ej_id" : 140544
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "02",
+      "ej_id" : 140546
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "04",
+      "evk" : "02",
+      "ej_id" : 140548
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "20",
+      "evk" : "03",
+      "ej_id" : 140551
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "03",
+      "evk" : "03",
+      "ej_id" : 140552
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "08",
+      "evk" : "04",
+      "ej_id" : 140553
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "05",
+      "ej_id" : 140557
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "19",
+      "evk" : "04",
+      "ej_id" : 140558
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "03",
+      "evk" : "01",
+      "ej_id" : 140559
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "07",
+      "ej_id" : 140561
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "03",
+      "evk" : "02",
+      "ej_id" : 140562
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "12",
+      "evk" : "03",
+      "ej_id" : 140564
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "05",
+      "evk" : "01",
+      "ej_id" : 140565
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "09",
+      "ej_id" : 140566
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "15",
+      "evk" : "02",
+      "ej_id" : 140568
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "01",
+      "ej_id" : 140570
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "05",
+      "evk" : "07",
+      "ej_id" : 140574
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "02",
+      "evk" : "04",
+      "ej_id" : 140576
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "07",
+      "evk" : "03",
+      "ej_id" : 140579
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "04",
+      "evk" : "03",
+      "ej_id" : 140580
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "20",
+      "evk" : "01",
+      "ej_id" : 140584
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "06",
+      "ej_id" : 140585
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "05",
+      "evk" : "06",
+      "ej_id" : 140588
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "10",
+      "evk" : "03",
+      "ej_id" : 140591
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "11",
+      "ej_id" : 140593
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "06",
+      "evk" : "04",
+      "ej_id" : 140595
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "14",
+      "ej_id" : 140598
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "05",
+      "evk" : "04",
+      "ej_id" : 140600
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "10",
+      "evk" : "02",
+      "ej_id" : 140601
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "01",
+      "ej_id" : 140603
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "17",
+      "evk" : "02",
+      "ej_id" : 140604
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "06",
+      "ej_id" : 140606
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "04",
+      "evk" : "01",
+      "ej_id" : 140607
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "19",
+      "evk" : "01",
+      "ej_id" : 140608
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "11",
+      "evk" : "01",
+      "ej_id" : 140609
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "08",
+      "evk" : "05",
+      "ej_id" : 140611
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "11",
+      "ej_id" : 140618
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "05",
+      "ej_id" : 140623
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "12",
+      "evk" : "02",
+      "ej_id" : 140625
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "12",
+      "ej_id" : 140626
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "15",
+      "evk" : "01",
+      "ej_id" : 140627
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "16",
+      "evk" : "03",
+      "ej_id" : 140631
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "20",
+      "evk" : "02",
+      "ej_id" : 140632
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "08",
+      "evk" : "02",
+      "ej_id" : 140633
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "08",
+      "ej_id" : 140634
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "03",
+      "evk" : "06",
+      "ej_id" : 140636
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "09",
+      "evk" : "02",
+      "ej_id" : 140637
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "03",
+      "ej_id" : 140638
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "08",
+      "evk" : "01",
+      "ej_id" : 140639
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "14",
+      "ej_id" : 140640
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "04",
+      "ej_id" : 140641
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "06",
+      "evk" : "02",
+      "ej_id" : 140643
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "06",
+      "evk" : "03",
+      "ej_id" : 140645
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "13",
+      "evk" : "01",
+      "ej_id" : 140650
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "12",
+      "evk" : "01",
+      "ej_id" : 140651
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "09",
+      "evk" : "03",
+      "ej_id" : 140652
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "08",
+      "ej_id" : 140654
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "07",
+      "evk" : "02",
+      "ej_id" : 140658
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "07",
+      "ej_id" : 140659
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "10",
+      "evk" : "01",
+      "ej_id" : 140665
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "02",
+      "evk" : "03",
+      "ej_id" : 140666
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "15",
+      "ej_id" : 140667
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "17",
+      "evk" : "03",
+      "ej_id" : 140669
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "03",
+      "evk" : "04",
+      "ej_id" : 140670
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "13",
+      "ej_id" : 140672
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "16",
+      "evk" : "06",
+      "ej_id" : 140673
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "04",
+      "evk" : "04",
+      "ej_id" : 140674
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "02",
+      "ej_id" : 140679
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "03",
+      "evk" : "05",
+      "ej_id" : 140688
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "19",
+      "evk" : "02",
+      "ej_id" : 140689
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "11",
+      "evk" : "02",
+      "ej_id" : 140696
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "14",
+      "evk" : "03",
+      "ej_id" : 140698
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "15",
+      "evk" : "03",
+      "ej_id" : 140699
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "11",
+      "evk" : "04",
+      "ej_id" : 140702
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "05",
+      "evk" : "02",
+      "ej_id" : 140707
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "09",
+      "evk" : "01",
+      "ej_id" : 140729
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "17",
+      "evk" : "01",
+      "ej_id" : 140737
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "16",
+      "ej_id" : 140751
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "16",
+      "evk" : "01",
+      "ej_id" : 140760
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "19",
+      "evk" : "03",
+      "ej_id" : 140761
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "07",
+      "evk" : "04",
+      "ej_id" : 140762
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "01",
+      "evk" : "04",
+      "ej_id" : 140763
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "07",
+      "evk" : "01",
+      "ej_id" : 140765
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "1",
+      "maz" : "09",
+      "evk" : "06",
+      "ej_id" : 140770
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "1",
+      "maz" : "07",
+      "evk" : "05",
+      "ej_id" : 140686
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "1",
+      "maz" : "16",
+      "evk" : "05",
+      "ej_id" : 140704
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "1",
+      "maz" : "13",
+      "evk" : "02",
+      "ej_id" : 140735
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "1",
+      "maz" : "18",
+      "evk" : "02",
+      "ej_id" : 140739
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "1",
+      "maz" : "05",
+      "evk" : "03",
+      "ej_id" : 140771
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "1",
+      "maz" : "09",
+      "evk" : "04",
+      "ej_id" : 140782
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "1",
+      "maz" : "08",
+      "evk" : "03",
+      "ej_id" : 140839
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "1",
+      "maz" : "16",
+      "evk" : "04",
+      "ej_id" : 140840
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "1",
+      "maz" : "11",
+      "evk" : "03",
+      "ej_id" : 140843
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "1",
+      "maz" : "18",
+      "evk" : "03",
+      "ej_id" : 140855
+    }, {
+      "jlcs_kod" : 3605,
+      "mand_tip" : "4",
+      "tl_id" : 1919,
+      "tj_id" : 23921
+    }, {
+      "jlcs_kod" : 3619,
+      "mand_tip" : "4",
+      "tl_id" : 1920,
+      "tj_id" : 23925
+    }, {
+      "jlcs_kod" : 3607,
+      "mand_tip" : "4",
+      "tl_id" : 1921,
+      "tj_id" : 23930
+    }, {
+      "jlcs_kod" : 3631,
+      "mand_tip" : "4",
+      "tl_id" : 1922,
+      "tj_id" : 23937
+    }, {
+      "jlcs_kod" : 3592,
+      "mand_tip" : "2",
+      "tl_id" : 1923,
+      "tj_id" : 23942
+    }, {
+      "jlcs_kod" : 3592,
+      "mand_tip" : "2",
+      "tl_id" : 1923,
+      "tj_id" : 23943
+    }, {
+      "jlcs_kod" : 3592,
+      "mand_tip" : "2",
+      "tl_id" : 1923,
+      "tj_id" : 23944
+    }, {
+      "jlcs_kod" : 3592,
+      "mand_tip" : "2",
+      "tl_id" : 1923,
+      "tj_id" : 23945
+    }, {
+      "jlcs_kod" : 3592,
+      "mand_tip" : "2",
+      "tl_id" : 1923,
+      "tj_id" : 23946
+    }, {
+      "jlcs_kod" : 3592,
+      "mand_tip" : "2",
+      "tl_id" : 1923,
+      "tj_id" : 23947
+    }, {
+      "jlcs_kod" : 3620,
+      "mand_tip" : "4",
+      "tl_id" : 1924,
+      "tj_id" : 24077
+    }, {
+      "jlcs_kod" : 3602,
+      "mand_tip" : "4",
+      "tl_id" : 1925,
+      "tj_id" : 24189
+    }, {
+      "jlcs_kod" : 3599,
+      "mand_tip" : "4",
+      "tl_id" : 1926,
+      "tj_id" : 24197
+    }, {
+      "jlcs_kod" : 3623,
+      "mand_tip" : "4",
+      "tl_id" : 1927,
+      "tj_id" : 24203
+    }, {
+      "jlcs_kod" : 3633,
+      "mand_tip" : "4",
+      "tl_id" : 1928,
+      "tj_id" : 24206
+    }, {
+      "jlcs_kod" : 3606,
+      "mand_tip" : "4",
+      "tl_id" : 1929,
+      "tj_id" : 24212
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24215
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24216
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24217
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24218
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24219
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24220
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24221
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24222
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24223
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24224
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24225
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24226
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24227
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24228
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24229
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24230
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24231
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24232
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24233
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24234
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24235
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24236
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24237
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24238
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24239
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24240
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24241
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24242
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24243
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24244
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24245
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24246
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24247
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24249
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24250
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24251
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24254
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24255
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24257
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24258
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24260
+    }, {
+      "jlcs_kod" : 3644,
+      "mand_tip" : "2",
+      "tl_id" : 1930,
+      "tj_id" : 24261
+    }, {
+      "jlcs_kod" : 3608,
+      "mand_tip" : "4",
+      "tl_id" : 1931,
+      "tj_id" : 24248
+    }, {
+      "jlcs_kod" : 3618,
+      "mand_tip" : "4",
+      "tl_id" : 1933,
+      "tj_id" : 24630
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24663
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24664
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24669
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24677
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24679
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24681
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24682
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24684
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24685
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24686
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24688
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24689
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24690
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24691
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24692
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24693
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24694
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24695
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24696
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24697
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24698
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24699
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24700
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24701
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24702
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24703
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24704
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24705
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24706
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24762
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24769
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24771
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24785
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24810
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24814
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24816
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24817
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24818
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24820
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24822
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24826
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24827
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24829
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24834
+    }, {
+      "jlcs_kod" : 3600,
+      "mand_tip" : "2",
+      "tl_id" : 1934,
+      "tj_id" : 24836
+    } ]
+  }
+}
