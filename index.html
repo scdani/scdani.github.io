@@ -388,7 +388,7 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
     <p class="eyb rv">By the numbers</p>
     <h2 class="st rv d1">What I've built</h2>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp2);margin-top:var(--sp5);margin-bottom:var(--sp3)">
-      <div class="bc rv" style="grid-column:span 2">
+      <div class="bc rv">
         <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px">
           <span style="font-size:64px;font-weight:700;line-height:1;color:var(--sky)" data-target="23">0</span>
           <span style="font-size:14px;color:var(--muted);padding-bottom:10px">agents</span>
@@ -397,34 +397,23 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
       </div>
       <div class="bc rv d1">
         <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px">
-          <span style="font-size:64px;font-weight:700;line-height:1;color:var(--sky)" data-target="2">0</span>
-          <span style="font-size:14px;color:var(--muted);padding-bottom:10px">months</span>
-        </div>
-        <div style="font-size:13px;color:var(--muted2)">From client-call to SaaS MVP</div>
-      </div>
-      <div class="bc rv d2">
-        <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px">
           <span style="font-size:64px;font-weight:700;line-height:1;color:var(--sky)" data-target="50">0</span>
           <span style="font-size:14px;color:var(--muted);padding-bottom:10px">+</span>
         </div>
         <div style="font-size:13px;color:var(--muted2)">Custom AI skills & MCP integrations</div>
       </div>
-      <div class="bc rv d1">
+      <div class="bc rv d2">
         <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px">
           <span style="font-size:64px;font-weight:700;line-height:1;color:var(--sky)" data-target="18">0</span>
           <span style="font-size:14px;color:var(--muted);padding-bottom:10px">routes</span>
         </div>
         <div style="font-size:13px;color:var(--muted2)">API routes in EnergySense SaaS</div>
       </div>
-      <div class="bc rv d2">
+      <div class="bc rv d3">
         <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px">
           <span style="font-size:64px;font-weight:700;line-height:1;color:var(--sky)" data-target="704">0</span>
         </div>
         <div style="font-size:13px;color:var(--muted2)">Home Assistant entities via natural language</div>
-      </div>
-      <div class="bc bq rv d3" style="grid-column:span 2">
-        <blockquote>"I wasn't learning to code. I was learning to communicate intent to a system that could build it."</blockquote>
-        <cite>— Daniel Csonka</cite>
       </div>
     </div>
   </div>
@@ -469,7 +458,7 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
     <div class="vid-ov">
       <div class="vid-eyb">Live Demo · EnergySense · Capgemini Engineering</div>
       <h2 class="vid-title">EnergySense —<br>Built with AI, end to end</h2>
-      <p class="vid-sub">Full-stack TypeScript SaaS · 23 AI agents · Running in production · Built in under 2 months with Claude Code</p>
+      <p class="vid-sub">Full-stack TypeScript SaaS · 23 AI agents · Running in production · Built with Claude Code</p>
       <div style="display:flex;gap:13px;margin-top:21px;flex-wrap:wrap">
         <a href="https://energysense.techdaddy.app" target="_blank" style="
           display:inline-flex;align-items:center;gap:8px;
@@ -921,6 +910,66 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
           </div>
         </div>
     </div>
+
+    <!-- AGENT GUILDS -->
+    <div class="rv d2" style="margin-top:var(--sp5)">
+      <p class="eyb" style="margin-bottom:var(--sp3)">Agent architecture · 23 agents across 3 guilds</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp2)">
+        <!-- Expert Guild -->
+        <div style="background:var(--surface);border:1px solid rgba(29,184,242,0.2);border-radius:12px;padding:var(--sp4);position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(29,184,242,0.4),transparent)"></div>
+          <div style="font-size:22px;margin-bottom:var(--sp2)">🔬</div>
+          <div style="font-family:var(--mono);font-size:10px;color:rgba(29,184,242,0.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Expert Guild</div>
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:var(--sp2);color:var(--text)">Domain Intelligence</h4>
+          <ul style="list-style:none;font-size:12.5px;color:var(--muted2);line-height:2.1">
+            <li>→ HVAC Analysis Agent</li>
+            <li>→ BMS Integration Agent</li>
+            <li>→ Electrical Systems Agent</li>
+            <li>→ Lighting Control Agent</li>
+            <li>→ Commissioning Agent</li>
+            <li>→ Anomaly Detection Agent</li>
+            <li>→ Benchmark Agent</li>
+            <li>→ Audit Agent</li>
+          </ul>
+          <div style="margin-top:var(--sp3);font-family:var(--mono);font-size:11px;padding:3px 10px;display:inline-block;border:1px solid rgba(29,184,242,0.25);border-radius:4px;color:rgba(29,184,242,0.7)">8 agents</div>
+        </div>
+        <!-- Strategy Guild -->
+        <div style="background:var(--surface);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:var(--sp4);position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(245,158,11,0.4),transparent)"></div>
+          <div style="font-size:22px;margin-bottom:var(--sp2)">📈</div>
+          <div style="font-family:var(--mono);font-size:10px;color:rgba(245,158,11,0.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Strategy Guild</div>
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:var(--sp2);color:var(--text)">Business & Compliance</h4>
+          <ul style="list-style:none;font-size:12.5px;color:var(--muted2);line-height:2.1">
+            <li>→ ROI Modelling Agent</li>
+            <li>→ IPMVP M&amp;V Agent</li>
+            <li>→ Compliance Agent (CSRD/EED)</li>
+            <li>→ Portfolio Agent</li>
+            <li>→ Reporting Agent</li>
+            <li>→ Recommendation Agent</li>
+            <li>→ Priority Agent</li>
+          </ul>
+          <div style="margin-top:var(--sp3);font-family:var(--mono);font-size:11px;padding:3px 10px;display:inline-block;border:1px solid rgba(245,158,11,0.25);border-radius:4px;color:rgba(245,158,11,0.7)">7 agents</div>
+        </div>
+        <!-- Data Guild -->
+        <div style="background:var(--surface);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:var(--sp4);position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(16,185,129,0.4),transparent)"></div>
+          <div style="font-size:22px;margin-bottom:var(--sp2)">🔗</div>
+          <div style="font-family:var(--mono);font-size:10px;color:rgba(16,185,129,0.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Data Guild</div>
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:var(--sp2);color:var(--text)">Integration & Quality</h4>
+          <ul style="list-style:none;font-size:12.5px;color:var(--muted2);line-height:2.1">
+            <li>→ Data Integration Agent</li>
+            <li>→ Protocol Adapter Agent</li>
+            <li>→ Data Quality Agent</li>
+            <li>→ Normalisation Agent</li>
+            <li>→ Historical Analysis Agent</li>
+            <li>→ Real-time Monitor Agent</li>
+            <li>→ Export Agent</li>
+            <li>→ Sync Agent</li>
+          </ul>
+          <div style="margin-top:var(--sp3);font-family:var(--mono);font-size:11px;padding:3px 10px;display:inline-block;border:1px solid rgba(16,185,129,0.25);border-radius:4px;color:rgba(16,185,129,0.7)">8 agents</div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -939,11 +988,10 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
       <div class="cg-card rv" style="display:grid;grid-template-columns:1fr auto;gap:var(--sp4);align-items:start">
         <div>
           <h3 style="font-size:16px;margin-bottom:var(--sp2)">⚡ EnergySense — Agentic Workflows</h3>
-          <p>23 agents across 3 guilds orchestrate the full energy management cycle: Expert Guild (HVAC, BMS, electrical), Strategy Guild (ROI, compliance), and Data Guild (integration, M&V). Built in 2 months with Claude Code. Piloting at Capgemini Utrecht. FoX Innovation 2026 submission.</p>
+          <p>23 agents across 3 guilds orchestrate the full energy management cycle: Expert Guild (HVAC, BMS, electrical), Strategy Guild (ROI, compliance), and Data Guild (integration, M&V). Piloting at Capgemini Utrecht. FoX Innovation 2026 submission.</p>
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0">
           <a href="https://energysense.techdaddy.app" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--sky);border:1px solid var(--sky-mid);border-radius:6px;padding:6px 14px;white-space:nowrap;transition:background .15s">⚡ Live app →</a>
-          <a href="energysense-pitch.html" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted2);border:1px solid var(--line);border-radius:6px;padding:6px 14px;white-space:nowrap;transition:border-color .15s">📊 Pitch deck →</a>
         </div>
       </div>
       <!-- Field Assist + Copilot — two columns -->
@@ -1028,7 +1076,7 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
       <div class="tli rv d2">
         <div class="tld">🚀</div>
         <div class="tl-c"><div class="tl-yr">2026</div>
-          <h4>Production SaaS in 2 months</h4>
+          <h4>Production SaaS, end to end</h4>
           <p>EnergySense: 23 AI agents, full-stack TypeScript, ML scoring. The domain knowledge I'd spent years building became the highest-value AI input.</p></div>
       </div>
     </div>
@@ -1119,7 +1167,7 @@ async function sendChat() {
   msgs.scrollTop = msgs.scrollHeight;
 
   try {
-    const r = await fetch('/api/chat?q=' + encodeURIComponent(q));
+    const r = await fetch('https://api.techdaddy.app/api/chat?q=' + encodeURIComponent(q));
     const d = await r.json();
     mimirDiv.textContent = '';
     const text = d.text;
