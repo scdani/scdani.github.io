@@ -24,9 +24,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
   opacity:.5}
 
 /* REVEAL */
-.rv{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(0.22,1,0.36,1),transform .7s cubic-bezier(0.22,1,0.36,1)}
 .rv.in{opacity:1;transform:none}
-.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.25s}
+.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.32s}
+@media(prefers-reduced-motion:reduce){.rv{transition:opacity .3s ease;transform:none}.rv.in{transform:none}}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;
@@ -43,11 +44,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;
 .nav-links a{font-size:13px;color:var(--muted);font-weight:500;transition:color .2s}
 .nav-links a:hover{color:var(--text);opacity:1}
 .nav-cta{font-size:13px;font-weight:600;padding:7px 18px;
-  border:1px solid var(--sky);color:var(--sky);border-radius:6px;transition:background .2s}
+  border:1px solid var(--sky);color:var(--sky);border-radius:6px;transition:background .15s cubic-bezier(0.4,0,0.2,1),transform .1s cubic-bezier(0.4,0,0.2,1)}
 .nav-cta:hover{background:var(--sky-dim);opacity:1}
+.nav-cta:active{transform:scale(0.97)}
 
 /* HERO */
-.hero{min-height:100dvh;display:grid;grid-template-columns:56% 44%;
+.hero{min-height:100dvh;display:grid;grid-template-columns:61.8% 38.2%;
   align-items:start;padding:120px var(--sp5) var(--sp6);gap:var(--sp5);
   position:relative;overflow:hidden}
 .hero-orb{position:absolute;pointer-events:none;border-radius:50%;filter:blur(60px);
@@ -74,8 +76,9 @@ h1.hero-title{font-size:clamp(40px,6vw,76px);font-weight:700;
 .hero-contacts{display:flex;gap:var(--sp2);flex-wrap:wrap}
 .chip-contact{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted2);
   border:1px solid var(--line);border-radius:6px;padding:7px 14px;
-  transition:border-color .2s,color .2s}
+  transition:border-color .15s cubic-bezier(0.4,0,0.2,1),color .15s cubic-bezier(0.4,0,0.2,1),transform .1s cubic-bezier(0.4,0,0.2,1)}
 .chip-contact:hover{border-color:var(--sky);color:var(--text);opacity:1}
+.chip-contact:active{transform:scale(0.97)}
 .chip-contact svg{width:13px;height:13px;flex-shrink:0}
 
 /* TERMINAL */
@@ -116,11 +119,11 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
 /* BENTO */
 .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--sp2);margin-top:var(--sp5)}
 .bc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:var(--sp4);
-  transition:border-color .25s,transform .25s;position:relative;overflow:hidden}
-.bc:hover{border-color:var(--sky-mid);transform:translateY(-2px)}
+  transition:border-color .15s cubic-bezier(0.4,0,0.2,1),transform .2s cubic-bezier(0.22,1,0.36,1);position:relative;overflow:hidden}
+.bc:hover{border-color:var(--sky-mid);transform:translateY(-3px)}
 .bc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,var(--sky),transparent);
-  opacity:0;transition:opacity .25s}
+  opacity:0;transition:opacity .15s cubic-bezier(0.4,0,0.2,1)}
 .bc:hover::before{opacity:1}
 .bw2{grid-column:span 2}.bw3{grid-column:span 3}
 .sn{font-size:52px;font-weight:700;line-height:1;color:var(--sky);
@@ -147,8 +150,8 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
 .pg{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--sp2);margin-top:var(--sp5)}
 .pc{background:var(--surface);border:1px solid var(--line);border-radius:12px;
   padding:var(--sp4);position:relative;overflow:hidden;
-  transition:border-color .25s,transform .25s}
-.pc:hover{border-color:var(--edge);transform:translateY(-2px)}
+  transition:border-color .15s cubic-bezier(0.4,0,0.2,1),transform .2s cubic-bezier(0.22,1,0.36,1)}
+.pc:hover{border-color:var(--sky-mid);transform:translateY(-3px)}
 .pc.s7{grid-column:span 7}.pc.s5{grid-column:span 5}
 .pc.s4{grid-column:span 4}.pc.s8{grid-column:span 8}
 .pc.hl{border-color:rgba(14,165,233,.18);background:linear-gradient(135deg,rgba(14,165,233,.04),transparent)}
@@ -161,7 +164,7 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
 .pp li::before{content:'→';position:absolute;left:0;color:var(--sky);font-size:10px;top:5px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .ch{font-family:var(--mono);font-size:11px;padding:3px 9px;
-  border:1px solid var(--line);border-radius:4px;color:var(--muted);transition:border-color .15s,color .15s}
+  border:1px solid var(--line);border-radius:4px;color:var(--muted);transition:border-color .12s cubic-bezier(0.4,0,0.2,1),color .12s cubic-bezier(0.4,0,0.2,1)}
 .ch:hover{border-color:var(--sky);color:var(--sky)}
 .ch.live{border-color:rgba(74,222,128,.3);color:#4ADE80;background:rgba(74,222,128,.05)}
 .ch.open{border-color:rgba(251,191,36,.3);color:#FBBF24;background:rgba(251,191,36,.05)}
@@ -172,8 +175,8 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
 .cg-logo{height:24px;opacity:.75;filter:brightness(1.3)}
 .cg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp2)}
 .cg-card{border:1px solid var(--line);border-radius:10px;padding:var(--sp4);
-  transition:border-color .25s,transform .25s}
-.cg-card:hover{border-color:var(--sky-mid);transform:translateX(4px)}
+  transition:border-color .15s cubic-bezier(0.4,0,0.2,1),transform .2s cubic-bezier(0.22,1,0.36,1)}
+.cg-card:hover{border-color:var(--sky-mid);transform:translateX(5px)}
 .cg-n{font-size:40px;font-weight:700;color:var(--sky);line-height:1;
   margin-bottom:var(--sp2);font-family:var(--mono)}
 .cg-card h3{font-size:14px;font-weight:700;margin-bottom:var(--sp2);letter-spacing:-.2px}
@@ -211,8 +214,9 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
 .cta p{color:var(--muted2);max-width:420px;margin:0 auto var(--sp5);font-size:15px}
 .btn-row{display:flex;justify-content:center;gap:var(--sp3);flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:var(--sp2);font-weight:600;font-size:14px;
-  padding:13px 26px;border-radius:8px;transition:transform .15s,box-shadow .15s}
-.btn:hover{transform:translateY(-2px);opacity:1}
+  padding:13px 26px;border-radius:8px;transition:transform .2s cubic-bezier(0.22,1,0.36,1),box-shadow .2s cubic-bezier(0.22,1,0.36,1)}
+.btn:hover{transform:translateY(-3px);opacity:1}
+.btn:active{transform:scale(0.97)}
 .btn-p{background:var(--sky);color:#060A14;box-shadow:0 4px 20px rgba(14,165,233,.3)}
 .btn-p:hover{box-shadow:0 8px 32px rgba(14,165,233,.4)}
 .btn-g{border:1px solid var(--line);color:var(--muted2)}
@@ -227,6 +231,11 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
   .fr{grid-template-columns:1fr}
   .nav-links{display:none}
   .sec{padding:var(--sp6) var(--sp3)}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .rv{transform:none;opacity:1}
+  .hero-orb,.nav-dot,.h-dot,.csr{animation:none}
 }
 </style>
 </head>
@@ -283,100 +292,100 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
 <div class="mq-wrap">
   <div class="mq">
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/anthropic.svg" alt="Claude / Anthropic" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/anthropic.svg" alt="Claude / Anthropic" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Claude / Anthropic
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/homeassistant.svg" alt="Home Assistant" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/homeassistant.svg" alt="Home Assistant" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Home Assistant
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/docker2.svg" alt="Docker" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/docker2.svg" alt="Docker" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Docker
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/typescript2.svg" alt="TypeScript" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/typescript2.svg" alt="TypeScript" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       TypeScript
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/react2.svg" alt="React" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/react2.svg" alt="React" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       React
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/python2.svg" alt="Python" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/python2.svg" alt="Python" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Python
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/azure2.svg" alt="Azure AI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/azure2.svg" alt="Azure AI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Azure AI
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/pg.svg" alt="PostgreSQL" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/pg.svg" alt="PostgreSQL" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       PostgreSQL
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/cloudflare.svg" alt="Cloudflare" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/cloudflare.svg" alt="Cloudflare" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Cloudflare
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/github2.svg" alt="GitHub" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/github2.svg" alt="GitHub" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       GitHub
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/fastapi.svg" alt="FastAPI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/fastapi.svg" alt="FastAPI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       FastAPI
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/playwright2.svg" alt="Playwright" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/playwright2.svg" alt="Playwright" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Playwright
     </span>
     <!-- duplicate -->
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/anthropic.svg" alt="Claude / Anthropic" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/anthropic.svg" alt="Claude / Anthropic" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Claude / Anthropic
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/homeassistant.svg" alt="Home Assistant" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/homeassistant.svg" alt="Home Assistant" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Home Assistant
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/docker2.svg" alt="Docker" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/docker2.svg" alt="Docker" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Docker
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/typescript2.svg" alt="TypeScript" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/typescript2.svg" alt="TypeScript" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       TypeScript
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/react2.svg" alt="React" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/react2.svg" alt="React" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       React
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/python2.svg" alt="Python" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/python2.svg" alt="Python" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Python
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/azure2.svg" alt="Azure AI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/azure2.svg" alt="Azure AI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Azure AI
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/pg.svg" alt="PostgreSQL" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/pg.svg" alt="PostgreSQL" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       PostgreSQL
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/cloudflare.svg" alt="Cloudflare" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/cloudflare.svg" alt="Cloudflare" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Cloudflare
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/github2.svg" alt="GitHub" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/github2.svg" alt="GitHub" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       GitHub
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/fastapi.svg" alt="FastAPI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/fastapi.svg" alt="FastAPI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       FastAPI
     </span>
     <span class="mi">
-      <img src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/logos/playwright2.svg" alt="Playwright" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
+      <img src="logos/playwright2.svg" alt="Playwright" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Playwright
     </span>
   </div>
@@ -464,7 +473,7 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
 <div class="vid-sec">
   <div class="vid-wrap">
     <video autoplay muted loop playsinline preload="auto">
-      <source src="https://api.techdaddy.app/energysense_cropped.mp4" type="video/mp4">
+      <source src="energysense_cropped.mp4" type="video/mp4">
     </video>
     <div class="vid-ov">
       <div class="vid-eyb">Live Demo · EnergySense · Capgemini Engineering</div>
@@ -479,7 +488,7 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
           backdrop-filter:blur(8px);transition:background .2s;text-decoration:none">
           ⚡ Open live app
         </a>
-        <a href="https://api.techdaddy.app/energysense-pitch.html" target="_blank" style="
+        <a href="energysense-pitch.html" target="_blank" style="
           display:inline-flex;align-items:center;gap:8px;
           background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);
           color:#8AABB0;font-family:Space Grotesk,system-ui,sans-serif;
@@ -932,7 +941,7 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
         <p class="eyb">Professional work</p>
         <h2 class="st">At Capgemini Engineering</h2>
       </div>
-      <img class="cg-logo" src="https://raw.githubusercontent.com/scdani/scdani.github.io/main/assets/brand/capgemini-engineering-wordmark.svg" alt="Capgemini Engineering" onerror="this.style.display='none'">
+      <img class="cg-logo" src="assets/brand/capgemini-engineering-wordmark.svg" alt="Capgemini Engineering" onerror="this.style.display='none'">
     </div>
     <div class="cg-grid">
       <div class="cg-card rv">
@@ -1055,7 +1064,7 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
     <p class="eyb rv">Live demos</p>
     <h2 class="st rv d1">See it running</h2>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp2);margin-top:var(--sp4)">
-      <a href="https://api.techdaddy.app/demo2/" target="_blank" class="rv" style="
+      <a href="demo2/" target="_blank" class="rv" style="
         display:block;background:var(--surface);border:1px solid var(--line);
         border-radius:12px;padding:var(--sp4);
         transition:border-color .25s,transform .25s;color:inherit">
@@ -1064,7 +1073,7 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
         <div style="font-size:16px;font-weight:700;margin-bottom:8px">Daniel's Agentic AI Demo Suite</div>
         <div style="font-size:13px;color:var(--muted2)">Running demos of agentic use cases — live, not screenshots</div>
       </a>
-      <a href="https://api.techdaddy.app/field-assist.html" target="_blank" class="rv d1" style="
+      <a href="field-assist.html" target="_blank" class="rv d1" style="
         display:block;background:var(--surface);border:1px solid var(--line);
         border-radius:12px;padding:var(--sp4);
         transition:border-color .25s,transform .25s;color:inherit">
@@ -1111,7 +1120,7 @@ async function sendChat() {
   msgs.scrollTop = msgs.scrollHeight;
 
   try {
-    const r = await fetch('https://api.techdaddy.app/api/chat?q=' + encodeURIComponent(q));
+    const r = await fetch('/api/chat?q=' + encodeURIComponent(q));
     const d = await r.json();
     mimirDiv.textContent = '';
     const text = d.text;
@@ -1239,7 +1248,7 @@ async function sendChat() {
 
 const ro=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');ro.unobserve(x.target)}}),{threshold:.07,rootMargin:'0px 0px -30px 0px'});
 document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
-setTimeout(()=>document.querySelectorAll('.hero .rv').forEach(el=>el.classList.add('in')),80);
+setTimeout(()=>{const els=[...document.querySelectorAll('.hero .rv')];els.forEach((el,i)=>setTimeout(()=>el.classList.add('in'),i*60));},100);
 
 function cnt(el,to,dur=1100){const s=performance.now(),r=n=>{const p=Math.min((n-s)/dur,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(e*to);if(p<1)requestAnimationFrame(r)};requestAnimationFrame(r)}
 const co=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){const t=parseInt(x.target.dataset.target);if(!isNaN(t))cnt(x.target,t);co.unobserve(x.target)}}),{threshold:.5});
