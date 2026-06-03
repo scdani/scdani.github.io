@@ -261,8 +261,7 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
     <h1 class="hero-title">Daniel<br>Csonka</h1>
     <p class="hero-sub">Domain expert turned <strong>agentic AI builder.</strong><br>
     I spent years telling clients what needed to change.<br>AI gave me the tools to build the change myself.</p>
-    <blockquote class="hero-quote">"The biggest unlock wasn't the code — it was realising that years of domain knowledge made me a better AI collaborator than a developer with no field context."</blockquote>
-    <div class="hero-contacts">
+    <div class="hero-contacts" style="margin-top:var(--sp4)">
       <a class="chip-contact" href="mailto:daniel.csonka@capgemini.com">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         daniel.csonka@capgemini.com
@@ -316,10 +315,6 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
       Python
     </span>
     <span class="mi">
-      <img src="logos/azure2.svg" alt="Azure AI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
-      Azure AI
-    </span>
-    <span class="mi">
       <img src="logos/pg.svg" alt="PostgreSQL" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       PostgreSQL
     </span>
@@ -363,10 +358,6 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
     <span class="mi">
       <img src="logos/python2.svg" alt="Python" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
       Python
-    </span>
-    <span class="mi">
-      <img src="logos/azure2.svg" alt="Azure AI" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
-      Azure AI
     </span>
     <span class="mi">
       <img src="logos/pg.svg" alt="PostgreSQL" style="width:16px;height:16px;filter:brightness(0) invert(1);opacity:.6;flex-shrink:0">
@@ -473,7 +464,7 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
 <div class="vid-sec">
   <div class="vid-wrap">
     <video autoplay muted loop playsinline preload="auto">
-      <source src="https://api.techdaddy.app/energysense_cropped.mp4" type="video/mp4">
+      <source src="energysense_cropped.mp4" type="video/mp4">
     </video>
     <div class="vid-ov">
       <div class="vid-eyb">Live Demo · EnergySense · Capgemini Engineering</div>
@@ -943,22 +934,30 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
       </div>
       <img class="cg-logo" src="assets/brand/capgemini-engineering-wordmark.svg" alt="Capgemini Engineering" onerror="this.style.display='none'">
     </div>
-    <div class="cg-grid">
-      <div class="cg-card rv">
-        <h3>⚡ EnergySense — Agentic Workflows</h3>
-        <p>23 agents across 3 guilds orchestrate the full energy management cycle: Expert Guild (HVAC, BMS, electrical), Strategy Guild (ROI, compliance), and Data Guild (integration, M&V). Built in 2 months with Claude Code. Piloting at Capgemini Utrecht. FoX Innovation 2026 submission.</p>
+    <div style="display:flex;flex-direction:column;gap:var(--sp2)">
+      <!-- EnergySense — featured full-width -->
+      <div class="cg-card rv" style="display:grid;grid-template-columns:1fr auto;gap:var(--sp4);align-items:start">
+        <div>
+          <h3 style="font-size:16px;margin-bottom:var(--sp2)">⚡ EnergySense — Agentic Workflows</h3>
+          <p>23 agents across 3 guilds orchestrate the full energy management cycle: Expert Guild (HVAC, BMS, electrical), Strategy Guild (ROI, compliance), and Data Guild (integration, M&V). Built in 2 months with Claude Code. Piloting at Capgemini Utrecht. FoX Innovation 2026 submission.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0">
+          <a href="https://energysense.techdaddy.app" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--sky);border:1px solid var(--sky-mid);border-radius:6px;padding:6px 14px;white-space:nowrap;transition:background .15s">⚡ Live app →</a>
+          <a href="energysense-pitch.html" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted2);border:1px solid var(--line);border-radius:6px;padding:6px 14px;white-space:nowrap;transition:border-color .15s">📊 Pitch deck →</a>
+        </div>
       </div>
-      <div class="cg-card rv d1">
-        <h3>🏭 Field Assist — Mock Call to Live Demo in 1 Hour</h3>
-        <p>During a simulated client discovery call, co-designed and built a working AI field service app end-to-end — from first conversation to a running prototype — within the hour-long session. Embedded LLM triage, offline fallback, human-in-the-loop guardrails. Full PRD delivered.</p>
-      </div>
-      <div class="cg-card rv d2">
-        <h3>🔧 Claude via Copilot Proxy</h3>
-        <p>700+ line API proxy routing Claude through Copilot Business. Self-healing watchdog, dashboard, dynamic timeout scaling. Used by the team daily.</p>
-      </div>
-      <div class="cg-card rv d3">
-        <h3>☁️ Azure AI Agent Toolkit</h3>
-        <p>26 skills: AKS/GPU provisioning, AI Gateway (semantic caching, jailbreak detection), cross-cloud migration, multi-model setup — GPT-5, DeepSeek-R1, Llama 3.2 Vision 90B.</p>
+      <!-- Field Assist + Copilot — two columns -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp2)">
+        <a href="field-assist.html" target="_blank" class="cg-card rv d1" style="display:block;text-decoration:none;color:inherit">
+          <h3>🏭 Field Assist — Mock Call to Live Demo in 1 Hour</h3>
+          <p>During a simulated client discovery call, co-designed and built a working AI field service app end-to-end — from first conversation to a running prototype — within the hour-long session. Embedded LLM triage, offline fallback, human-in-the-loop guardrails. Full PRD delivered.</p>
+          <div style="margin-top:var(--sp3);font-size:12px;color:var(--sky);font-weight:600">→ View prototype</div>
+        </a>
+        <a href="copilot-proxy.html" target="_blank" class="cg-card rv d2" style="display:block;text-decoration:none;color:inherit">
+          <h3>🔧 Claude via Copilot Proxy</h3>
+          <p>700+ line API proxy routing Claude through Copilot Business. Self-healing watchdog, dashboard, dynamic timeout scaling. Used by the team daily.</p>
+          <div style="margin-top:var(--sp3);font-size:12px;color:var(--sky);font-weight:600">→ View architecture</div>
+        </a>
       </div>
     </div>
   </div>
