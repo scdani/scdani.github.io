@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic AI — Daniel's Demos</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --bg: #030712;
+    --surface: rgba(255,255,255,0.03);
+    --border: rgba(255,255,255,0.08);
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --accent: #63b3ed;
+    --accent2: #76e4f7;
+    --green: #4ade80;
+    --orange: #fb923c;
+    --purple: #a78bfa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .bg-mesh {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(99,179,237,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 80%, rgba(167,139,250,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 50% 50%, rgba(118,228,247,0.04) 0%, transparent 60%);
+  }
+
+  .container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* HERO */
+  .hero { padding: 100px 0 72px; text-align: center; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(99,179,237,0.1); border: 1px solid rgba(99,179,237,0.25);
+    border-radius: 100px; padding: 6px 16px;
+    font-size: 0.75rem; font-weight: 600; color: var(--accent);
+    letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 32px;
+  }
+  .hero-badge .dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .hero h1 {
+    font-size: clamp(3rem, 8vw, 6rem); font-weight: 900; line-height: 1;
+    letter-spacing: -0.03em; margin-bottom: 24px;
+    background: linear-gradient(135deg, #f1f5f9 0%, #94a3b8 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, var(--purple) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero-sub { font-size: 1.1rem; color: var(--muted); max-width: 540px; margin: 0 auto 40px; line-height: 1.6; }
+  .hero-infra { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 64px; }
+  .chip {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 100px; padding: 6px 16px;
+    font-size: 0.78rem; color: var(--muted); backdrop-filter: blur(8px);
+  }
+  .chip b { color: var(--text); font-weight: 600; }
+
+  /* STATS */
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden; margin-bottom: 88px;
+  }
+  @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+  .stat-cell { background: var(--bg); padding: 28px 20px; text-align: center; }
+  .stat-cell .n {
+    font-size: 2.2rem; font-weight: 900; letter-spacing: -0.04em;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 6px;
+  }
+  .stat-cell .d { font-size: 0.75rem; color: var(--muted); }
+
+  /* HOW */
+  .section-head { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+  .section-head .lbl { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .section-head .line { flex: 1; height: 1px; background: var(--border); }
+
+  .how { margin-bottom: 88px; }
+  .steps-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border-radius: 20px; overflow: hidden; border: 1px solid var(--border);
+  }
+  @media (max-width: 700px) { .steps-row { grid-template-columns: repeat(2, 1fr); } }
+  .step-cell { background: var(--bg); padding: 28px 22px; transition: background 0.2s; }
+  .step-cell:hover { background: rgba(99,179,237,0.04); }
+  .step-num {
+    width: 30px; height: 30px; border-radius: 50%;
+    border: 1px solid rgba(99,179,237,0.35); color: var(--accent);
+    font-weight: 800; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
+  }
+  .step-cell h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 6px; }
+  .step-cell p { font-size: 0.77rem; color: var(--muted); line-height: 1.6; }
+  .step-cell .eg { font-size: 0.7rem; color: rgba(99,179,237,0.55); margin-top: 8px; font-style: italic; }
+
+  /* DEMO CARDS — merged with stories */
+  .demos { margin-bottom: 60px; }
+  .demo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  @media (max-width: 640px) { .demo-grid { grid-template-columns: 1fr; } }
+
+  .demo-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden;
+    display: flex; flex-direction: column;
+    backdrop-filter: blur(8px);
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .demo-card:hover {
+    border-color: rgba(99,179,237,0.25);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  /* Card header */
+  .card-head { padding: 24px 24px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .card-head-left { display: flex; align-items: center; gap: 14px; }
+  .card-icon { font-size: 2rem; }
+  .card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 3px; }
+  .card-tag { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+  .card-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.2);
+    color: var(--green); border-radius: 100px; padding: 4px 11px;
+    font-size: 0.68rem; font-weight: 600; white-space: nowrap; flex-shrink: 0;
+  }
+
+  /* IO section */
+  .card-io { padding: 20px 24px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .io-col {}
+  .io-lbl { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 7px; }
+  .io-lbl.in { color: var(--orange); }
+  .io-lbl.out { color: var(--green); }
+  .io-bub { border-radius: 10px; padding: 9px 12px; font-size: 0.77rem; line-height: 1.5; }
+  .io-bub.in { background: rgba(251,146,60,0.07); border: 1px solid rgba(251,146,60,0.14); color: #fcd09a; }
+  .io-bub.out { background: rgba(74,222,128,0.06); border: 1px solid rgba(74,222,128,0.13); color: #86efac; }
+
+  /* Story detail */
+  .card-story { padding: 18px 24px; border-bottom: 1px solid var(--border); }
+  .story-lbl { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .tg-msg { background: #1e293b; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px 12px 3px 12px; padding: 9px 13px; font-size: 0.78rem; line-height: 1.55; color: #cbd5e1; margin-bottom: 8px; }
+  .photo-row { display: flex; gap: 6px; margin-bottom: 8px; }
+  .photo-row img { width: 72px; height: 90px; object-fit: cover; border-radius: 7px; border: 1px solid rgba(255,255,255,0.07); }
+  .result-msg { background: rgba(74,222,128,0.05); border: 1px solid rgba(74,222,128,0.12); border-radius: 12px 12px 12px 3px; padding: 9px 13px; font-size: 0.78rem; line-height: 1.55; color: #86efac; }
+
+  /* Open button */
+  .card-foot { padding: 16px 24px; margin-top: auto; }
+  .open-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: linear-gradient(135deg, rgba(99,179,237,0.12), rgba(118,228,247,0.08));
+    border: 1px solid rgba(99,179,237,0.28);
+    color: var(--accent); font-weight: 700; font-size: 0.84rem;
+    padding: 12px; border-radius: 12px; text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .open-btn:hover { background: linear-gradient(135deg, rgba(99,179,237,0.22), rgba(118,228,247,0.16)); border-color: rgba(99,179,237,0.45); }
+  .open-btn .arr { transition: transform 0.15s; }
+  .open-btn:hover .arr { transform: translateX(3px); }
+
+  footer { text-align: center; color: var(--muted); font-size: 0.75rem; padding-top: 40px; border-top: 1px solid var(--border); }
+
+  /* FEATURED LIVE CARD */
+  .live-section { margin-bottom: 60px; }
+  .live-divider { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+  .live-pill {
+    display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+    background: rgba(251,146,60,0.1); border: 1px solid rgba(251,146,60,0.3);
+    color: #fb923c; border-radius: 100px; padding: 6px 16px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .live-pill .live-dot { width: 7px; height: 7px; background: #fb923c; border-radius: 50%; animation: blink 1.2s infinite; }
+  .live-divider .line { flex: 1; height: 1px; background: var(--border); }
+
+  .demo-card.featured {
+    border-color: rgba(251,146,60,0.2);
+    box-shadow: 0 0 0 1px rgba(251,146,60,0.08), 0 8px 40px rgba(251,146,60,0.06);
+  }
+  .demo-card.featured:hover {
+    border-color: rgba(251,146,60,0.4);
+    box-shadow: 0 0 0 1px rgba(251,146,60,0.15), 0 20px 60px rgba(251,146,60,0.1);
+  }
+  .demo-card.featured .card-head { padding: 28px 32px 22px; }
+  .demo-card.featured .card-icon { font-size: 2.6rem; }
+  .demo-card.featured .card-title { font-size: 1.4rem; }
+  .demo-card.featured .card-io { padding: 22px 32px; }
+  .demo-card.featured .card-story { padding: 20px 32px; }
+  .demo-card.featured .card-foot { padding: 20px 32px; }
+  .demo-card.featured .open-btn {
+    background: linear-gradient(135deg, rgba(251,146,60,0.15), rgba(251,146,60,0.08));
+    border-color: rgba(251,146,60,0.35); color: #fb923c;
+    font-size: 1rem; padding: 16px;
+  }
+  .demo-card.featured .open-btn:hover {
+    background: linear-gradient(135deg, rgba(251,146,60,0.28), rgba(251,146,60,0.16));
+    border-color: rgba(251,146,60,0.55);
+  }
+  .demo-card.featured .card-badge {
+    background: rgba(251,146,60,0.1); border-color: rgba(251,146,60,0.3); color: #fb923c;
+    font-size: 0.75rem; padding: 5px 14px;
+  }
+</style>
+</head>
+<body>
+<div class="bg-mesh"></div>
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge"><span class="dot"></span> Running live right now</div>
+    <h1>Built by <span>talking</span><br>to an AI</h1>
+    <p class="hero-sub">Every demo on this page was created through a Telegram conversation — text or voice. No code written. No design tools opened.</p>
+    <div class="hero-infra">
+      <div class="chip"><b>Claude Code</b> — Anthropic</div>
+      <div class="chip">Runs on <b>Ubuntu VM</b></div>
+      <div class="chip">Proxmox on <b>Lenovo M700</b></div>
+      <div class="chip">Interface: <b>Telegram</b></div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-cell"><div class="n">~5 min</div><div class="d">idea → deployed app</div></div>
+    <div class="stat-cell"><div class="n">0</div><div class="d">lines of code written manually</div></div>
+    <div class="stat-cell"><div class="n">Voice or text</div><div class="d">the only input needed</div></div>
+    <div class="stat-cell"><div class="n">24/7</div><div class="d">always on, self-healing</div></div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how">
+    <div class="section-head"><span class="lbl">How it works</span><span class="line"></span></div>
+    <div class="steps-row">
+      <div class="step-cell">
+        <div class="step-num">1</div>
+        <h3>Describe it</h3>
+        <p>Type or voice-message what you want. No spec needed.</p>
+        <div class="eg">"Make me an election dashboard"</div>
+      </div>
+      <div class="step-cell">
+        <div class="step-num">2</div>
+        <h3>AI plans it</h3>
+        <p>Claude breaks the request into steps and starts executing autonomously.</p>
+        <div class="eg">Write code → fetch API → deploy</div>
+      </div>
+      <div class="step-cell">
+        <div class="step-num">3</div>
+        <h3>Tools run</h3>
+        <p>Writes files, runs commands, calls APIs — no human in the loop.</p>
+        <div class="eg">All on the VM, in the background</div>
+      </div>
+      <div class="step-cell">
+        <div class="step-num">4</div>
+        <h3>Live result</h3>
+        <p>A working URL arrives in Telegram. You didn't touch a keyboard once.</p>
+        <div class="eg">Done in ~5 minutes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEMO CARDS -->
+  <div class="demos">
+    <div class="section-head"><span class="lbl">Live demos</span><span class="line"></span></div>
+    <div class="demo-grid">
+
+      <!-- TOPOLOGY -->
+      <div class="demo-card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <span class="card-icon">🔩</span>
+            <div>
+              <div class="card-title">Topology Optimization</div>
+              <div class="card-tag">Engineering · Interactive Explainer</div>
+            </div>
+          </div>
+          <span class="card-badge">✅ ~4 min</span>
+        </div>
+        <div class="card-io">
+          <div class="io-col">
+            <div class="io-lbl in">Input</div>
+            <div class="io-bub in">"Make me a nice interactive explainer for topology optimization"</div>
+          </div>
+          <div class="io-col">
+            <div class="io-lbl out">Output</div>
+            <div class="io-bub out">Interactive page: process steps, algorithm comparison, real-world use cases</div>
+          </div>
+        </div>
+        <div class="card-story">
+          <div class="story-lbl">Behind the scenes</div>
+          <div class="tg-msg">"Make me a nice interactive explainer page for topology optimization"</div>
+          <div class="result-msg">Claude wrote the full HTML/CSS/JS, added interactive step-by-step walkthrough and comparison tables, deployed to nginx — one conversation, zero code written by Daniel</div>
+        </div>
+        <div class="card-foot">
+          <a class="open-btn" href="/topology.html">Open demo <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- ELECTION -->
+      <div class="demo-card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <span class="card-icon">🗳️</span>
+            <div>
+              <div class="card-title">Election UI</div>
+              <div class="card-tag">Data Viz · Live Data</div>
+            </div>
+          </div>
+          <span class="card-badge">✅ Used on election night</span>
+        </div>
+        <div class="card-io">
+          <div class="io-col">
+            <div class="io-lbl in">Input</div>
+            <div class="io-bub in">"Real-time Hungarian election dashboard, live data from the official NVI API"</div>
+          </div>
+          <div class="io-col">
+            <div class="io-lbl out">Output</div>
+            <div class="io-bub out">Live seat counts, party bars, two-thirds tracker — Daniel followed results on his phone all night</div>
+          </div>
+        </div>
+        <div class="card-story">
+          <div class="story-lbl">Behind the scenes</div>
+          <div class="tg-msg">"Make me a real-time Hungarian election dashboard, live data from the official NVI API"</div>
+          <div class="result-msg">Claude wrote the dashboard, set up a CORS proxy to the Hungarian election authority API, deployed to nginx. Daniel watched the seat count change in real-time on election night.</div>
+        </div>
+        <div class="card-foot">
+          <a class="open-btn" href="/election/">Open demo <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- DUTCH GAME -->
+      <div class="demo-card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <span class="card-icon">🇳🇱</span>
+            <div>
+              <div class="card-title">Dutch Learning Game</div>
+              <div class="card-tag">Education · Built from Photos</div>
+            </div>
+          </div>
+          <span class="card-badge">✅ ~6 min</span>
+        </div>
+        <div class="card-io">
+          <div class="io-col">
+            <div class="io-lbl in">Input</div>
+            <div class="io-bub in">📸 3 photos of textbook pages + "Make a gamified way to learn these chapters"</div>
+          </div>
+          <div class="io-col">
+            <div class="io-lbl out">Output</div>
+            <div class="io-bub out">Full quiz game: multiple choice, fill-in-the-blank, score tracking — content read from the photos</div>
+          </div>
+        </div>
+        <div class="card-story">
+          <div class="story-lbl">The actual photos Daniel sent</div>
+          <div class="photo-row">
+            <img src="/demo/assets/dutch1.jpg" alt="Textbook page 1">
+            <img src="/demo/assets/dutch2.jpg" alt="Textbook page 2">
+            <img src="/demo/assets/dutch3.jpg" alt="Textbook page 3">
+          </div>
+          <div class="tg-msg">"Can you make a sort of gamified way to learn these chapters?"</div>
+          <div class="result-msg">Claude read the photos, extracted vocabulary and grammar rules, generated a complete interactive quiz — all content matched the textbook pages exactly</div>
+        </div>
+        <div class="card-foot">
+          <a class="open-btn" href="/dutch-game/">Open demo <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- KNOWLEDGE GRAPH -->
+      <div class="demo-card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <span class="card-icon">🕸️</span>
+            <div>
+              <div class="card-title">Knowledge Graph</div>
+              <div class="card-tag">AI · Semantic · 180 nodes</div>
+            </div>
+          </div>
+          <span class="card-badge">✅ 180 nodes</span>
+        </div>
+        <div class="card-io">
+          <div class="io-col">
+            <div class="io-lbl in">Input</div>
+            <div class="io-bub in">"Index my whole Obsidian vault and make a knowledge graph I can explore"</div>
+          </div>
+          <div class="io-col">
+            <div class="io-lbl out">Output</div>
+            <div class="io-bub out">Force-directed graph: 180 nodes, projects, people, integrations — all linked and filterable</div>
+          </div>
+        </div>
+        <div class="card-story">
+          <div class="story-lbl">Behind the scenes</div>
+          <div class="tg-msg">"Index my whole Obsidian vault and make a knowledge graph I can explore"</div>
+          <div class="result-msg">Claude parsed 80+ markdown files, extracted entities and relationships, built a vis.js force-directed graph with community clustering, search, and zoom. Now also powers AI queries: "What are Daniel's active projects?"</div>
+        </div>
+        <div class="card-foot">
+          <a class="open-btn" href="/graph/">Open demo <span class="arr">→</span></a>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+  <!-- BUILT LIVE -->
+  <div class="live-section">
+    <div class="live-divider">
+      <span class="live-pill"><span class="live-dot"></span> Built live — during this meeting</span>
+      <span class="line"></span>
+    </div>
+    <div class="demo-card featured">
+      <div class="card-head">
+        <div class="card-head-left">
+          <span class="card-icon">🔧</span>
+          <div>
+            <div class="card-title">Field Assist</div>
+            <div class="card-tag">Client Presentation · AI-built · Live Demo</div>
+          </div>
+        </div>
+        <span class="card-badge">⚡ Built live</span>
+      </div>
+      <div class="card-io">
+        <div class="io-col">
+          <div class="io-lbl in">Input</div>
+          <div class="io-bub in">Discovery call transcript + PRD sent via Telegram voice message</div>
+        </div>
+        <div class="io-col">
+          <div class="io-lbl out">Output</div>
+          <div class="io-bub out">7-slide client presentation — problem, solution, AI detail, MVP scope, meta slide</div>
+        </div>
+      </div>
+      <div class="card-story">
+        <div class="story-lbl">Behind the scenes</div>
+        <div class="tg-msg">"Make a client presentation for Field Assist — use the energy assessment as the design guide, same fonts and background. I will send screenshots live."</div>
+        <div class="result-msg">Claude read the discovery call transcript and PRD, matched the design system from the reference deck, built a 7-slide HTML presentation and deployed it — all from a voice message during this live Capgemini meeting.</div>
+      </div>
+      <div class="card-foot">
+        <a class="open-btn" href="/field-assist.html">Open demo <span class="arr">→</span></a>
+      </div>
+    </div>
+  </div>
+
+  <footer>All demos built via Telegram — text or voice &nbsp;·&nbsp; Claude Code on Ubuntu VM &nbsp;·&nbsp; Proxmox homelab (Lenovo M700)</footer>
+</div>
+</body>
+</html>
