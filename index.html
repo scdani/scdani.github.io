@@ -134,17 +134,6 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
 .bq blockquote{font-size:14px;color:var(--text);line-height:1.7;font-style:italic;margin-bottom:var(--sp3)}
 .bq cite{font-size:11px;color:var(--muted);font-style:normal;font-family:var(--mono)}
 
-/* VIDEO */
-.vid-sec{position:relative;clip-path:polygon(0 48px,100% 0,100% calc(100% - 48px),0 100%);margin:var(--sp4) 0}
-.vid-wrap{position:relative;overflow:hidden;max-height:540px}
-.vid-wrap video{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.5) saturate(.75)}
-.vid-ov{position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(6,10,20,.92) 0%,rgba(6,10,20,.7) 60%,rgba(14,165,233,.03) 100%);
-  display:flex;flex-direction:column;justify-content:flex-end;
-  padding:var(--sp6) var(--sp5)}
-.vid-eyb{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--sky);margin-bottom:var(--sp3)}
-.vid-title{font-size:clamp(22px,4vw,44px);font-weight:700;letter-spacing:-1.5px;max-width:580px;line-height:1.15}
-.vid-sub{font-size:14px;color:var(--muted2);margin-top:var(--sp2);max-width:460px}
 
 /* PROJECT GRID */
 .pg{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--sp2);margin-top:var(--sp5)}
@@ -387,8 +376,8 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
   <div class="sec-in">
     <p class="eyb rv">By the numbers</p>
     <h2 class="st rv d1">What I've built</h2>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp2);margin-top:var(--sp5);margin-bottom:var(--sp3)">
-      <div class="bc rv">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp2);margin-top:var(--sp5);margin-bottom:var(--sp3)">
+      <div class="bc rv" style="grid-column:span 2">
         <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px">
           <span style="font-size:64px;font-weight:700;line-height:1;color:var(--sky)" data-target="23">0</span>
           <span style="font-size:14px;color:var(--muted);padding-bottom:10px">agents</span>
@@ -404,568 +393,17 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
       </div>
       <div class="bc rv d2">
         <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px">
-          <span style="font-size:64px;font-weight:700;line-height:1;color:var(--sky)" data-target="20">0</span>
-          <span style="font-size:14px;color:var(--muted);padding-bottom:10px">+</span>
+          <span style="font-size:64px;font-weight:700;line-height:1;color:var(--sky)" data-target="704">0</span>
         </div>
-        <div style="font-size:13px;color:var(--muted2)">APIs & MCPs integrated — AI providers, banking, cloud, IoT, communication</div>
+        <div style="font-size:13px;color:var(--muted2)">Home Assistant entities via natural language</div>
+      </div>
+      <div class="bc bq rv d3" style="grid-column:span 2">
+        <blockquote>"I wasn't learning to code. I was learning to communicate intent to a system that could build it."</blockquote>
+        <cite>— Daniel Csonka</cite>
       </div>
     </div>
   </div>
 
-<!-- MIMIR CHAT -->
-<section class="sec" style="background:var(--surface);border-top:1px solid var(--line)">
-  <div class="sec-in">
-    <p class="eyb rv">Ask Mimir</p>
-    <h2 class="st rv d1" style="margin-bottom:var(--sp2)">Ask about Daniel</h2>
-    <p class="rv d2" style="color:var(--muted2);margin-bottom:var(--sp4);font-size:15px;max-width:520px">Powered by the same AI assistant Daniel uses daily. Try: "Why should we hire Daniel?" or "What has he actually built?"</p>
-    <div class="rv d2" style="max-width:720px">
-      <div id="chat-msgs" style="
-        min-height:80px;max-height:340px;overflow-y:auto;
-        background:var(--bg);border:1px solid var(--line);border-radius:12px 12px 0 0;
-        padding:var(--sp3);font-size:13.5px;line-height:1.75;
-        display:flex;flex-direction:column;gap:var(--sp2)">
-        <div style="color:var(--sky);font-family:var(--mono);font-size:11px">Mimir v1 · ready</div>
-        <div class="msg-mimir" style="color:var(--muted2)">Hi, I'm Mimir — Daniel's AI assistant. Ask me anything about his background, what he's built, or whether he might be a good fit for the Rabobank Agentic Champion role.</div>
-      </div>
-      <div style="display:flex;border:1px solid var(--line);border-top:none;border-radius:0 0 12px 12px;overflow:hidden">
-        <input id="chat-input" type="text" placeholder="Ask a question..." onkeydown="if(event.key==='Enter')sendChat()" style="
-          flex:1;background:var(--edge);border:none;outline:none;
-          padding:14px var(--sp3);font-family:var(--sans);font-size:14px;color:var(--text)">
-        <button onclick="sendChat()" style="
-          background:var(--sky);color:#060A14;border:none;cursor:pointer;
-          font-family:var(--sans);font-size:13px;font-weight:700;
-          padding:14px 20px;transition:opacity .15s;white-space:nowrap">
-          Send ↵
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- VIDEO -->
-<div class="vid-sec">
-  <div class="vid-wrap">
-    <video autoplay muted loop playsinline preload="auto">
-      <source src="energysense_cropped.mp4" type="video/mp4">
-    </video>
-    <div class="vid-ov">
-      <div class="vid-eyb">Live Demo · EnergySense · Capgemini Engineering</div>
-      <h2 class="vid-title">EnergySense —<br>Built with AI, end to end</h2>
-      <p class="vid-sub">Full-stack TypeScript SaaS · 23 AI agents · Running in production · Built with Claude Code</p>
-      <div style="display:flex;gap:13px;margin-top:21px;flex-wrap:wrap">
-        <a href="https://energysense.techdaddy.app" target="_blank" style="
-          display:inline-flex;align-items:center;gap:8px;
-          background:rgba(14,165,233,.15);border:1px solid rgba(14,165,233,.4);
-          color:#E8F0F8;font-family:Space Grotesk,system-ui,sans-serif;
-          font-size:13px;font-weight:600;padding:10px 20px;border-radius:8px;
-          backdrop-filter:blur(8px);transition:background .2s;text-decoration:none">
-          ⚡ Open live app
-        </a>
-        <a href="energysense-pitch.html" target="_blank" style="
-          display:inline-flex;align-items:center;gap:8px;
-          background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);
-          color:#8AABB0;font-family:Space Grotesk,system-ui,sans-serif;
-          font-size:13px;font-weight:600;padding:10px 20px;border-radius:8px;
-          backdrop-filter:blur(8px);transition:background .2s;text-decoration:none">
-          📊 5-min pitch deck
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ENERGYSENSE DETAIL -->
-<section class="sec es-section" style="padding-top:var(--sp5)">
-  <style>
-    .es-section { --cyan:#1DB8F2; --teal:#00C2B3; --amber:#F59E0B; --green:#10B981; --purple:#7C3AED; }
-    .tag {
-      font-size: 0.65rem; font-weight: 600; padding: 2px 8px;
-      border-radius: 2rem; letter-spacing: 0.04em;
-    }
-.tag--cyan   { background: rgba(29,184,242,0.08); border: 1px solid rgba(29,184,242,0.25); color: var(--cyan); }
-.tag--teal   { background: rgba(0,194,179,0.08);  border: 1px solid rgba(0,194,179,0.25);  color: var(--teal); }
-.tag--green  { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); color: var(--green); }
-.tag--amber  { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); color: var(--amber); }
-.tag--muted  { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.35); }
-.s4-metrics {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      gap: 0.75rem; flex: 1; min-height: 0;
-    }
-.metric-panel {
-      border-radius: 16px; padding: 1.25rem 1.75rem;
-      display: flex; flex-direction: column; justify-content: space-between;
-      position: relative; overflow: hidden;
-    }
-.metric-icon-row {
-      display: flex; align-items: center; gap: 0.625rem; margin-bottom: 0.75rem; flex-shrink: 0;
-    }
-.metric-icon-box {
-      width: 2.25rem; height: 2.25rem; border-radius: 10px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-    }
-.metric-panel--a .metric-icon-box { background: rgba(29,184,242,0.14); border: 1px solid rgba(29,184,242,0.3); }
-.metric-panel--b .metric-icon-box { background: rgba(245,158,11,0.14); border: 1px solid rgba(245,158,11,0.3); }
-.metric-panel--c .metric-icon-box { background: rgba(16,185,129,0.14); border: 1px solid rgba(16,185,129,0.3); }
-.metric-panel--d .metric-icon-box { background: rgba(124,58,237,0.14); border: 1px solid rgba(124,58,237,0.3); }
-.metric-panel::before {
-      content: ''; position: absolute; inset: 0; border-radius: inherit;
-      border: 1px solid rgba(255,255,255,0.09);
-    }
-.metric-panel--a { background: linear-gradient(135deg, rgba(29,184,242,0.12), rgba(29,184,242,0.04)); }
-.metric-panel--b { background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.04)); }
-.metric-panel--c { background: linear-gradient(135deg, rgba(16,185,129,0.14), rgba(16,185,129,0.04)); }
-.metric-panel--d { background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(124,58,237,0.04)); }
-.metric-eyebrow {
-      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em;
-      text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 0.5rem;
-    }
-.metric-delta {
-      display: flex; flex-direction: column; gap: 0.2rem; margin-bottom: 0.875rem;
-    }
-.metric-before {
-      font-family: var(--font-head); font-weight: 700;
-      font-size: 1.7rem; line-height: 1;
-      color: rgba(255,255,255,0.60); text-decoration: line-through;
-      text-decoration-color: rgba(225,29,72,0.75);
-    }
-.metric-arrow-row {
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-.metric-arrow { color: var(--cyan); font-size: 1rem; opacity: 0.6; }
-.metric-after {
-      font-family: var(--font-head); font-weight: 700;
-      font-size: 2.8rem; line-height: 1;
-      background: linear-gradient(135deg, var(--cyan), var(--teal));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-.metric-panel--b .metric-after {
-      background: linear-gradient(135deg, var(--amber), #fbbf24);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-.metric-panel--c .metric-after {
-      background: linear-gradient(135deg, var(--green), #34d399);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-.metric-panel--d .metric-after {
-      background: linear-gradient(135deg, #a78bfa, var(--purple));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-.metric-desc {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.62); line-height: 1.6; font-weight: 500;
-    }
-.metric-tags { margin-top: 0.75rem; display: flex; gap: 0.35rem; flex-wrap: wrap; }
-    .es-arch-wrap { background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:var(--sp3);padding:var(--sp3) }
-    .es-arch-inner { display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:340px }
-    .es-arch-inner svg { width:100%;height:100%;min-height:280px } .es-arch-inner { padding: 13px; }
-    .es-metrics-grid { display:grid;grid-template-columns:1fr 1fr;gap:var(--sp2) }
-    .metric-panel { border-radius:12px;padding:var(--sp3) var(--sp4);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden }
-    .metric-eyebrow { font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:4px }
-    .metric-before { font-size:13px;color:rgba(255,255,255,.45);margin-bottom:4px }
-    .metric-arrow-row { display:flex;align-items:center;gap:8px }
-    .metric-arrow { font-size:20px;font-weight:700 }
-    .metric-after { font-size:22px;font-weight:700;color:#fff }
-    .metric-desc { font-size:12px;color:rgba(255,255,255,.5);line-height:1.5;margin-top:var(--sp2) }
-    .metric-tags { display:flex;gap:6px;flex-wrap:wrap;margin-top:var(--sp2) }
-    .tag { font-size:10.5px;padding:2px 8px;border-radius:4px;font-weight:500 }
-    .metric-icon-row { display:flex;align-items:center;gap:8px;margin-bottom:var(--sp2) }
-    .metric-icon-box { width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0 }
-    .es-section .metric-panel::before { content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,.09) }
-    .metric-delta { margin-bottom:6px }
-  </style>
-  <div class="sec-in">
-    <p class="eyb rv">EnergySense explainer</p>
-    <p class="rv d1" style="color:var(--muted2);font-size:15px;max-width:640px;margin-bottom:var(--sp4)">The intelligence layer on top of your existing building systems — connecting any data source, surfacing what matters, turning it into verified action.</p>
-
-    <!-- Architecture + FAST wheel from pitch deck -->
-    <div class="es-arch-wrap rv d2">
-      <div class="es-arch-inner">
-        <svg class="s3-arch-diagram" viewBox="0 0 840 678" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-
-          <!-- ── EnergySense bar (+10% taller: h=272) ───────────── -->
-          <rect x="80" y="0" width="680" height="272" rx="10"
-                fill="rgba(29,184,242,0.09)" stroke="rgba(29,184,242,0.50)" stroke-width="1.5"/>
-          <image href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNjAwIDE1MyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCiAgPCEtLSBNYXJrICh2ZWN0b3JpemVkIGZyb20gb3JpZ2luYWwpIC0tPg0KICA8cGF0aCBmaWxsPSIjNDQ5ZjUzIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yNi43NyAxMzkuMTYgYy0wLjQzIC0wLjI3IC0wLjcyIC0wLjg2IC0wLjYxIC0xLjI3IDAuMDQgLTAuMTYgMC4zOSAtMC43OCAwLjgwIC0xLjQwIDEuNDYgLTIuMjIgMy4xNSAtNS42NCA1LjI3IC0xMC42MiAxLjcwIC00LjAyIDIuMTIgLTUuMTAgMi4wNCAtNS4yMyAtMC4wNSAtMC4wNyAtMC41MCAtMC40MiAtMS4wMiAtMC43NiAtNC4xMiAtMi43NyAtOC4zMSAtNi41MCAtMTAuNzMgLTkuNTQgLTQuNDEgLTUuNTMgLTcuNTggLTEzLjAzIC04LjYxIC0yMC40MSAtMC4yNyAtMS44OSAtMC4zOCAtNi43NiAtMC4yMCAtOC43MCAxLjAyIC0xMC44MyA1Ljk1IC0yMC42MiAxNC43OSAtMjkuNDEgMi43NyAtMi43NiA2LjEzIC01LjczIDkuNTAgLTguNDAgMS43MCAtMS4zNSA3LjE2IC01LjQ2IDguNTIgLTYuNDEgMS43OSAtMS4yNiA4LjgxIC01Ljk2IDkuNzAgLTYuNTAgMC40OCAtMC4yOSAxLjQ1IC0wLjkxIDIuMTUgLTEuMzcgMS40MCAtMC45MyAxLjQzIC0wLjk2IDQuODkgLTMuMTQgNS4zOSAtMy40MSA3LjA5IC00LjQ3IDcuOTEgLTQuOTggMC40OCAtMC4yOCAxLjA1IC0wLjY1IDEuMjkgLTAuODAgMC4yMyAtMC4xNSAxLjA0IC0wLjY0IDEuNzggLTEuMDkgMC43NSAtMC40NSAxLjk2IC0xLjIxIDIuNzIgLTEuNjkgMC43NiAtMC40OSAxLjQ2IC0wLjg4IDEuNTYgLTAuODggMC4xMCAwIDAuMjIgLTAuMDUgMC4yNiAtMC4xMiAwLjEzIC0wLjIxIDAuOTkgLTAuMTMgMS4zMSAwLjExIDAuNDUgMC4zNiAwLjY0IDAuOTEgMS40MyA0LjEyIDQuMjkgMTcuMzAgNy4yOCAzNC44OCA4LjEyIDQ3Ljc0IDAuMjEgMy4yMCAwLjA5IDguODMgLTAuMjUgMTEuMjMgLTEuMjkgOS40NCAtNC42MiAxNy4wNCAtMTAuNzYgMjQuNTEgLTEuNzUgMi4xMiAtNi42MSA2Ljc0IC03LjM5IDcuMDQgLTAuMjUgMC4xMCAtMi4wNCAxLjM0IC0yLjYwIDEuODAgLTAuMjYgMC4yMSAtMC43NiAwLjU0IC0xLjE0IDAuNzQgLTAuMzggMC4xOCAtMC45MiAwLjUzIC0xLjIwIDAuNzUgLTAuMjggMC4yMyAtMC41OSAwLjQyIC0wLjY3IDAuNDIgLTAuMjAgMCAtMi44NCAxLjM5IC0zLjY3IDEuOTEgLTAuMzQgMC4yMyAtMC42OSAwLjQyIC0wLjc2IDAuNDIgLTAuMDcgMCAtMC4yMyAwLjA1IC0wLjM2IDAuMTEgLTAuMTEgMC4wNiAtMC42NSAwLjI5IC0xLjE5IDAuNTEgLTAuNTQgMC4yMiAtMS4xMCAwLjUwIC0xLjI2IDAuNjEgLTAuMTYgMC4xMiAtMC41OCAwLjMxIC0wLjkyIDAuNDMgLTAuMzYgMC4xMSAtMC44MyAwLjMxIC0xLjA3IDAuNDIgLTAuMjMgMC4xMiAtMC45OCAwLjM5IC0xLjY2IDAuNjEgLTAuNjcgMC4yMiAtMS4zMSAwLjQ3IC0xLjQxIDAuNTUgLTAuMTAgMC4wOSAtMC41NiAwLjI4IC0xLjA0IDAuNDMgLTAuODUgMC4yNyAtMS4wMiAwLjMzIC0xLjY5IDAuNjAgLTAuMTggMC4wNyAtMC40MyAwLjEzIC0wLjUzIDAuMTMgLTAuMTAgMCAtMC40MCAwLjExIC0wLjcwIDAuMjMgLTAuMjggMC4xMiAtMC44NiAwLjMxIC0xLjI5IDAuMzggLTAuNDIgMC4wOSAtMC44MCAwLjIxIC0wLjgzIDAuMjYgLTAuMDQgMC4wNiAtMC4xNiAwLjExIC0wLjI4IDAuMTEgLTAuNTYgMCAtMi4wOCAwLjcyIC0yLjczIDEuMzAgLTAuMjUgMC4yMiAtMC42MyAwLjQ5IC0wLjgyIDAuNjAgLTAuMjEgMC4xMCAtMS4wMyAwLjc3IC0xLjgxIDEuNTAgLTEuMzcgMS4yMyAtMi4zOCAyLjI0IC05LjExIDkuMjMgLTMuNTcgMy42OSAtNC4xMiA0LjE3IC00LjgyIDQuMTcgLTAuMjggMCAtMC42OSAtMC4xMCAtMC44OSAtMC4yM3ogbTE5LjY1IC0zMS40MiBjMi4yOCAtMi41OSA0LjgyIC01LjQ3IDUuNjMgLTYuNDEgMy4wNCAtMy41NCAxNy44MSAtMjEuNDIgMjEuNzIgLTI2LjMwIGwwLjY0IC0wLjgwIC03Ljc3IC0wLjA2IGMtNy40MiAtMC4wNiAtNy43OCAtMC4wNyAtOC4wMyAtMC4yOSAtMC4xNiAtMC4xNSAtMC4yNiAtMC4zOCAtMC4yNiAtMC42NCAwIC0wLjIyIDAuNDQgLTEuOTQgMC45NyAtMy44MSAxLjQxIC00Ljk4IDMuMDIgLTEwLjc1IDQuNDMgLTE1Ljk3IDAuNjcgLTIuNTMgMS41NCAtNS43MCAxLjkxIC03LjA2IDAuNzAgLTIuNTkgMC43MiAtMi43NSAwLjU1IC0yLjc1IC0wLjMxIDAgLTEzLjAyIDE0LjUwIC0xNy44MyAyMC4zMyAtMS4zNiAxLjY2IC0zLjA4IDMuNzMgLTMuODEgNC42MSAtMS4xMyAxLjM3IC00Ljk5IDYuMDggLTcuNjAgOS4yNyAtMC40MCAwLjUwIC0xLjg2IDIuMjkgLTMuMjIgMy45NiAtMS4zNyAxLjY4IC0yLjQ5IDMuMTAgLTIuNDkgMy4xNiAwIDAuMDYgMy40MCAwLjExIDguNzAgMC4xMSBsOC43MiAwIDAuMjkgMC4zMSBjMC4yMCAwLjE4IDAuMzEgMC40NCAwLjMxIDAuNjYgMCAwLjIxIC0wLjUwIDIuMTIgLTEuMTIgNC4yNyAtMi45NCAxMC4zNSAtNS45OSAyMS41MCAtNS45OSAyMS45OCAwIDAuMDYgMC4wMiAwLjEyIDAuMDYgMC4xMiAwLjAyIDAgMS45MSAtMi4xMSA0LjE5IC00LjY4eiIvPg0KICA8IS0tIFdvcmRtYXJrIOKAlCBVYnVudHUgQm9sZCwgb3V0bGluZWQgcGF0aHMgKHdoaXRlLCBmb3IgZGFyayBiYWNrZ3JvdW5kcykgLS0+DQogIDxwYXRoIGZpbGw9IiNGRkZGRkYiIGQ9Ik0xNjUuMzk2IDEwOEwxMjguMDgwIDEwOEwxMjguMDgwIDU1LjMzMkwxNjMuNjQ4IDU1LjMzMkwxNjMuNjQ4IDY1LjI4OEwxMzkuOTM2IDY1LjI4OEwxMzkuOTM2IDc1LjYyNEwxNjAuOTg4IDc1LjYyNEwxNjAuOTg4IDg1LjM1MkwxMzkuOTM2IDg1LjM1MkwxMzkuOTM2IDk4LjA0NEwxNjUuMzk2IDk4LjA0NCBNMTcyLjM3NiAxMDhMMTcyLjM3NiA2OS4zOTJRMTc1LjI2NCA2OC41NTYgMTc5LjgyNCA2Ny44MzRRMTg0LjM4NCA2Ny4xMTIgMTg5LjQwMCA2Ny4xMTJRMTk0LjQ5MiA2Ny4xMTIgMTk3Ljg3NCA2OC40NDJRMjAxLjI1NiA2OS43NzIgMjAzLjIzMiA3Mi4yMDRRMjA1LjIwOCA3NC42MzYgMjA2LjA0NCA3Ny45ODBRMjA2Ljg4MCA4MS4zMjQgMjA2Ljg4MCA4NS40MjhMMjA2Ljg4MCAxMDhMMTk1LjU1NiAxMDhMMTk1LjU1NiA4Ni43OTZRMTk1LjU1NiA4MS4zMjQgMTk0LjExMiA3OS4wNDRRMTkyLjY2OCA3Ni43NjQgMTg4LjcxNiA3Ni43NjRRMTg3LjUwMCA3Ni43NjQgMTg2LjEzMiA3Ni44NzhRMTg0Ljc2NCA3Ni45OTIgMTgzLjcwMCA3Ny4xNDRMMTgzLjcwMCAxMDggTTIxNC4yNDAgODguMzE2UTIxNC4yNDAgODIuOTk2IDIxNS44NzQgNzkuMDA2UTIxNy41MDggNzUuMDE2IDIyMC4xNjggNzIuMzU2UTIyMi44MjggNjkuNjk2IDIyNi4yODYgNjguMzI4UTIyOS43NDQgNjYuOTYwIDIzMy4zOTIgNjYuOTYwUTI0MS45MDQgNjYuOTYwIDI0Ni44NDQgNzIuMTY2UTI1MS43ODQgNzcuMzcyIDI1MS43ODQgODcuNDgwUTI1MS43ODQgODguNDY4IDI1MS43MDggODkuNjQ2UTI1MS42MzIgOTAuODI0IDI1MS41NTYgOTEuNzM2TDIyNS44NjggOTEuNzM2UTIyNi4yNDggOTUuMjMyIDIyOS4xMzYgOTcuMjg0UTIzMi4wMjQgOTkuMzM2IDIzNi44ODggOTkuMzM2UTI0MC4wMDQgOTkuMzM2IDI0My4wMDYgOTguNzY2UTI0Ni4wMDggOTguMTk2IDI0Ny45MDggOTcuMzYwTDI0OS40MjggMTA2LjU1NlEyNDguNTE2IDEwNy4wMTIgMjQ2Ljk5NiAxMDcuNDY4UTI0NS40NzYgMTA3LjkyNCAyNDMuNjE0IDEwOC4yNjZRMjQxLjc1MiAxMDguNjA4IDIzOS42MjQgMTA4LjgzNlEyMzcuNDk2IDEwOS4wNjQgMjM1LjM2OCAxMDkuMDY0UTIyOS45NzIgMTA5LjA2NCAyMjUuOTgyIDEwNy40NjhRMjIxLjk5MiAxMDUuODcyIDIxOS4zNzAgMTAzLjA5OFEyMTYuNzQ4IDEwMC4zMjQgMjE1LjQ5NCA5Ni41MjRRMjE0LjI0MCA5Mi43MjQgMjE0LjI0MCA4OC4zMTZNMjI1Ljg2OCA4My45ODRMMjQwLjg0MCA4My45ODRRMjQwLjc2NCA4Mi41NDAgMjQwLjM0NiA4MS4xNzJRMjM5LjkyOCA3OS44MDQgMjM5LjA1NCA3OC43NDBRMjM4LjE4MCA3Ny42NzYgMjM2Ljg1MCA3Ni45OTJRMjM1LjUyMCA3Ni4zMDggMjMzLjU0NCA3Ni4zMDhRMjMxLjY0NCA3Ni4zMDggMjMwLjI3NiA3Ni45NTRRMjI4LjkwOCA3Ny42MDAgMjI3Ljk5NiA3OC42NjRRMjI3LjA4NCA3OS43MjggMjI2LjU5MCA4MS4xMzRRMjI2LjA5NiA4Mi41NDAgMjI1Ljg2OCA4My45ODQgTTI4NS41MTYgNjguNzA4TDI4My42MTYgNzguMDU2UTI4Mi4wOTYgNzcuNjc2IDI4MC4wNDQgNzcuMjU4UTI3Ny45OTIgNzYuODQwIDI3NS42MzYgNzYuODQwUTI3NC41NzIgNzYuODQwIDI3My4wOTAgNzcuMDMwUTI3MS42MDggNzcuMjIwIDI3MC44NDggNzcuNDQ4TDI3MC44NDggMTA4TDI1OS41MjQgMTA4TDI1OS41MjQgNzAuMTUyUTI2Mi41NjQgNjkuMDg4IDI2Ni43MDYgNjguMTM4UTI3MC44NDggNjcuMTg4IDI3NS45NDAgNjcuMTg4UTI3Ni44NTIgNjcuMTg4IDI3OC4xNDQgNjcuMzAyUTI3OS40MzYgNjcuNDE2IDI4MC43MjggNjcuNjA2UTI4Mi4wMjAgNjcuNzk2IDI4My4zMTIgNjguMDYyUTI4NC42MDQgNjguMzI4IDI4NS41MTYgNjguNzA4IE0zMDAuMjQ4IDg2LjcyMFEzMDAuMjQ4IDk2LjIyMCAzMDcuOTI0IDk2LjIyMFEzMDkuNjcyIDk2LjIyMCAzMTEuMTkyIDk1Ljc2NFEzMTIuNzEyIDk1LjMwOCAzMTMuNzc2IDk0LjcwMEwzMTMuNzc2IDc2LjYxMlEzMTIuOTQwIDc2LjQ2MCAzMTEuODAwIDc2LjM0NlEzMTAuNjYwIDc2LjIzMiAzMDkuMTQwIDc2LjIzMlEzMDQuNjU2IDc2LjIzMiAzMDIuNDUyIDc5LjE5NlEzMDAuMjQ4IDgyLjE2MCAzMDAuMjQ4IDg2LjcyME0zMjUuMTAwIDY5LjM5MkwzMjUuMTAwIDEwMi45ODRRMzI1LjEwMCAxMTIuNzg4IDMyMC4xMjIgMTE3LjUzOFEzMTUuMTQ0IDEyMi4yODggMzA0LjczMiAxMjIuMjg4UTMwMS4wODQgMTIyLjI4OCAyOTcuNDM2IDEyMS42NDJRMjkzLjc4OCAxMjAuOTk2IDI5MC42NzIgMTE5LjkzMkwyOTIuNjQ4IDExMC40MzJRMjk1LjMwOCAxMTEuNDk2IDI5OC4yMzQgMTEyLjEwNFEzMDEuMTYwIDExMi43MTIgMzA0Ljg4NCAxMTIuNzEyUTMwOS43NDggMTEyLjcxMiAzMTEuNzYyIDExMC41ODRRMzEzLjc3NiAxMDguNDU2IDMxMy43NzYgMTA1LjExMkwzMTMuNzc2IDEwMy42NjhRMzExLjk1MiAxMDQuNTA0IDMxMC4wMTQgMTA0LjkyMlEzMDguMDc2IDEwNS4zNDAgMzA1Ljc5NiAxMDUuMzQwUTI5Ny41MTIgMTA1LjM0MCAyOTMuMTA0IDEwMC40MzhRMjg4LjY5NiA5NS41MzYgMjg4LjY5NiA4Ni43MjBRMjg4LjY5NiA4Mi4zMTIgMjkwLjA2NCA3OC43MDJRMjkxLjQzMiA3NS4wOTIgMjk0LjA1NCA3Mi41MDhRMjk2LjY3NiA2OS45MjQgMzAwLjQ3NiA2OC41MThRMzA0LjI3NiA2Ny4xMTIgMzA5LjA2NCA2Ny4xMTJRMzExLjExNiA2Ny4xMTIgMzEzLjI4MiA2Ny4zMDJRMzE1LjQ0OCA2Ny40OTIgMzE3LjU3NiA2Ny43OTZRMzE5LjcwNCA2OC4xMDAgMzIxLjY0MiA2OC41MThRMzIzLjU4MCA2OC45MzYgMzI1LjEwMCA2OS4zOTIgTTM1OC41MjggNjguMDI0TDM3MC4yMzIgNjguMDI0UTM2Ni44MTIgNzkuNTc2IDM2My4wODggODkuNjg0UTM1OS4zNjQgOTkuNzkyIDM1NC45NTYgMTA5LjI5MlEzNTMuMzYwIDExMi43MTIgMzUxLjc2NCAxMTUuMTA2UTM1MC4xNjggMTE3LjUwMCAzNDguMjY4IDExOS4wNThRMzQ2LjM2OCAxMjAuNjE2IDM0My45NzQgMTIxLjMzOFEzNDEuNTgwIDEyMi4wNjAgMzM4LjM4OCAxMjIuMDYwUTMzNS43MjggMTIyLjA2MCAzMzMuNDg2IDEyMS41NjZRMzMxLjI0NCAxMjEuMDcyIDMyOS44MDAgMTIwLjQ2NEwzMzEuNzc2IDExMS40MjBRMzMzLjUyNCAxMTIuMDI4IDMzNC44OTIgMTEyLjI1NlEzMzYuMjYwIDExMi40ODQgMzM3Ljc4MCAxMTIuNDg0UTM0MC44MjAgMTEyLjQ4NCAzNDIuNDU0IDExMC44NTBRMzQ0LjA4OCAxMDkuMjE2IDM0NS4yMjggMTA2LjMyOFEzNDEuMzUyIDk4LjcyOCAzMzcuNDc2IDg5LjI2NlEzMzMuNjAwIDc5LjgwNCAzMzAuMTgwIDY4LjAyNEwzNDIuMTg4IDY4LjAyNFEzNDIuOTQ4IDcwLjk4OCAzNDMuOTc0IDc0LjQ0NlEzNDUgNzcuOTA0IDM0Ni4xNDAgODEuNDM4UTM0Ny4yODAgODQuOTcyIDM0OC40NTggODguMzE2UTM0OS42MzYgOTEuNjYwIDM1MC43MDAgOTQuMzk2UTM1MS42ODggOTEuNjYwIDM1Mi43NTIgODguMzE2UTM1My44MTYgODQuOTcyIDM1NC44NDIgODEuNDM4UTM1NS44NjggNzcuOTA0IDM1Ni44MTggNzQuNDQ2UTM1Ny43NjggNzAuOTg4IDM1OC41MjggNjguMDI0IE0zOTAuNDM2IDk4Ljk1NlEzOTIuOTQ0IDk4Ljk1NiAzOTQuNTc4IDk4LjUzOFEzOTYuMjEyIDk4LjEyMCAzOTcuMjAwIDk3LjM5OFEzOTguMTg4IDk2LjY3NiAzOTguNTY4IDk1LjY4OFEzOTguOTQ4IDk0LjcwMCAzOTguOTQ4IDkzLjQ4NFEzOTguOTQ4IDkwLjkwMCAzOTYuNTE2IDg5LjE5MFEzOTQuMDg0IDg3LjQ4MCAzODguMTU2IDg1LjUwNFEzODUuNTcyIDg0LjU5MiAzODIuOTg4IDgzLjQxNFEzODAuNDA0IDgyLjIzNiAzNzguMzUyIDgwLjQ1MFEzNzYuMzAwIDc4LjY2NCAzNzUuMDA4IDc2LjExOFEzNzMuNzE2IDczLjU3MiAzNzMuNzE2IDY5LjkyNFEzNzMuNzE2IDY2LjI3NiAzNzUuMDg0IDYzLjM1MFEzNzYuNDUyIDYwLjQyNCAzNzguOTYwIDU4LjM3MlEzODEuNDY4IDU2LjMyMCAzODUuMDQwIDU1LjIxOFEzODguNjEyIDU0LjExNiAzOTMuMDk2IDU0LjExNlEzOTguNDE2IDU0LjExNiA0MDIuMjkyIDU1LjI1NlE0MDYuMTY4IDU2LjM5NiA0MDguNjc2IDU3Ljc2NEw0MDUuMjU2IDY3LjExMlE0MDMuMDUyIDY1Ljk3MiA0MDAuMzU0IDY1LjA5OFEzOTcuNjU2IDY0LjIyNCAzOTMuODU2IDY0LjIyNFEzODkuNjAwIDY0LjIyNCAzODcuNzM4IDY1LjQwMlEzODUuODc2IDY2LjU4MCAzODUuODc2IDY5LjAxMlEzODUuODc2IDcwLjQ1NiAzODYuNTYwIDcxLjQ0NFEzODcuMjQ0IDcyLjQzMiAzODguNDk4IDczLjIzMFEzODkuNzUyIDc0LjAyOCAzOTEuMzg2IDc0LjY3NFEzOTMuMDIwIDc1LjMyMCAzOTQuOTk2IDc2LjAwNFEzOTkuMTAwIDc3LjUyNCA0MDIuMTQwIDc5LjAwNlE0MDUuMTgwIDgwLjQ4OCA0MDcuMTk0IDgyLjQ2NFE0MDkuMjA4IDg0LjQ0MCA0MTAuMTk2IDg3LjEwMFE0MTEuMTg0IDg5Ljc2MCA0MTEuMTg0IDkzLjU2MFE0MTEuMTg0IDEwMC45MzIgNDA2LjAxNiAxMDQuOTk4UTQwMC44NDggMTA5LjA2NCAzOTAuNDM2IDEwOS4wNjRRMzg2Ljk0MCAxMDkuMDY0IDM4NC4xMjggMTA4LjY0NlEzODEuMzE2IDEwOC4yMjggMzc5LjE1MCAxMDcuNjIwUTM3Ni45ODQgMTA3LjAxMiAzNzUuNDI2IDEwNi4zMjhRMzczLjg2OCAxMDUuNjQ0IDM3Mi44MDQgMTA1LjAzNkwzNzYuMTQ4IDk1LjYxMlEzNzguNTA0IDk2LjkwNCAzODEuOTYyIDk3LjkzMFEzODUuNDIwIDk4Ljk1NiAzOTAuNDM2IDk4Ljk1NiBNNDE2LjY0NCA4OC4zMTZRNDE2LjY0NCA4Mi45OTYgNDE4LjI3OCA3OS4wMDZRNDE5LjkxMiA3NS4wMTYgNDIyLjU3MiA3Mi4zNTZRNDI1LjIzMiA2OS42OTYgNDI4LjY5MCA2OC4zMjhRNDMyLjE0OCA2Ni45NjAgNDM1Ljc5NiA2Ni45NjBRNDQ0LjMwOCA2Ni45NjAgNDQ5LjI0OCA3Mi4xNjZRNDU0LjE4OCA3Ny4zNzIgNDU0LjE4OCA4Ny40ODBRNDU0LjE4OCA4OC40NjggNDU0LjExMiA4OS42NDZRNDU0LjAzNiA5MC44MjQgNDUzLjk2MCA5MS43MzZMNDI4LjI3MiA5MS43MzZRNDI4LjY1MiA5NS4yMzIgNDMxLjU0MCA5Ny4yODRRNDM0LjQyOCA5OS4zMzYgNDM5LjI5MiA5OS4zMzZRNDQyLjQwOCA5OS4zMzYgNDQ1LjQxMCA5OC43NjZRNDQ4LjQxMiA5OC4xOTYgNDUwLjMxMiA5Ny4zNjBMNDUxLjgzMiAxMDYuNTU2UTQ1MC45MjAgMTA3LjAxMiA0NDkuNDAwIDEwNy40NjhRNDQ3Ljg4MCAxMDcuOTI0IDQ0Ni4wMTggMTA4LjI2NlE0NDQuMTU2IDEwOC42MDggNDQyLjAyOCAxMDguODM2UTQzOS45MDAgMTA5LjA2NCA0MzcuNzcyIDEwOS4wNjRRNDMyLjM3NiAxMDkuMDY0IDQyOC4zODYgMTA3LjQ2OFE0MjQuMzk2IDEwNS44NzIgNDIxLjc3NCAxMDMuMDk4UTQxOS4xNTIgMTAwLjMyNCA0MTcuODk4IDk2LjUyNFE0MTYuNjQ0IDkyLjcyNCA0MTYuNjQ0IDg4LjMxNk00MjguMjcyIDgzLjk4NEw0NDMuMjQ0IDgzLjk4NFE0NDMuMTY4IDgyLjU0MCA0NDIuNzUwIDgxLjE3MlE0NDIuMzMyIDc5LjgwNCA0NDEuNDU4IDc4Ljc0MFE0NDAuNTg0IDc3LjY3NiA0MzkuMjU0IDc2Ljk5MlE0MzcuOTI0IDc2LjMwOCA0MzUuOTQ4IDc2LjMwOFE0MzQuMDQ4IDc2LjMwOCA0MzIuNjgwIDc2Ljk1NFE0MzEuMzEyIDc3LjYwMCA0MzAuNDAwIDc4LjY2NFE0MjkuNDg4IDc5LjcyOCA0MjguOTk0IDgxLjEzNFE0MjguNTAwIDgyLjU0MCA0MjguMjcyIDgzLjk4NCBNNDYxLjkyOCAxMDhMNDYxLjkyOCA2OS4zOTJRNDY0LjgxNiA2OC41NTYgNDY5LjM3NiA2Ny44MzRRNDczLjkzNiA2Ny4xMTIgNDc4Ljk1MiA2Ny4xMTJRNDg0LjA0NCA2Ny4xMTIgNDg3LjQyNiA2OC40NDJRNDkwLjgwOCA2OS43NzIgNDkyLjc4NCA3Mi4yMDRRNDk0Ljc2MCA3NC42MzYgNDk1LjU5NiA3Ny45ODBRNDk2LjQzMiA4MS4zMjQgNDk2LjQzMiA4NS40MjhMNDk2LjQzMiAxMDhMNDg1LjEwOCAxMDhMNDg1LjEwOCA4Ni43OTZRNDg1LjEwOCA4MS4zMjQgNDgzLjY2NCA3OS4wNDRRNDgyLjIyMCA3Ni43NjQgNDc4LjI2OCA3Ni43NjRRNDc3LjA1MiA3Ni43NjQgNDc1LjY4NCA3Ni44NzhRNDc0LjMxNiA3Ni45OTIgNDczLjI1MiA3Ny4xNDRMNDczLjI1MiAxMDggTTUxNy4xNjggOTkuODY4UTUyMC4yODQgOTkuODY4IDUyMS41NzYgOTkuMjYwUTUyMi44NjggOTguNjUyIDUyMi44NjggOTYuOTA0UTUyMi44NjggOTUuNTM2IDUyMS4xOTYgOTQuNTEwUTUxOS41MjQgOTMuNDg0IDUxNi4xMDQgOTIuMTkyUTUxMy40NDQgOTEuMjA0IDUxMS4yNzggOTAuMTQwUTUwOS4xMTIgODkuMDc2IDUwNy41OTIgODcuNTk0UTUwNi4wNzIgODYuMTEyIDUwNS4yMzYgODQuMDYwUTUwNC40MDAgODIuMDA4IDUwNC40MDAgNzkuMTIwUTUwNC40MDAgNzMuNDk2IDUwOC41ODAgNzAuMjI4UTUxMi43NjAgNjYuOTYwIDUyMC4wNTYgNjYuOTYwUTUyMy43MDQgNjYuOTYwIDUyNy4wNDggNjcuNjA2UTUzMC4zOTIgNjguMjUyIDUzMi4zNjggNjkuMDEyTDUzMC4zOTIgNzcuODI4UTUyOC40MTYgNzcuMTQ0IDUyNi4wOTggNzYuNjEyUTUyMy43ODAgNzYuMDgwIDUyMC44OTIgNzYuMDgwUTUxNS41NzIgNzYuMDgwIDUxNS41NzIgNzkuMDQ0UTUxNS41NzIgNzkuNzI4IDUxNS44MDAgODAuMjYwUTUxNi4wMjggODAuNzkyIDUxNi43MTIgODEuMjg2UTUxNy4zOTYgODEuNzgwIDUxOC41NzQgODIuMzUwUTUxOS43NTIgODIuOTIwIDUyMS41NzYgODMuNjA0UTUyNS4zMDAgODQuOTcyIDUyNy43MzIgODYuMzAyUTUzMC4xNjQgODcuNjMyIDUzMS41NzAgODkuMTkwUTUzMi45NzYgOTAuNzQ4IDUzMy41NDYgOTIuNjQ4UTUzNC4xMTYgOTQuNTQ4IDUzNC4xMTYgOTcuMDU2UTUzNC4xMTYgMTAyLjk4NCA1MjkuNjcwIDEwNi4wMjRRNTI1LjIyNCAxMDkuMDY0IDUxNy4wOTIgMTA5LjA2NFE1MTEuNzcyIDEwOS4wNjQgNTA4LjIzOCAxMDguMTUyUTUwNC43MDQgMTA3LjI0MCA1MDMuMzM2IDEwNi42MzJMNTA1LjIzNiA5Ny40MzZRNTA4LjEyNCA5OC41NzYgNTExLjE2NCA5OS4yMjJRNTE0LjIwNCA5OS44NjggNTE3LjE2OCA5OS44NjggTTUzOS42NTIgODguMzE2UTUzOS42NTIgODIuOTk2IDU0MS4yODYgNzkuMDA2UTU0Mi45MjAgNzUuMDE2IDU0NS41ODAgNzIuMzU2UTU0OC4yNDAgNjkuNjk2IDU1MS42OTggNjguMzI4UTU1NS4xNTYgNjYuOTYwIDU1OC44MDQgNjYuOTYwUTU2Ny4zMTYgNjYuOTYwIDU3Mi4yNTYgNzIuMTY2UTU3Ny4xOTYgNzcuMzcyIDU3Ny4xOTYgODcuNDgwUTU3Ny4xOTYgODguNDY4IDU3Ny4xMjAgODkuNjQ2UTU3Ny4wNDQgOTAuODI0IDU3Ni45NjggOTEuNzM2TDU1MS4yODAgOTEuNzM2UTU1MS42NjAgOTUuMjMyIDU1NC41NDggOTcuMjg0UTU1Ny40MzYgOTkuMzM2IDU2Mi4zMDAgOTkuMzM2UTU2NS40MTYgOTkuMzM2IDU2OC40MTggOTguNzY2UTU3MS40MjAgOTguMTk2IDU3My4zMjAgOTcuMzYwTDU3NC44NDAgMTA2LjU1NlE1NzMuOTI4IDEwNy4wMTIgNTcyLjQwOCAxMDcuNDY4UTU3MC44ODggMTA3LjkyNCA1NjkuMDI2IDEwOC4yNjZRNTY3LjE2NCAxMDguNjA4IDU2NS4wMzYgMTA4LjgzNlE1NjIuOTA4IDEwOS4wNjQgNTYwLjc4MCAxMDkuMDY0UTU1NS4zODQgMTA5LjA2NCA1NTEuMzk0IDEwNy40NjhRNTQ3LjQwNCAxMDUuODcyIDU0NC43ODIgMTAzLjA5OFE1NDIuMTYwIDEwMC4zMjQgNTQwLjkwNiA5Ni41MjRRNTM5LjY1MiA5Mi43MjQgNTM5LjY1MiA4OC4zMTZNNTUxLjI4MCA4My45ODRMNTY2LjI1MiA4My45ODRRNTY2LjE3NiA4Mi41NDAgNTY1Ljc1OCA4MS4xNzJRNTY1LjM0MCA3OS44MDQgNTY0LjQ2NiA3OC43NDBRNTYzLjU5MiA3Ny42NzYgNTYyLjI2MiA3Ni45OTJRNTYwLjkzMiA3Ni4zMDggNTU4Ljk1NiA3Ni4zMDhRNTU3LjA1NiA3Ni4zMDggNTU1LjY4OCA3Ni45NTRRNTU0LjMyMCA3Ny42MDAgNTUzLjQwOCA3OC42NjRRNTUyLjQ5NiA3OS43MjggNTUyLjAwMiA4MS4xMzRRNTUxLjUwOCA4Mi41NDAgNTUxLjI4MCA4My45ODQiLz4NCjwvc3ZnPg==" x="277" y="14" width="286" height="82"
-                 preserveAspectRatio="xMidYMid meet"/>
-          <line x1="100" y1="104" x2="740" y2="104" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-          <text x="420" y="122" text-anchor="middle" font-size="13"
-                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif" letter-spacing="1.5">INTELLIGENCE LAYER</text>
-          <text x="420" y="150" text-anchor="middle" font-size="22" font-weight="700"
-                fill="rgba(255,255,255,0.92)" font-family="Ubuntu,sans-serif">Single source of truth</text>
-          <line x1="110" y1="164" x2="730" y2="164" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-          <text x="420" y="184" text-anchor="middle" font-size="16"
-                fill="rgba(255,255,255,0.55)" font-family="Plus Jakarta Sans,sans-serif">Turns building data into verified decisions</text>
-          <line x1="140" y1="198" x2="700" y2="198" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-          <text x="420" y="218" text-anchor="middle" font-size="13"
-                fill="rgba(255,255,255,0.36)" font-family="Plus Jakarta Sans,sans-serif">Unified portfolio view · all buildings · one platform</text>
-          <text x="420" y="238" text-anchor="middle" font-size="12"
-                fill="rgba(255,255,255,0.25)" font-family="Plus Jakarta Sans,sans-serif">Automated compliance · verified savings · live dashboards</text>
-
-          <!-- ── Funnel from ES card → integration band (inverted) ── -->
-          <!-- ES card bottom=272, band top=322 — narrows from card width to band width -->
-          <polygon points="80,272 760,272 665,322 175,322"
-                   fill="rgba(29,184,242,0.04)" stroke="none"/>
-          <line x1="80" y1="272" x2="175" y2="322"
-                stroke="rgba(29,184,242,0.18)" stroke-width="1"/>
-          <line x1="760" y1="272" x2="665" y2="322"
-                stroke="rgba(29,184,242,0.18)" stroke-width="1"/>
-
-          <!-- ── Data integration band (30% narrower: x=175 w=490) ── -->
-          <rect x="175" y="322" width="490" height="65" rx="5"
-                fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.11)" stroke-width="1"/>
-          <text x="420" y="350" text-anchor="middle" font-size="14"
-                fill="rgba(255,255,255,0.40)" font-family="Plus Jakarta Sans,sans-serif" letter-spacing="0.8">DATA INTEGRATION</text>
-          <text x="420" y="370" text-anchor="middle" font-size="12"
-                fill="rgba(255,255,255,0.26)" font-family="Plus Jakarta Sans,sans-serif">any protocol · any system · multiple buildings</text>
-
-          <!-- ── Funnel: band bottom (387) → row 1 tiles (452) ─── -->
-          <polygon points="0,452 840,452 665,387 175,387"
-                   fill="rgba(29,184,242,0.04)" stroke="none"/>
-          <line x1="0" y1="452" x2="175" y2="387"
-                stroke="rgba(29,184,242,0.22)" stroke-width="1"/>
-          <line x1="840" y1="452" x2="665" y2="387"
-                stroke="rgba(29,184,242,0.22)" stroke-width="1"/>
-
-          <!-- ── "CUSTOMER'S EXISTING LANDSCAPE" header ─────────── -->
-          <text x="420" y="432" text-anchor="middle" font-size="16"
-                fill="rgba(255,255,255,0.28)" font-family="Plus Jakarta Sans,sans-serif" letter-spacing="1">CUSTOMER'S EXISTING LANDSCAPE</text>
-          <line x1="0" y1="438" x2="112" y2="438" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-          <line x1="728" y1="438" x2="840" y2="438" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-
-          <!-- ── Row 1 tiles (y=452, h=115) ────────────────────── -->
-          <!-- BMS -->
-          <rect x="0" y="452" width="272" height="115" rx="8"
-                fill="rgba(255,255,255,0.055)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-          <text x="136" y="480" text-anchor="middle" font-size="19" font-weight="700"
-                fill="rgba(255,255,255,0.90)" font-family="Ubuntu,sans-serif">BMS</text>
-          <line x1="14" y1="490" x2="258" y2="490" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-          <text x="136" y="508" text-anchor="middle" font-size="16"
-                fill="rgba(255,255,255,0.52)" font-family="Plus Jakarta Sans,sans-serif">Building controls</text>
-          <text x="136" y="524" text-anchor="middle" font-size="14"
-                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">HVAC · lighting · setpoints</text>
-          <text x="136" y="539" text-anchor="middle" font-size="13"
-                fill="rgba(255,255,255,0.22)" font-family="Plus Jakarta Sans,sans-serif">ventilation · schedules</text>
-
-          <!-- Meters -->
-          <rect x="284" y="452" width="272" height="115" rx="8"
-                fill="rgba(255,255,255,0.055)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-          <text x="420" y="480" text-anchor="middle" font-size="19" font-weight="700"
-                fill="rgba(255,255,255,0.90)" font-family="Ubuntu,sans-serif">Meters</text>
-          <line x1="298" y1="490" x2="542" y2="490" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-          <text x="420" y="508" text-anchor="middle" font-size="16"
-                fill="rgba(255,255,255,0.52)" font-family="Plus Jakarta Sans,sans-serif">Smart metering</text>
-          <text x="420" y="524" text-anchor="middle" font-size="14"
-                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">electricity · gas · water</text>
-          <text x="420" y="539" text-anchor="middle" font-size="13"
-                fill="rgba(255,255,255,0.22)" font-family="Plus Jakarta Sans,sans-serif">P1 · DSMR · pulse</text>
-
-          <!-- Sensors -->
-          <rect x="568" y="452" width="272" height="115" rx="8"
-                fill="rgba(255,255,255,0.055)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-          <text x="704" y="480" text-anchor="middle" font-size="19" font-weight="700"
-                fill="rgba(255,255,255,0.90)" font-family="Ubuntu,sans-serif">Sensors</text>
-          <line x1="582" y1="490" x2="826" y2="490" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-          <text x="704" y="508" text-anchor="middle" font-size="16"
-                fill="rgba(255,255,255,0.52)" font-family="Plus Jakarta Sans,sans-serif">IoT environment</text>
-          <text x="704" y="524" text-anchor="middle" font-size="14"
-                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">CO₂ · occupancy · air</text>
-          <text x="704" y="539" text-anchor="middle" font-size="13"
-                fill="rgba(255,255,255,0.22)" font-family="Plus Jakarta Sans,sans-serif">temperature · humidity</text>
-
-          <!-- ── Row 2 tiles (y=585, h=85) ──────────────────────── -->
-          <!-- EV Charging -->
-          <rect x="0" y="585" width="272" height="85" rx="8"
-                fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-          <text x="136" y="607" text-anchor="middle" font-size="17" font-weight="700"
-                fill="rgba(255,255,255,0.60)" font-family="Ubuntu,sans-serif">EV Charging</text>
-          <line x1="14" y1="616" x2="258" y2="616" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-          <text x="136" y="633" text-anchor="middle" font-size="14"
-                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">charge points · load mgmt</text>
-          <text x="136" y="649" text-anchor="middle" font-size="12"
-                fill="rgba(255,255,255,0.20)" font-family="Plus Jakarta Sans,sans-serif">OCPP · smart charging</text>
-
-          <!-- Renewables -->
-          <rect x="284" y="585" width="272" height="85" rx="8"
-                fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-          <text x="420" y="607" text-anchor="middle" font-size="17" font-weight="700"
-                fill="rgba(255,255,255,0.60)" font-family="Ubuntu,sans-serif">Renewables</text>
-          <line x1="298" y1="616" x2="542" y2="616" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-          <text x="420" y="633" text-anchor="middle" font-size="14"
-                fill="rgba(255,255,255,0.32)" font-family="Plus Jakarta Sans,sans-serif">solar PV · wind · battery</text>
-          <text x="420" y="649" text-anchor="middle" font-size="12"
-                fill="rgba(255,255,255,0.20)" font-family="Plus Jakarta Sans,sans-serif">generation · self-consumption</text>
-
-          <!-- + any system -->
-          <rect x="568" y="585" width="272" height="85" rx="8"
-                fill="rgba(255,255,255,0.020)" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="6,3"/>
-          <text x="704" y="607" text-anchor="middle" font-size="17" font-weight="700"
-                fill="rgba(255,255,255,0.55)" font-family="Ubuntu,sans-serif">+ any system</text>
-          <text x="704" y="633" text-anchor="middle" font-size="14"
-                fill="rgba(255,255,255,0.40)" font-family="Plus Jakarta Sans,sans-serif">ERP · CMMS · GIS · BIM</text>
-          <text x="704" y="649" text-anchor="middle" font-size="12"
-                fill="rgba(255,255,255,0.30)" font-family="Plus Jakarta Sans,sans-serif">if it has data, we connect</text>
-        </svg>
-        <svg class="s3-fast-wheel" viewBox="0 0 720 720" xmlns="http://www.w3.org/2000/svg">
-
-          <!-- ── Ring borders (center shifted right to 360,360) ─── -->
-          <circle cx="360" cy="360" r="217" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-          <circle cx="360" cy="360" r="173" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-
-          <!-- ── Gradient defs for arc strokes ─────────────────────── -->
-          <defs>
-            <linearGradient id="grad-find" x1="360" y1="165" x2="555" y2="360" gradientUnits="userSpaceOnUse">
-              <stop offset="0%"   stop-color="#1DB8F2" stop-opacity="0.72"/>
-              <stop offset="100%" stop-color="#00C2B3" stop-opacity="0.22"/>
-            </linearGradient>
-            <linearGradient id="grad-act" x1="555" y1="360" x2="360" y2="555" gradientUnits="userSpaceOnUse">
-              <stop offset="0%"   stop-color="#F59E0B" stop-opacity="0.70"/>
-              <stop offset="100%" stop-color="#FBBF24" stop-opacity="0.20"/>
-            </linearGradient>
-            <linearGradient id="grad-save" x1="360" y1="555" x2="165" y2="360" gradientUnits="userSpaceOnUse">
-              <stop offset="0%"   stop-color="#10B981" stop-opacity="0.70"/>
-              <stop offset="100%" stop-color="#34D399" stop-opacity="0.20"/>
-            </linearGradient>
-            <linearGradient id="grad-tell" x1="165" y1="360" x2="360" y2="165" gradientUnits="userSpaceOnUse">
-              <stop offset="0%"   stop-color="#A78BFA" stop-opacity="0.60"/>
-              <stop offset="100%" stop-color="#7C3AED" stop-opacity="0.16"/>
-            </linearGradient>
-          </defs>
-
-          <!-- ── Arc quadrants (r=195, stroke-width=42, center 360,360) ── -->
-          <path d="M 360 165 A 195 195 0 0 1 555 360"
-                fill="none" stroke="url(#grad-find)" stroke-width="42" stroke-linecap="butt"/>
-          <path d="M 555 360 A 195 195 0 0 1 360 555"
-                fill="none" stroke="url(#grad-act)"  stroke-width="42" stroke-linecap="butt"/>
-          <path d="M 360 555 A 195 195 0 0 1 165 360"
-                fill="none" stroke="url(#grad-save)" stroke-width="42" stroke-linecap="butt"/>
-          <path d="M 165 360 A 195 195 0 0 1 360 165"
-                fill="none" stroke="url(#grad-tell)" stroke-width="42" stroke-linecap="butt"/>
-
-          <!-- ── Center circle (r=110) ──────────────────────────── -->
-          <circle cx="360" cy="360" r="110" fill="rgba(11,17,32,0.92)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-          <text x="360" y="334" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-weight="700" font-size="47" fill="rgba(255,255,255,0.92)">FAST</text>
-          <text x="360" y="360" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-size="22" fill="rgba(29,184,242,0.82)">Energy Management</text>
-          <text x="360" y="384" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-size="22" fill="rgba(29,184,242,0.82)">cycle</text>
-          <text x="360" y="406" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-size="13" fill="rgba(255,255,255,0.40)" letter-spacing="0.3">Based on ISO 50001</text>
-
-          <!-- ── FIND node (r=38, top, center 360,165) ──────────── -->
-          <circle cx="360" cy="165" r="38" fill="rgba(11,17,32,0.95)" stroke="rgba(29,184,242,0.72)" stroke-width="2"/>
-          <text x="360" y="171" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-weight="700" font-size="21" fill="rgba(29,184,242,0.95)">FIND</text>
-          <text x="360" y="72" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-size="15" fill="rgba(255,255,255,0.78)">Spot savings opportunities</text>
-          <text x="360" y="92" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-size="13" fill="rgba(255,255,255,0.50)">across the live portfolio</text>
-          <text x="360" y="110" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-size="13" fill="rgba(255,255,255,0.36)">anomalies · waste · quick wins</text>
-
-          <!-- ── ACT node (r=38, right, center 555,360) ─────────── -->
-          <circle cx="555" cy="360" r="38" fill="rgba(11,17,32,0.95)" stroke="rgba(245,158,11,0.72)" stroke-width="2"/>
-          <text x="555" y="366" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-weight="700" font-size="21" fill="rgba(245,158,11,0.95)">ACT</text>
-          <text x="605" y="342" text-anchor="start" font-family="Ubuntu,sans-serif"
-                font-size="15" fill="rgba(255,255,255,0.78)">Model ROI</text>
-          <text x="605" y="362" text-anchor="start" font-family="Ubuntu,sans-serif"
-                font-size="13" fill="rgba(255,255,255,0.55)">plan &amp; prioritise</text>
-          <text x="605" y="382" text-anchor="start" font-family="Ubuntu,sans-serif"
-                font-size="13" fill="rgba(255,255,255,0.38)">track measures</text>
-          <text x="605" y="402" text-anchor="start" font-family="Ubuntu,sans-serif"
-                font-size="13" fill="rgba(255,255,255,0.26)">follow through</text>
-
-          <!-- ── SAVE node (r=38, bottom, center 360,555) ──────── -->
-          <circle cx="360" cy="555" r="38" fill="rgba(11,17,32,0.95)" stroke="rgba(16,185,129,0.72)" stroke-width="2"/>
-          <text x="360" y="561" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-weight="700" font-size="21" fill="rgba(16,185,129,0.95)">SAVE</text>
-          <text x="360" y="612" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-size="15" fill="rgba(255,255,255,0.78)">Verified savings</text>
-          <text x="360" y="632" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-size="13" fill="rgba(255,255,255,0.50)">proven by IPMVP</text>
-          <text x="360" y="650" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-size="13" fill="rgba(255,255,255,0.36)">not estimated · audit-proof</text>
-
-          <!-- ── TELL node (r=38, left, center 165,360) ─────────── -->
-          <circle cx="165" cy="360" r="38" fill="rgba(11,17,32,0.95)" stroke="rgba(124,58,237,0.72)" stroke-width="2"/>
-          <text x="165" y="366" text-anchor="middle" font-family="Ubuntu,sans-serif"
-                font-weight="700" font-size="21" fill="rgba(124,58,237,0.95)">TELL</text>
-          <text x="116" y="342" text-anchor="end" font-family="Ubuntu,sans-serif"
-                font-size="15" fill="rgba(255,255,255,0.78)">Reporting</text>
-          <text x="116" y="362" text-anchor="end" font-family="Ubuntu,sans-serif"
-                font-size="13" fill="rgba(255,255,255,0.55)">CSRD · EED</text>
-          <text x="116" y="382" text-anchor="end" font-family="Ubuntu,sans-serif"
-                font-size="13" fill="rgba(255,255,255,0.38)">ISO 50001</text>
-          <text x="116" y="402" text-anchor="end" font-family="Ubuntu,sans-serif"
-                font-size="13" fill="rgba(255,255,255,0.26)">client reports</text>
-        </svg>
-      </div>
-    </div>
-
-    <!-- Metric panels from pitch deck (slide 4) -->
-    <div class="es-metrics-grid rv d3">
-      <!-- Find -->
-        <div class="metric-panel metric-panel--a">
-          <div>
-            <div class="metric-icon-row">
-              <div class="metric-icon-box">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(29,184,242,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              </div>
-              <div class="metric-eyebrow">Find — Data freshness</div>
-            </div>
-            <div class="metric-delta">
-              <div class="metric-before">12–16 months lag</div>
-              <div class="metric-arrow-row">
-                <span class="metric-arrow">↓</span>
-                <div class="metric-after">Near-live</div>
-              </div>
-            </div>
-          </div>
-          <div class="metric-desc">Identify measures across the portfolio — on current data, not last year's.</div>
-          <div class="metric-tags">
-            <span class="tag tag--cyan">Find phase</span>
-            <span class="tag tag--muted">Real-time</span>
-          </div>
-        </div>
-
-        <!-- Act -->
-        <div class="metric-panel metric-panel--b">
-          <div>
-            <div class="metric-icon-row">
-              <div class="metric-icon-box">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(245,158,11,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              </div>
-              <div class="metric-eyebrow">Act — ROI modelling time</div>
-            </div>
-            <div class="metric-delta">
-              <div class="metric-before">Weeks</div>
-              <div class="metric-arrow-row">
-                <span class="metric-arrow" style="color:var(--amber);">↓</span>
-                <div class="metric-after">&lt; 2 hours</div>
-              </div>
-            </div>
-          </div>
-          <div class="metric-desc">Automated ROI simulation — every measure, every building, instantly.</div>
-          <div class="metric-tags">
-            <span class="tag tag--amber">Act phase</span>
-            <span class="tag tag--muted">Automated</span>
-          </div>
-        </div>
-
-        <!-- Save -->
-        <div class="metric-panel metric-panel--c">
-          <div>
-            <div class="metric-icon-row">
-              <div class="metric-icon-box">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(16,185,129,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-              </div>
-              <div class="metric-eyebrow">Save — Annual savings</div>
-            </div>
-            <div class="metric-delta">
-              <div class="metric-before">Unverified</div>
-              <div class="metric-arrow-row">
-                <span class="metric-arrow" style="color:var(--green);">↑</span>
-                <div class="metric-after">12–18%</div>
-              </div>
-            </div>
-          </div>
-          <div class="metric-desc">IPMVP-verified savings. Payback &lt;3 years across the portfolio.</div>
-          <div class="metric-tags">
-            <span class="tag tag--green">Save phase</span>
-            <span class="tag tag--muted">IPMVP</span>
-          </div>
-        </div>
-
-        <!-- Tell -->
-        <div class="metric-panel metric-panel--d">
-          <div>
-            <div class="metric-icon-row">
-              <div class="metric-icon-box">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-              </div>
-              <div class="metric-eyebrow">Tell — Monthly reporting time</div>
-            </div>
-            <div class="metric-delta">
-              <div class="metric-before">5 days</div>
-              <div class="metric-arrow-row">
-                <span class="metric-arrow" style="color:#a78bfa;">↓</span>
-                <div class="metric-after">&lt; 1 hour</div>
-              </div>
-            </div>
-          </div>
-          <div class="metric-desc">One-click compliance output — CSRD, EED, ISO 50001 — always ready.</div>
-          <div class="metric-tags">
-            <span class="tag" style="background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.25);color:#a78bfa;">Tell phase</span>
-            <span class="tag tag--muted">Automated</span>
-          </div>
-        </div>
-    </div>
-
-    <!-- AGENT GUILDS -->
-    <div class="rv d2" style="margin-top:var(--sp5)">
-      <p class="eyb" style="margin-bottom:var(--sp3)">Agent architecture · 23 agents across 3 guilds</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp2)">
-        <!-- Expert Guild -->
-        <div style="background:var(--surface);border:1px solid rgba(29,184,242,0.2);border-radius:12px;padding:var(--sp4);position:relative;overflow:hidden">
-          <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(29,184,242,0.4),transparent)"></div>
-          <div style="font-size:22px;margin-bottom:var(--sp2)">🔬</div>
-          <div style="font-family:var(--mono);font-size:10px;color:rgba(29,184,242,0.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Expert Guild</div>
-          <h4 style="font-size:15px;font-weight:700;margin-bottom:var(--sp2);color:var(--text)">Domain Intelligence</h4>
-          <ul style="list-style:none;font-size:12.5px;color:var(--muted2);line-height:2.1">
-            <li>→ HVAC Analysis Agent</li>
-            <li>→ BMS Integration Agent</li>
-            <li>→ Electrical Systems Agent</li>
-            <li>→ Lighting Control Agent</li>
-            <li>→ Commissioning Agent</li>
-            <li>→ Anomaly Detection Agent</li>
-            <li>→ Benchmark Agent</li>
-            <li>→ Audit Agent</li>
-          </ul>
-          <div style="margin-top:var(--sp3);font-family:var(--mono);font-size:11px;padding:3px 10px;display:inline-block;border:1px solid rgba(29,184,242,0.25);border-radius:4px;color:rgba(29,184,242,0.7)">8 agents</div>
-        </div>
-        <!-- Strategy Guild -->
-        <div style="background:var(--surface);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:var(--sp4);position:relative;overflow:hidden">
-          <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(245,158,11,0.4),transparent)"></div>
-          <div style="font-size:22px;margin-bottom:var(--sp2)">📈</div>
-          <div style="font-family:var(--mono);font-size:10px;color:rgba(245,158,11,0.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Strategy Guild</div>
-          <h4 style="font-size:15px;font-weight:700;margin-bottom:var(--sp2);color:var(--text)">Business & Compliance</h4>
-          <ul style="list-style:none;font-size:12.5px;color:var(--muted2);line-height:2.1">
-            <li>→ ROI Modelling Agent</li>
-            <li>→ IPMVP M&amp;V Agent</li>
-            <li>→ Compliance Agent (CSRD/EED)</li>
-            <li>→ Portfolio Agent</li>
-            <li>→ Reporting Agent</li>
-            <li>→ Recommendation Agent</li>
-            <li>→ Priority Agent</li>
-          </ul>
-          <div style="margin-top:var(--sp3);font-family:var(--mono);font-size:11px;padding:3px 10px;display:inline-block;border:1px solid rgba(245,158,11,0.25);border-radius:4px;color:rgba(245,158,11,0.7)">7 agents</div>
-        </div>
-        <!-- Data Guild -->
-        <div style="background:var(--surface);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:var(--sp4);position:relative;overflow:hidden">
-          <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(16,185,129,0.4),transparent)"></div>
-          <div style="font-size:22px;margin-bottom:var(--sp2)">🔗</div>
-          <div style="font-family:var(--mono);font-size:10px;color:rgba(16,185,129,0.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Data Guild</div>
-          <h4 style="font-size:15px;font-weight:700;margin-bottom:var(--sp2);color:var(--text)">Integration & Quality</h4>
-          <ul style="list-style:none;font-size:12.5px;color:var(--muted2);line-height:2.1">
-            <li>→ Data Integration Agent</li>
-            <li>→ Protocol Adapter Agent</li>
-            <li>→ Data Quality Agent</li>
-            <li>→ Normalisation Agent</li>
-            <li>→ Historical Analysis Agent</li>
-            <li>→ Real-time Monitor Agent</li>
-            <li>→ Export Agent</li>
-            <li>→ Sync Agent</li>
-          </ul>
-          <div style="margin-top:var(--sp3);font-family:var(--mono);font-size:11px;padding:3px 10px;display:inline-block;border:1px solid rgba(16,185,129,0.25);border-radius:4px;color:rgba(16,185,129,0.7)">8 agents</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- CAPGEMINI -->
 <section class="sec cg-sec" id="capgemini">
@@ -978,16 +416,6 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
       <img class="cg-logo" src="assets/brand/capgemini-engineering-wordmark.svg" alt="Capgemini Engineering" onerror="this.style.display='none'">
     </div>
     <div style="display:flex;flex-direction:column;gap:var(--sp2)">
-      <!-- EnergySense — featured full-width -->
-      <div class="cg-card rv" style="display:grid;grid-template-columns:1fr auto;gap:var(--sp4);align-items:start">
-        <div>
-          <h3 style="font-size:16px;margin-bottom:var(--sp2)">⚡ EnergySense — Agentic Workflows</h3>
-          <p>23 agents across 3 guilds orchestrate the full energy management cycle: Expert Guild (HVAC, BMS, electrical), Strategy Guild (ROI, compliance), and Data Guild (integration, M&V). Piloting at Capgemini Utrecht. FoX Innovation 2026 submission.</p>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0">
-          <a href="https://energysense.techdaddy.app" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--sky);border:1px solid var(--sky-mid);border-radius:6px;padding:6px 14px;white-space:nowrap;transition:background .15s">⚡ Live app →</a>
-        </div>
-      </div>
       <!-- Field Assist + Copilot — two columns -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp2)">
         <a href="field-assist.html" target="_blank" class="cg-card rv d1" style="display:block;text-decoration:none;color:inherit">
@@ -1022,13 +450,7 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
           <li>50+ custom skills + MCP integrations (Gmail, Calendar, Playwright, Telegram)</li>
           <li>Self-improving: detects usage patterns, proposes new skills automatically</li>
         </ul>
-        <div style="margin-bottom:8px;font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">AI providers</div>
-        <div class="chips" style="margin-bottom:var(--sp2)"><span class="ch">Claude API</span><span class="ch">Groq</span><span class="ch">Gemini</span><span class="ch">NVIDIA NIM</span></div>
-        <div style="margin-bottom:8px;font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">MCPs</div>
-        <div class="chips" style="margin-bottom:var(--sp2)"><span class="ch">Gmail</span><span class="ch">Google Calendar</span><span class="ch">Playwright</span><span class="ch">Telegram</span></div>
-        <div style="margin-bottom:8px;font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">APIs</div>
-        <div class="chips" style="margin-bottom:var(--sp2)"><span class="ch">Home Assistant</span><span class="ch">Enable Banking (PSD2)</span><span class="ch">GitHub</span><span class="ch">Cloudflare</span><span class="ch">Plex</span><span class="ch">UniFi</span><span class="ch">Google Maps</span><span class="ch">Telegram Bot</span><span class="ch">Immich</span><span class="ch">Open-Meteo</span><span class="ch">Steam</span><span class="ch">NS API</span></div>
-        <div class="chips"><span class="ch live">24/7 Production</span></div>
+        <div class="chips"><span class="ch">Claude API</span><span class="ch">MCP</span><span class="ch">Python</span><span class="ch">systemd</span><span class="ch live">24/7 Production</span></div>
       </div>
       <div class="pc s5 rv d1">
         <span class="pi">💶</span>
@@ -1076,8 +498,8 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
       <div class="tli rv d2">
         <div class="tld">🚀</div>
         <div class="tl-c"><div class="tl-yr">2026</div>
-          <h4>Production SaaS, end to end</h4>
-          <p>EnergySense: 23 AI agents, full-stack TypeScript, ML scoring. The domain knowledge I'd spent years building became the highest-value AI input.</p></div>
+          <h4>Production SaaS in 2 months</h4>
+          <p>Full-stack TypeScript AI SaaS — 23 agents, ML scoring. The domain knowledge I'd spent years building became the highest-value AI input.</p></div>
       </div>
     </div>
   </div>
@@ -1145,44 +567,6 @@ h2.st{font-size:clamp(26px,3.5vw,42px);font-weight:700;letter-spacing:-1px;margi
 </div>
 
 <script>
-async function sendChat() {
-  const input = document.getElementById('chat-input');
-  const msgs = document.getElementById('chat-msgs');
-  const q = input.value.trim();
-  if (!q) return;
-  input.value = '';
-
-  // User bubble
-  const userDiv = document.createElement('div');
-  userDiv.style.cssText = 'text-align:right;color:var(--text);background:var(--edge);border-radius:8px;padding:8px 12px;align-self:flex-end;max-width:80%';
-  userDiv.textContent = q;
-  msgs.appendChild(userDiv);
-
-  // Mimir thinking
-  const mimirDiv = document.createElement('div');
-  mimirDiv.className = 'msg-mimir';
-  mimirDiv.style.color = 'var(--muted2)';
-  mimirDiv.textContent = '⟳ thinking...';
-  msgs.appendChild(mimirDiv);
-  msgs.scrollTop = msgs.scrollHeight;
-
-  try {
-    const r = await fetch('https://api.techdaddy.app/api/chat?q=' + encodeURIComponent(q));
-    const d = await r.json();
-    mimirDiv.textContent = '';
-    const text = d.text;
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i < text.length) {
-        mimirDiv.textContent += text[i++];
-        msgs.scrollTop = msgs.scrollHeight;
-      } else clearInterval(interval);
-    }, 10);
-  } catch(e) {
-    mimirDiv.textContent = 'Mimir is offline — try again in a moment.';
-  }
-}
-
 // Dynamic terminal
 (function() {
   const tb = document.getElementById('term-body');
@@ -1195,7 +579,7 @@ async function sendChat() {
       [500, S('loading agent context…')],
       [1000,`${S('✓','grn')} ${S('Financial Health Agent','wht')} ${S('— ING NL / Revolut / OTP synced')}`],
       [1400,`${S('✓','grn')} ${S('Homelab Monitor','wht')} ${S('— VM 12% CPU · NAS 68% · all nominal')}`],
-      [1800,`${S('✓','grn')} ${S('EnergySense / 23 agents','wht')} ${S('— active')}`],
+
       [2200,`${S('⟳','ylw')} ${S('Weekly Life Audit','wht')} ${S('— reading calendar + git log…')}`],
       [3000,`${S('→')} anomaly: ${S('energy spike site 4 +34%','ylw')}`],
       [3500,`${S('→')} running HVAC simulation…`],
